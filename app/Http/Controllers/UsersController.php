@@ -23,9 +23,9 @@ class UsersController extends Controller
         $user = User::create($req);
         if ($user) {
             return response()->json([
-                'message' => 'Successfully registered',
+                'message' => trans('messages.register_success'),
             ]);
         }
-        return response()->json(['message' => 'Registration has failed'], 422);
+        return response()->json(['message' => trans('messages.register_failed')], 422);
     }
 }
