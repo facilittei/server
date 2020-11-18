@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
+use App\Mail\UserConfirmationMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller
@@ -23,6 +25,7 @@ class UsersController extends Controller
 
         $user = User::create($req);
         if ($user) {
+            Mail::to($user->email)->queue(new UserConfirmationMail($user));
             return response()->json([
                 'message' => trans('messages.register_success'),
             ]);

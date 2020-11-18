@@ -18,7 +18,7 @@ use \App\Http\Controllers\UsersController;
 Route::post('/register', [UsersController::class, 'register']);
 Route::post('/login', [UsersController::class, 'login']);
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
