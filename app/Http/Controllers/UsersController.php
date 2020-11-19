@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class UsersController extends Controller
 {
@@ -31,7 +32,7 @@ class UsersController extends Controller
             ]);
         }
 
-        return response()->json(['message' => trans('messages.register_failed')], 422);
+        return response()->json(['error' => trans('messages.register_failed')], 422);
     }
 
     /**
@@ -65,5 +66,25 @@ class UsersController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
+    }
+
+    /**
+     * User email verification.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function verify($hash)
+    {
+        list($id, $created_at) = explode('-', $hash);
+        $user = User::where('id', $id)->where('created_at', base64_decode($created_at))->first();
+
+        if ($user) {
+            $user->update(['email_verified_at' => Carbon::now()]);
+            return response()->json(['user' => $user]);
+        }
+
+        return response()->json([
+            'error' => trans('auth.invalid_verification_token')
+        ], 401);
     }
 }

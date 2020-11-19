@@ -20,6 +20,13 @@ class UserConfirmationMail extends Mailable implements ShouldQueue
     public $user;
 
     /**
+     * The verification link.
+     *
+     * @var string
+     */
+    public $verification;
+
+    /**
      * Create a new message instance.
      *
      * @return void
@@ -27,6 +34,7 @@ class UserConfirmationMail extends Mailable implements ShouldQueue
     public function __construct(User $user)
     {
         $this->user = $user;
+        $this->verification = strval($this->user->id) . '-' . base64_encode($this->user->created_at);
     }
 
     /**

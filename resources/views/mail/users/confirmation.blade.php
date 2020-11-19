@@ -2,23 +2,24 @@
 
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-HEADER
+Welcome!
 @endcomponent
 @endslot
 
-# Introduction
-{{ $user->name }}
+# {{ trans('messages.register_greeting') }}, {{ $user->name }}
 
-The body of your message.
+{{ trans('messages.register_thanks') }}, facilittei.com!
+
+{{ trans('messages.register_confirm') }}
 
 @slot('subcopy')
 @component('mail::subcopy')
-SUBCOPY
+<a href="{{ url('/verify/' . $verification) }}">{{ url('/verify/' . $verification) }}</a>
 @endcomponent
 @endslot
 
-@component('mail::button', ['url' => ''])
-Confirm
+@component('mail::button', ['url' => url($verification)])
+{{ trans('ui.confirm') }}
 @endcomponent
 
 @slot('footer')
