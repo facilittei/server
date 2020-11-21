@@ -18,6 +18,8 @@ use \App\Http\Controllers\UsersController;
 Route::post('/register', [UsersController::class, 'register']);
 Route::post('/login', [UsersController::class, 'login']);
 Route::get('/verify/{hash}', [UsersController::class, 'verify']);
+Route::post('/recover', [UsersController::class, 'recover']);
+Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/user', function (Request $request) {
