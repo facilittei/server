@@ -154,12 +154,15 @@ class UsersController extends Controller
      */
     public function update(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
+        $user = $request->user();
+        $hasPassword = $request->input('password') && strlen($request->input('password')) >= 8;
 
-        $request->user()->update(['name' => $request->input('name')]);
-        if($request->user()->name === $request->input('name')) {
+        $req = [
+            'name' => $request->input('name') ?? $user->name,
+            'password' => $hasPassword ? Hash::make($request->input('password')) : $user->password,
+        ];
+
+        if ($request->user()->update($req)) {
             return response()->json(['message' => trans('messages.general_update')]);
         }
 
