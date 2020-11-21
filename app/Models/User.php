@@ -51,4 +51,14 @@ class User extends Authenticatable
     {
         return $this->email_verified_at;
     }
+
+    /**
+     * The courses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
 }
