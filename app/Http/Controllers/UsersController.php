@@ -102,11 +102,11 @@ class UsersController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         if ($status === Password::RESET_LINK_SENT) {
-            return response()->json(['status' => $status]);
+            return response()->json(['message' => trans('passwords.sent')]);
         }
 
         return response()->json([
-            'email' => $status
+            'error' => trans('messages.general_error')
         ], 401);
     }
 
@@ -138,11 +138,33 @@ class UsersController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return response()->json(['status' => $status]);
+            return response()->json(['message' => trans('passwords.reset')]);
         }
 
         return response()->json([
-            'email' => $status
+            'error' => trans('messages.general_error')
+        ], 401);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $request->user()->update(['name' => $request->input('name')]);
+        if($request->user()->name === $request->input('name')) {
+            return response()->json(['message' => trans('messages.general_update')]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
         ], 401);
     }
 }
