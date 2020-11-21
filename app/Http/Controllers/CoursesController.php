@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CourseRequest;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class CoursesController extends Controller
@@ -18,24 +20,26 @@ class CoursesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CourseRequest $request)
     {
-        //
+        $user = $request->user();
+        $course = $user->courses()->create($request->all());
+
+        if ($course) {
+            return response()->json([
+                'course' => $course,
+                'message' => trans('messages.general_create'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**
@@ -50,26 +54,26 @@ class CoursesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CourseRequest $request, $id)
     {
-        //
+        $user = $request->user();
+        $course = Course::where('user_id', $user->id)->findOrFail($id);
+
+        if ($course->update($request->all())) {
+            return response()->json([
+                'message' => trans('messages.general_update'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**
@@ -78,8 +82,19 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $user = $request->user();
+        $course = Course::where('user_id', $user->id)->findOrFail($id);
+
+        if ($course->delete()) {
+            return response()->json([
+                'message' => trans('messages.general_destroy'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 }

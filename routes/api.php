@@ -25,5 +25,5 @@ Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset')
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::put('/users', [UsersController::class, 'update']);
     Route::delete('/logout', [UsersController::class, 'logout']);
-    Route::resource('/courses', CoursesController::class);
+    Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
 });
