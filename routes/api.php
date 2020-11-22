@@ -25,8 +25,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::put('/users', [UsersController::class, 'update']);
     Route::delete('/logout', [UsersController::class, 'logout']);
     Route::get('/courses/enrolled', [CoursesController::class, 'enrolled']);
-    Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
     Route::post('/courses/{id}/upload', [CoursesController::class, 'upload']);
     Route::post('/courses/{id}/enroll-many', [CoursesController::class, 'enrollMany']);
+    Route::post('/courses/{id}/enroll', [CoursesController::class, 'enroll']);
     Route::delete('/courses/{id}/annul', [CoursesController::class, 'annul']);
+    Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
 });

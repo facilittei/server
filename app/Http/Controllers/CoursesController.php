@@ -174,6 +174,28 @@ class CoursesController extends Controller
     }
 
     /**
+     * Enroll the specified resource to course.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function enroll(Request $request, $id)
+    {
+        $request->validate([
+            'user_id' => 'required|numeric',
+        ]);
+
+        $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
+
+        if ($course->students()->sync($request->input('user_id'))) {
+            return response()->json(['message' => trans('messages.general_success')]);
+        }
+
+        return response()->json(['message' => trans('messages.general_error')], 422);
+    }
+
+    /**
      * Annul the specified resource from course.
      *
      * @param  \Illuminate\Http\Request  $request

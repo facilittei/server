@@ -20,5 +20,6 @@ return [
     'general_error' => 'Whops, we\'ve got an error, please try again',
     'general_create' => 'Creation operation performed successfully',
     'general_destroy' => 'Removal operation performed successfully',
+    'general_success' => 'Operation performed successfully',
 
 ];
