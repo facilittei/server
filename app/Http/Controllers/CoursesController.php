@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class CoursesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource (teacher).
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -18,6 +18,17 @@ class CoursesController extends Controller
     public function index(Request $request)
     {
         return $request->user()->courses;
+    }
+
+    /**
+     * Display a listing of the enrolled classes (student).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function enrolled(Request $request)
+    {
+        return $request->user()->enrolled;
     }
 
     /**
@@ -46,12 +57,22 @@ class CoursesController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $course = Course::findOrFail($id);
+        $user = $request->user();
+
+        if ($course->user_id === $user->id || in_array($id, $user->enrolled->pluck('id')->toArray())) {
+            return $course;
+        }
+
+        return response()->json([
+            'error' => trans('auth.unauthorized'),
+        ], 401);
     }
 
     /**
