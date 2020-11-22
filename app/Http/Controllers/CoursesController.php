@@ -97,4 +97,39 @@ class CoursesController extends Controller
             'error' => trans('messages.general_error'),
         ], 422);
     }
+
+    /**
+     * Upload the course cover.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function upload(Request $request, $id)
+    {
+        $request->validate([
+            'cover' => 'file|mimes:jpeg,png|max:3000',
+        ]);
+
+        $user = $request->user();
+        $course = Course::where('user_id', $user->id)->findOrFail($id);
+        $cover = '';
+
+        if ($course->cover) {
+            $file = str_replace('courses/', '', $course->cover);
+            $cover = $request->file('cover')->storePubliclyAs('courses', $file, 'public');
+        } else {
+            $cover = $request->file('cover')->storePublicly('courses', 'public');
+        }
+
+        if ($course->update(['cover' => $cover])) {
+            return response()->json([
+                'cover' => $cover,
+                'message' => trans('messages.general_create'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
+    }
 }

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\CoursesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UsersController;
 
@@ -26,4 +25,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::put('/users', [UsersController::class, 'update']);
     Route::delete('/logout', [UsersController::class, 'logout']);
     Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
+    Route::post('/courses/{id}/upload', [CoursesController::class, 'upload']);
 });
