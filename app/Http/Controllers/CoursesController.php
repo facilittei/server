@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EnrollMany;
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
 use Illuminate\Http\Request;
@@ -131,5 +132,23 @@ class CoursesController extends Controller
         return response()->json([
             'error' => trans('messages.general_error'),
         ], 422);
+    }
+
+    /**
+     * Enroll a list of users sent by file
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function enrollMany(Request $request, $id)
+    {
+        $request->validate([
+            'attach' => 'file|mimes:txt,csv|max:512',
+        ]);
+
+        $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
+        $records = explode(PHP_EOL, file_get_contents($request->file('attach')));
+        event(new EnrollMany($course, $records));
     }
 }

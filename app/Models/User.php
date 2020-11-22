@@ -61,4 +61,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Course::class);
     }
+
+    /**
+     * The enrolled courses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function enrolled()
+    {
+        return $this->belongsToMany(Course::class);
+    }
 }
