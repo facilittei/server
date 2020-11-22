@@ -172,4 +172,22 @@ class CoursesController extends Controller
         $records = explode(PHP_EOL, file_get_contents($request->file('attach')));
         event(new EnrollMany($course, $records));
     }
+
+    /**
+     * Annul the specified resource from course.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function annul(Request $request, $id)
+    {
+        $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
+
+        if ($course->students()->detach($request->input('user_id'))) {
+            return response()->json(['message' => trans('messages.general_destroy')]);
+        }
+
+        return response()->json(['message' => trans('messages.general_error')], 422);
+    }
 }
