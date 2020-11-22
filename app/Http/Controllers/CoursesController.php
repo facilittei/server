@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Events\EnrollMany;
 use App\Http\Requests\CourseRequest;
+use App\Mail\CourseEnrollManyMail;
+use App\Mail\UserConfirmationMail;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class CoursesController extends Controller
 {
@@ -171,6 +176,8 @@ class CoursesController extends Controller
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
         $records = explode(PHP_EOL, file_get_contents($request->file('attach')));
         event(new EnrollMany($course, $records));
+
+        return response()->json(['message' => trans('messages.queue_enroll_many')]);
     }
 
     /**
@@ -183,12 +190,22 @@ class CoursesController extends Controller
     public function enroll(Request $request, $id)
     {
         $request->validate([
-            'user_id' => 'required|numeric',
+            'name' => 'required',
+            'email' => 'required|email',
         ]);
 
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
+        $student = User::where('email', $request->input('email'))->first();
 
-        if ($course->students()->sync($request->input('user_id'))) {
+        if(!$student) {
+            $req = $request->all();
+            $req['password'] = bcrypt(Str::random(10));
+            $student = User::create($req);
+            Mail::to($student->email)->queue(new UserConfirmationMail($student));
+        }
+
+        if ($course->students()->sync($student->id)) {
+            Mail::to($student->email)->queue(new CourseEnrollManyMail($course, $student));
             return response()->json(['message' => trans('messages.general_success')]);
         }
 

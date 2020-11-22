@@ -11,6 +11,9 @@ return [
     |
     */
 
-    'email_confirmation_subject' => 'Please confirm your email address',
+    'confirmation_subject' => 'Please confirm your email address',
+    'course_subject' => 'You are in! Lets begin our study journey',
+    'course_welcome' => 'We are really glad to have you here',
+    'course_info' => 'Here is the course you\'ve been subscribed',
 
 ];

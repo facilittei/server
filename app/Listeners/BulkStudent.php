@@ -3,8 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\EnrollMany;
+use App\Mail\CourseEnrollManyMail;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class BulkStudent implements ShouldQueue
@@ -22,9 +24,11 @@ class BulkStudent implements ShouldQueue
             $user = explode(',', $event->records[$i]);
             if (count($user) == 2) {
                 list($name, $email) = $user;
-                $isUser = User::where('email', $email)->select('id')->first();
+                $userDB = null;
+                $isUser = User::where('email', $email)->select('id', 'name', 'email')->first();
                 if ($isUser) {
                     $students[] = $isUser->id;
+                    $userDB = $isUser;
                 } else {
                     $newUser = User::create([
                         'name' => $name,
@@ -32,7 +36,9 @@ class BulkStudent implements ShouldQueue
                         'password' => bcrypt(Str::random(10)),
                     ]);
                     $students[] = $newUser->id;
+                    $userDB = $newUser;
                 }
+                Mail::to($userDB->email)->queue(new CourseEnrollManyMail($event->course, $userDB));
             }
         }
         $event->course->students()->sync($students);
