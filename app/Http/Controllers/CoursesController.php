@@ -71,7 +71,7 @@ class CoursesController extends Controller
         $course = Course::findOrFail($id);
         $user = $request->user();
 
-        if ($course->user_id === $user->id || in_array($id, $user->enrolled->pluck('id')->toArray())) {
+        if($user->can('view', $course)) {
             return $course;
         }
 

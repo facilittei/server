@@ -42,4 +42,14 @@ class Course extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    /**
+     * The chapters.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class)->orderBy('position');
+    }
 }

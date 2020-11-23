@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChaptersController;
 use App\Http\Controllers\CoursesController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UsersController;
@@ -24,6 +25,8 @@ Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset')
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::put('/users', [UsersController::class, 'update']);
     Route::delete('/logout', [UsersController::class, 'logout']);
+    Route::get('/courses/{course_id}/chapters', [ChaptersController::class, 'index']);
+    Route::resource('/chapters', ChaptersController::class)->except(['index', 'create', 'edit']);
     Route::get('/courses/enrolled', [CoursesController::class, 'enrolled']);
     Route::post('/courses/{id}/upload', [CoursesController::class, 'upload']);
     Route::post('/courses/{id}/enroll-many', [CoursesController::class, 'enrollMany']);
