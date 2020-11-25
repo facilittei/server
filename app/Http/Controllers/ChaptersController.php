@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChapterRequest;
 use App\Models\Chapter;
 use App\Models\Course;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChaptersController extends Controller
 {
@@ -111,6 +113,49 @@ class ChaptersController extends Controller
             return response()->json([
                 'chapter' => $chapter,
                 'message' => trans('messages.general_destroy'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
+    }
+
+    /**
+     * Reorder the course chapters resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $course_id
+     * @return \Illuminate\Http\Response
+     */
+    public function reorder(Request $request, $course_id)
+    {
+        $req = $request->all();
+        $user = $request->user();
+        $course = Course::where('user_id', $user->id)->findOrFail($course_id);
+        $table = Chapter::getModel()->getTable();
+
+        $cases = [];
+        $ids = [];
+        $params = [];
+
+        $position = 0;
+        foreach ($req['chapters'] as $id) {
+            $position++;
+            $id = (int) $id;
+            $cases[] = "WHEN {$id} THEN {$position}";
+            $ids[] = $id;
+        }
+
+        $ids = implode(',', $ids);
+        $cases = implode(' ', $cases);
+        $params[] = Carbon::now();
+
+        $res = DB::update("UPDATE `{$table}` SET `position` = CASE `id` {$cases} END, `updated_at` = ? WHERE `id` in ({$ids})", $params);
+
+        if ($res) {
+            return response()->json([
+                'message' => trans('messages.general_update'),
             ]);
         }
 
