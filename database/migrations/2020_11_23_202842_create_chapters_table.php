@@ -20,6 +20,7 @@ class CreateChaptersTable extends Migration
             $table->text('description')->nullable();
             $table->integer('position');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('course_id')
                   ->references('id')

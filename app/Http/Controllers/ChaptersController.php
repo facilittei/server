@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChapterRequest;
 use App\Models\Chapter;
 use App\Models\Course;
 use Illuminate\Http\Request;
@@ -28,9 +29,26 @@ class ChaptersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ChapterRequest $request)
     {
-        //
+        $req = $request->all();
+        $user = $request->user();
+        $course = Course::where('user_id', $user->id)->findOrFail($req['course_id']);
+
+        $chapters = $course->chapters;
+        $req['position'] = count($chapters) > 0 ? ($chapters[count($chapters) - 1])['position'] + 1 : 1;
+        $chapter = $course->chapters()->create($req);
+
+        if ($chapter) {
+            return response()->json([
+                'chapter' => $chapter,
+                'message' => trans('messages.general_create'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**
@@ -57,17 +75,47 @@ class ChaptersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $req = $request->all();
+        $user = $request->user();
+        $course = Course::where('user_id', $user->id)->findOrFail($req['course_id']);
+
+        $chapter = Chapter::where('course_id', $course->id)->findOrFail($id);
+
+        if ($chapter->update($req)) {
+            return response()->json([
+                'chapter' => $chapter,
+                'message' => trans('messages.general_update'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $req = $request->all();
+        $user = $request->user();
+        $course = Course::where('user_id', $user->id)->findOrFail($req['course_id']);
+        $chapter = Chapter::where('course_id', $course->id)->findOrFail($id);
+
+        if ($chapter->delete()) {
+            return response()->json([
+                'chapter' => $chapter,
+                'message' => trans('messages.general_destroy'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 }
