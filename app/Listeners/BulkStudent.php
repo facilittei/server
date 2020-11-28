@@ -41,6 +41,6 @@ class BulkStudent implements ShouldQueue
                 Mail::to($userDB->email)->queue(new CourseEnrollManyMail($event->course, $userDB));
             }
         }
-        $event->course->students()->sync($students);
+        $event->course->students()->syncWithoutDetaching($students);
     }
 }
