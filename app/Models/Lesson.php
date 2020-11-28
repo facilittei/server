@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Chapter extends Model
+class Lesson extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -16,29 +16,19 @@ class Chapter extends Model
      * @var array
      */
     protected $fillable = [
-        'course_id',
+        'chapter_id',
         'title',
         'description',
-        'position',
+        'duration',
     ];
 
     /**
-     * The course.
+     * The chapter.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function course()
+    public function chapter()
     {
-        return $this->belongsTo(Course::class);
-    }
-
-    /**
-     * The lessons.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class);
+        return $this->belongsTo(Chapter::class);
     }
 }

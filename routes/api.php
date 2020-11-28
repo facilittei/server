@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChaptersController;
 use App\Http\Controllers\CoursesController;
+use App\Http\Controllers\LessonsController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UsersController;
 
@@ -35,4 +36,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/courses/{id}/enroll', [CoursesController::class, 'enroll']);
     Route::delete('/courses/{id}/annul', [CoursesController::class, 'annul']);
     Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
+    Route::resource('/chapters/{chapter_id}/lessons', LessonsController::class)->except(['create', 'edit']);
 });
