@@ -71,7 +71,7 @@ class CoursesController extends Controller
         $course = Course::findOrFail($id);
         $user = $request->user();
 
-        if($user->can('view', $course)) {
+        if ($user->can('view', $course)) {
             return $course;
         }
 
@@ -197,14 +197,14 @@ class CoursesController extends Controller
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
         $student = User::where('email', $request->input('email'))->first();
 
-        if(!$student) {
+        if (!$student) {
             $req = $request->all();
             $req['password'] = bcrypt(Str::random(10));
             $student = User::create($req);
             Mail::to($student->email)->queue(new UserConfirmationMail($student));
         }
 
-        if ($course->students()->sync($student->id)) {
+        if ($course->students()->syncWithoutDetaching($student->id)) {
             Mail::to($student->email)->queue(new CourseEnrollManyMail($course, $student));
             return response()->json(['message' => trans('messages.general_success')]);
         }
@@ -228,5 +228,18 @@ class CoursesController extends Controller
         }
 
         return response()->json(['message' => trans('messages.general_error')], 422);
+    }
+
+    /**
+     * Display a listing of the resource (teacher).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function students(Request $request, $id)
+    {
+        $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
+        return $course->students;
     }
 }

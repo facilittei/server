@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/courses/{course_id}/chapters', [ChaptersController::class, 'index']);
     Route::resource('/chapters', ChaptersController::class)->except(['index', 'create', 'edit']);
     Route::get('/courses/enrolled', [CoursesController::class, 'enrolled']);
+    Route::get('/courses/{id}/students', [CoursesController::class, 'students']);
     Route::post('/courses/{id}/upload', [CoursesController::class, 'upload']);
     Route::post('/courses/{id}/enroll-many', [CoursesController::class, 'enrollMany']);
     Route::post('/courses/{id}/enroll', [CoursesController::class, 'enroll']);
