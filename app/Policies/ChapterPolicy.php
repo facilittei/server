@@ -22,4 +22,16 @@ class ChapterPolicy
         return $user->id === $chapter->course->user_id
             || in_array($chapter->course->id, $user->enrolled->pluck('id')->toArray());
     }
+
+    /**
+     * Determine whether the user can update models.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Chapter  $chapter
+     * @return mixed
+     */
+    public function update(User $user, Chapter $chapter)
+    {
+        return $user->id === $chapter->course->user_id;
+    }
 }

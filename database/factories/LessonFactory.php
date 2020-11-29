@@ -26,6 +26,7 @@ class LessonFactory extends Factory
             'title' => $this->faker->sentence(3),
             'description' => implode(' ', $this->faker->sentences(3)),
             'duration' => $this->faker->time(),
+            'position' => random_int(1, 100),
         ];
     }
 }

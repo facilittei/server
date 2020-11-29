@@ -20,6 +20,10 @@ class Lesson extends Model
         'title',
         'description',
         'duration',
+        'video',
+        'audio',
+        'doc',
+        'position',
     ];
 
     /**
