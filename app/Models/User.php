@@ -71,4 +71,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class);
     }
+
+    /**
+     * The watched.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function watched()
+    {
+        return $this->belongsToMany(Lesson::class);
+    }
 }

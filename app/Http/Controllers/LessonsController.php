@@ -195,4 +195,36 @@ class LessonsController extends Controller
             'error' => trans('auth.unauthorized'),
         ], 401);
     }
+
+    /**
+     * Lessons has been watched.
+     *
+     * @param  \App\Http\Requests\Request;
+     * @param  int  $chapter_id
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function watched(Request $request, $chapter_id, $id)
+    {
+        $chapter = Chapter::findOrFail($chapter_id);
+
+        if ($request->user()->can('view', $chapter)) {
+            $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
+
+            if ($request->user()->watched()->toggle($lesson)) {
+                return response()->json([
+                    'lesson' => $lesson,
+                    'message' => trans('messages.general_update'),
+                ]);
+            }
+
+            return response()->json([
+                'error' => trans('messages.general_error'),
+            ], 422);
+        }
+
+        return response()->json([
+            'error' => trans('auth.unauthorized'),
+        ], 401);
+    }
 }
