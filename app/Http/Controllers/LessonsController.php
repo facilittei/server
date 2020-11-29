@@ -72,8 +72,15 @@ class LessonsController extends Controller
     {
         $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
 
+        $previous = Lesson::where('id', '<', $lesson->id)->max('id');
+        $next = Lesson::where('id', '>', $lesson->id)->min('id');
+
         if ($request->user()->can('view', $lesson)) {
-            return $lesson;
+            return response()->json([
+                'previous' => $previous,
+                'current' => $lesson,
+                'next' => $next,
+            ]);
         }
     }
 
