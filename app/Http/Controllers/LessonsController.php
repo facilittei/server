@@ -22,7 +22,15 @@ class LessonsController extends Controller
     {
         $chapter = Chapter::findOrFail($chapter_id);
         if ($request->user()->can('view', $chapter)) {
-            return $chapter->lessons;
+            $user = $request->user();
+            $lessons = $chapter->lessons;
+            $lessonsId = $lessons->pluck('id')->toArray();
+
+            return response()->json([
+                'lessons' => $lessons,
+                'watched' => $user->watched->whereIn('id', $lessonsId)->pluck('id')->all(),
+                'favorited' => $user->favorited->whereIn('id', $lessonsId)->pluck('id')->all(),
+            ]);
         }
     }
 
@@ -76,10 +84,14 @@ class LessonsController extends Controller
         $next = Lesson::where('id', '>', $lesson->id)->min('id');
 
         if ($request->user()->can('view', $lesson)) {
+            $user = $request->user();
+
             return response()->json([
                 'previous' => $previous,
                 'current' => $lesson,
                 'next' => $next,
+                'watched' => $user->watched->where('id', $id)->pluck('id')->first(),
+                'favorited' => $user->favorited->where('id', $id)->pluck('id')->first(),
             ]);
         }
     }
@@ -212,6 +224,38 @@ class LessonsController extends Controller
             $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
 
             if ($request->user()->watched()->toggle($lesson)) {
+                return response()->json([
+                    'lesson' => $lesson,
+                    'message' => trans('messages.general_update'),
+                ]);
+            }
+
+            return response()->json([
+                'error' => trans('messages.general_error'),
+            ], 422);
+        }
+
+        return response()->json([
+            'error' => trans('auth.unauthorized'),
+        ], 401);
+    }
+
+    /**
+     * Lessons has been favorited.
+     *
+     * @param  \App\Http\Requests\Request;
+     * @param  int  $chapter_id
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function favorited(Request $request, $chapter_id, $id)
+    {
+        $chapter = Chapter::findOrFail($chapter_id);
+
+        if ($request->user()->can('view', $chapter)) {
+            $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
+
+            if ($request->user()->favorited()->toggle($lesson)) {
                 return response()->json([
                     'lesson' => $lesson,
                     'message' => trans('messages.general_update'),

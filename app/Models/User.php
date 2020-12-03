@@ -79,6 +79,16 @@ class User extends Authenticatable
      */
     public function watched()
     {
-        return $this->belongsToMany(Lesson::class);
+        return $this->belongsToMany(Lesson::class)->withTimestamps();
+    }
+
+    /**
+     * The favorited.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function favorited()
+    {
+        return $this->belongsToMany(Lesson::class, 'favorite_lesson')->withTimestamps();
     }
 }
