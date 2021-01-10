@@ -24,6 +24,7 @@ Route::post('/recover', [UsersController::class, 'recover']);
 Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+    Route::get('/users', [UsersController::class, 'show']);
     Route::put('/users', [UsersController::class, 'update']);
     Route::delete('/logout', [UsersController::class, 'logout']);
     Route::patch('/courses/{course_id}/chapters/reorder', [ChaptersController::class, 'reorder']);

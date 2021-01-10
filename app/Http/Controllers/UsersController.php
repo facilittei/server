@@ -170,4 +170,17 @@ class UsersController extends Controller
             'error' => trans('messages.general_error'),
         ], 401);
     }
+
+    /**
+     * Get user info.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        $user = $request->user();
+
+        return response()->json(['user' => $user]);
+    }
 }
