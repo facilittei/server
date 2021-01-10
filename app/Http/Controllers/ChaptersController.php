@@ -150,8 +150,9 @@ class ChaptersController extends Controller
         $ids = implode(',', $ids);
         $cases = implode(' ', $cases);
         $params[] = Carbon::now();
+        $params[] = $course_id;
 
-        $res = DB::update("UPDATE `{$table}` SET `position` = CASE `id` {$cases} END, `updated_at` = ? WHERE `id` in ({$ids})", $params);
+        $res = DB::update("UPDATE `{$table}` SET `position` = CASE `id` {$cases} END, `updated_at` = ? WHERE `id` IN ({$ids}) AND course_id = ?", $params);
 
         if ($res) {
             return response()->json([

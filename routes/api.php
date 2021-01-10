@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChaptersController;
 use App\Http\Controllers\CoursesController;
+use App\Http\Controllers\LessonsController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\UsersController;
 
@@ -23,6 +24,7 @@ Route::post('/recover', [UsersController::class, 'recover']);
 Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+    Route::get('/users', [UsersController::class, 'show']);
     Route::put('/users', [UsersController::class, 'update']);
     Route::delete('/logout', [UsersController::class, 'logout']);
     Route::patch('/courses/{course_id}/chapters/reorder', [ChaptersController::class, 'reorder']);
@@ -35,4 +37,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/courses/{id}/enroll', [CoursesController::class, 'enroll']);
     Route::delete('/courses/{id}/annul', [CoursesController::class, 'annul']);
     Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
+    Route::post('/chapters/{chapter_id}/lessons/{id}/favorited', [LessonsController::class, 'favorited']);
+    Route::post('/chapters/{chapter_id}/lessons/{id}/watched', [LessonsController::class, 'watched']);
+    Route::patch('/chapters/{chapter_id}/lessons/reorder', [LessonsController::class, 'reorder']);
+    Route::resource('/chapters/{chapter_id}/lessons', LessonsController::class)->except(['create', 'edit']);
 });

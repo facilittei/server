@@ -31,4 +31,14 @@ class Chapter extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    /**
+     * The lessons.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class)->orderBy('position');
+    }
 }

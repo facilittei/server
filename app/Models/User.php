@@ -71,4 +71,24 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class);
     }
+
+    /**
+     * The watched.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function watched()
+    {
+        return $this->belongsToMany(Lesson::class)->withTimestamps();
+    }
+
+    /**
+     * The favorited.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function favorited()
+    {
+        return $this->belongsToMany(Lesson::class, 'favorite_lesson')->withTimestamps();
+    }
 }
