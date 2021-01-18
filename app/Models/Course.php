@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Course extends Model
 {
@@ -51,5 +52,17 @@ class Course extends Model
     public function chapters()
     {
         return $this->hasMany(Chapter::class)->orderBy('position');
+    }
+
+    /**
+     * Set the slug by title.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
     }
 }
