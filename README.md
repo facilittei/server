@@ -2,8 +2,14 @@
 
 ## Docker
 
-### MySQL
+```
+docker-compose up -d
+```
+
+### Database
+
+It will create and populate the tables
 
 ```
-docker run --name mysqldb -e MYSQL_ROOT_PASSWORD=4321 -d mysql:5.7
+docker-compose exec app php artisan migrate:fresh --seed
 ```
