@@ -9,6 +9,7 @@ use App\Mail\UserConfirmationMail;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -241,5 +242,38 @@ class CoursesController extends Controller
     {
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
         return $course->students;
+    }
+
+    /**
+     * Course favorited lessons.
+     *
+     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function favorites(Request $request, $id)
+    {
+        $course = Course::findOrFail($id);
+        $user = $request->user();
+
+        if ($user->can('view', $course)) {
+            return DB::table('lessons')
+                ->join('favorite_lesson', 'lessons.id', '=', 'favorite_lesson.lesson_id')
+                ->join('chapters', 'chapters.id', '=', 'lessons.chapter_id')
+                ->join('courses', 'courses.id', '=', 'chapters.course_id')
+                ->where('favorite_lesson.user_id', '=', $user->id)
+                ->where('courses.id', '=', $course->id)
+                ->select(
+                    'lessons.id as lesson_id',
+                    'lessons.title as lesson_title',
+                    'chapters.id as chapter_id',
+                    'chapters.title as chapter_title',
+                )
+                ->get();
+        }
+
+        return response()->json([
+            'error' => trans('auth.unauthorized'),
+        ], 401);
     }
 }
