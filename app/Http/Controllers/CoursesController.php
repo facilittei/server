@@ -257,7 +257,7 @@ class CoursesController extends Controller
         $user = $request->user();
 
         if ($user->can('view', $course)) {
-            return DB::table('lessons')
+            $result = DB::table('lessons')
                 ->join('favorite_lesson', 'lessons.id', '=', 'favorite_lesson.lesson_id')
                 ->join('chapters', 'chapters.id', '=', 'lessons.chapter_id')
                 ->join('courses', 'courses.id', '=', 'chapters.course_id')
@@ -270,6 +270,20 @@ class CoursesController extends Controller
                     'chapters.title as chapter_title',
                 )
                 ->get();
+
+            $lessons = [];
+            foreach ($result as $res) {
+                $lessons[] = [
+                    'id' => $res->lesson_id,
+                    'title' => $res->lesson_title,
+                    'chapter' => [
+                        'id' => $res->chapter_id,
+                        'title' => $res->chapter_title,
+                    ],
+                ];
+            }
+
+            return $lessons;
         }
 
         return response()->json([
