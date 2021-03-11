@@ -38,6 +38,16 @@ class Lesson extends Model
     }
 
     /**
+     * The comments.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
      * Set the lesson's audio.
      *
      * @param  string  $value

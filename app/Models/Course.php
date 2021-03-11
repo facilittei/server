@@ -55,6 +55,16 @@ class Course extends Model
     }
 
     /**
+     * The comments.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
      * Set the slug by title.
      *
      * @param  string  $value

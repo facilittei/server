@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Chapter;
+use App\Models\Comment;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\User;
@@ -21,5 +22,6 @@ class DatabaseSeeder extends Seeder
         Course::factory(30)->create();
         Chapter::factory(30)->create();
         Lesson::factory(100)->create();
+        Comment::factory(150)->create();
     }
 }
