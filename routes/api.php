@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChaptersController;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\LessonsController;
 use Illuminate\Support\Facades\Route;
@@ -42,4 +43,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/chapters/{chapter_id}/lessons/{id}/watched', [LessonsController::class, 'watched']);
     Route::patch('/chapters/{chapter_id}/lessons/reorder', [LessonsController::class, 'reorder']);
     Route::resource('/chapters/{chapter_id}/lessons', LessonsController::class)->except(['create', 'edit']);
+    Route::resource('/lessons/{lesson_id}/comments', CommentsController::class)->except(['show', 'create', 'edit']);
 });

@@ -6,6 +6,12 @@
 docker-compose up -d
 ```
 
+### Setup
+
+```
+docker-compose exec app composer install
+```
+
 ### Database
 
 It will create and populate the tables
