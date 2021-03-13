@@ -64,7 +64,7 @@ class ChaptersController extends Controller
     {
         $chapter = Chapter::findOrFail($id);
         if ($request->user()->can('view', $chapter)) {
-            return $chapter;
+            return $chapter->load('lessons');
         }
     }
 
