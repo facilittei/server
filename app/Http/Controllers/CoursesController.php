@@ -73,7 +73,7 @@ class CoursesController extends Controller
         $user = $request->user();
 
         if ($user->can('view', $course)) {
-            return $course;
+            return $course->load('chapters');
         }
 
         return response()->json([
