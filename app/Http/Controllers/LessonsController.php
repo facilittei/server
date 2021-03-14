@@ -27,6 +27,14 @@ class LessonsController extends Controller
             $lessonsId = $lessons->pluck('id')->toArray();
 
             return response()->json([
+                'course' => [
+                    'id' => $chapter->course->id,
+                    'title' => $chapter->course->title,
+                ],
+                'chapter' => [
+                    'id' => $chapter->id,
+                    'title' => $chapter->title,
+                ],
                 'lessons' => $lessons,
                 'watched' => $user->watched->whereIn('id', $lessonsId)->pluck('id')->all(),
                 'favorited' => $user->favorited->whereIn('id', $lessonsId)->pluck('id')->all(),

@@ -91,4 +91,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Lesson::class, 'favorite_lesson')->withTimestamps();
     }
+
+    /**
+     * The comments.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
