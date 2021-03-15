@@ -2,7 +2,7 @@
 
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-Howdy!
+{{ trans('ui.hi') }}
 @endcomponent
 @endslot
 
@@ -12,7 +12,7 @@ Howdy!
 
 @slot('footer')
 @component('mail::footer')
-Thanks, {{ config('app.name') }}
+{{ trans('ui.thanks') }}, {{ config('app.name') }}
 @endcomponent
 @endslot
 
