@@ -2,7 +2,7 @@
 
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-Welcome!
+{{ trans('ui.welcome') }}!
 @endcomponent
 @endslot
 
@@ -14,17 +14,17 @@ Welcome!
 
 @slot('subcopy')
 @component('mail::subcopy')
-<a href="{{ url('/verify/' . $verification) }}">{{ url('/verify/' . $verification) }}</a>
+<a href="{{ config('app.client_url') . '/verify/' . $verification }}">{{ config('app.client_url') . '/verify/' . $verification }}</a>
 @endcomponent
 @endslot
 
-@component('mail::button', ['url' => url($verification)])
+@component('mail::button', ['url' => config('app.client_url') . '/verify/' . $verification])
 {{ trans('ui.confirm') }}
 @endcomponent
 
 @slot('footer')
 @component('mail::footer')
-Thanks, {{ config('app.name') }}
+{{ trans('ui.thanks') }}, {{ config('app.name') }}
 @endcomponent
 @endslot
 

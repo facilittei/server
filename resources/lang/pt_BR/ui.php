@@ -11,9 +11,9 @@ return [
     |
     */
 
-    'confirm' => 'Confirm',
-    'welcome' => 'Welcome',
-    'thanks' => 'Thanks',
-    'hi' => 'Howdy',
+    'confirm' => 'Confirmar',
+    'welcome' => 'Bem vindo',
+    'thanks' => 'Obrigado',
+    'hi' => 'Olá',
 
 ];
