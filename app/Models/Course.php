@@ -75,4 +75,16 @@ class Course extends Model
         $this->attributes['title'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    /**
+     * Get the cover image URL.
+     *
+     * @return string
+     */
+    public function getCoverAttribute()
+    {
+        if ($this->attributes['cover']) {
+            return url('storage/' . $this->attributes['cover']);
+        }
+    }
 }
