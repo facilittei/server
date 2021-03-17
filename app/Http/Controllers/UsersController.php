@@ -51,7 +51,7 @@ class UsersController extends Controller
 
         if (!$user || !Hash::check($req['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => [trans('passwords.failed')],
+                'email' => [trans('auth.failed')],
             ]);
         }
 
