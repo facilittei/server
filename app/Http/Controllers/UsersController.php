@@ -51,7 +51,13 @@ class UsersController extends Controller
 
         if (!$user || !Hash::check($req['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => [trans('passwords.user')],
+                'email' => [trans('passwords.failed')],
+            ]);
+        }
+
+        if (!$user->email_verified_at) {
+            throw ValidationException::withMessages([
+                'email' => [trans('auth.email_not_confirmed')],
             ]);
         }
 
