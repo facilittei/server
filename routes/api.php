@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/courses/{id}/enroll', [CoursesController::class, 'enroll']);
     Route::delete('/courses/{id}/annul', [CoursesController::class, 'annul']);
     Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
+    Route::get('/lessons/search', [LessonsController::class, 'search']);
     Route::post('/chapters/{chapter_id}/lessons/{id}/favorited', [LessonsController::class, 'favorited']);
     Route::post('/chapters/{chapter_id}/lessons/{id}/watched', [LessonsController::class, 'watched']);
     Route::patch('/chapters/{chapter_id}/lessons/reorder', [LessonsController::class, 'reorder']);

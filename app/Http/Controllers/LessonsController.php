@@ -279,4 +279,34 @@ class LessonsController extends Controller
             'error' => trans('auth.unauthorized'),
         ], 401);
     }
+
+    /**
+     * Search user related lessons.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $user = $request->user();
+        $result = DB::table('lessons')
+            ->join('chapters', 'chapters.id', '=', 'lessons.chapter_id')
+            ->join('courses', 'courses.id', '=', 'chapters.course_id')
+            ->leftJoin('course_user', 'courses.id', '=', 'course_user.course_id')
+            ->where('lessons.title', 'like', '%' . $request->input('q') . '%')
+            ->where(function ($query) use ($user) {
+                $query->where('course_user.user_id', '=', $user->id)
+                    ->orWhere('courses.user_id', '=', $user->id);
+            })
+            ->distinct()
+            ->select(
+                'lessons.id as lesson_id',
+                'lessons.title as lesson_title',
+                'chapters.id as chapter_id',
+                'chapters.title as chapter_title',
+            )
+            ->paginate();
+
+        return Lesson::formatResultWithChapter($result);
+    }
 }
