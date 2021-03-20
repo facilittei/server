@@ -88,4 +88,26 @@ class Lesson extends Model
 
         return $url;
     }
+
+    /**
+     * Format lesson with a chapter on top of a query result.
+     *
+     * @param array $result
+     * @return array
+     */
+    public static function formatResultWithChapter($result)
+    {
+        $lessons = [];
+        foreach ($result as $res) {
+            $lessons[] = [
+                'id' => $res->lesson_id,
+                'title' => $res->lesson_title,
+                'chapter' => [
+                    'id' => $res->chapter_id,
+                    'title' => $res->chapter_title,
+                ],
+            ];
+        }
+        return $lessons;
+    }
 }

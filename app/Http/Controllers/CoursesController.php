@@ -7,6 +7,7 @@ use App\Http\Requests\CourseRequest;
 use App\Mail\CourseEnrollManyMail;
 use App\Mail\UserConfirmationMail;
 use App\Models\Course;
+use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -271,19 +272,7 @@ class CoursesController extends Controller
                 )
                 ->get();
 
-            $lessons = [];
-            foreach ($result as $res) {
-                $lessons[] = [
-                    'id' => $res->lesson_id,
-                    'title' => $res->lesson_title,
-                    'chapter' => [
-                        'id' => $res->chapter_id,
-                        'title' => $res->chapter_title,
-                    ],
-                ];
-            }
-
-            return $lessons;
+            return Lesson::formatResultWithChapter($result);
         }
 
         return response()->json([
