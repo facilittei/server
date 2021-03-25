@@ -22,6 +22,7 @@ class Course extends Model
         'slug',
         'description',
         'cover',
+        'is_draft',
     ];
 
     /**

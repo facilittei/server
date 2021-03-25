@@ -25,6 +25,7 @@ class Lesson extends Model
         'audio',
         'doc',
         'position',
+        'is_draft',
     ];
 
     /**
