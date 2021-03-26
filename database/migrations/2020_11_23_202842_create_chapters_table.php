@@ -19,6 +19,7 @@ class CreateChaptersTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('position');
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
             $table->softDeletes();
 

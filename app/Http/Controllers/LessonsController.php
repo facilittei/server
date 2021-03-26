@@ -23,7 +23,12 @@ class LessonsController extends Controller
         $chapter = Chapter::findOrFail($chapter_id);
         if ($request->user()->can('view', $chapter)) {
             $user = $request->user();
-            $lessons = $chapter->lessons;
+            if ($user->id === $chapter->course->user_id) {
+                $lessons = $chapter->lessons;
+            } else {
+                $lessons = Lesson::where('chapter_id', $chapter->id)->where('is_published', true)->get();
+            }
+
             $lessonsId = $lessons->pluck('id')->toArray();
 
             return response()->json([
@@ -88,11 +93,14 @@ class LessonsController extends Controller
     {
         $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
 
-        $previous = Lesson::where('id', '<', $lesson->id)->max('id');
-        $next = Lesson::where('id', '>', $lesson->id)->min('id');
-
         if ($request->user()->can('view', $lesson)) {
             $user = $request->user();
+            $previous = Lesson::where('id', '<', $lesson->id)->where('chapter_id', $lesson->chapter->id)->max('id');
+            $next = Lesson::where('id', '>', $lesson->id)->where('chapter_id', $lesson->chapter->id)->min('id');
+
+            if (($user->id !== $lesson->chapter->course->user_id) && !$lesson->is_published) {
+                return response()->json(['message' => trans('messages.not_published')]);
+            }
 
             return response()->json([
                 'previous' => $previous,

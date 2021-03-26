@@ -20,6 +20,7 @@ class Chapter extends Model
         'title',
         'description',
         'position',
+        'is_published',
     ];
 
     /**

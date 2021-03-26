@@ -20,6 +20,7 @@ class CreateCoursesTable extends Migration
             $table->string('slug');
             $table->text('description')->nullable();
             $table->text('cover')->nullable();
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
             $table->softDeletes();
 

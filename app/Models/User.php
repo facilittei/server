@@ -69,7 +69,7 @@ class User extends Authenticatable
      */
     public function enrolled()
     {
-        return $this->belongsToMany(Course::class);
+        return $this->belongsToMany(Course::class)->where('is_published', true);
     }
 
     /**

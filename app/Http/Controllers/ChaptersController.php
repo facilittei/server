@@ -21,8 +21,16 @@ class ChaptersController extends Controller
     {
         $course = Course::findOrFail($course_id);
         if ($request->user()->can('view', $course)) {
-            return $course->chapters;
+            if ($request->user()->id === $course->user_id) {
+                return $course->chapters;
+            } else {
+                return Chapter::where('course_id', $course->id)->where('is_published', true)->get();
+            }
         }
+
+        return response()->json([
+            'error' => trans('auth.unauthorized'),
+        ], 401);
     }
 
     /**
@@ -63,7 +71,12 @@ class ChaptersController extends Controller
     public function show(Request $request, $id)
     {
         $chapter = Chapter::findOrFail($id);
-        if ($request->user()->can('view', $chapter)) {
+        $user = $request->user();
+        if ($user->can('view', $chapter)) {
+            if (($user->id !== $chapter->course->user_id) && !$chapter->is_published) {
+                return response()->json(['message' => trans('messages.not_published')]);
+            }
+
             return $chapter->load('lessons');
         }
     }

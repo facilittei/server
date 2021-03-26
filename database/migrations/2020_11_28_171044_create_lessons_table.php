@@ -23,6 +23,7 @@ class CreateLessonsTable extends Migration
             $table->string('audio')->nullable();
             $table->string('doc')->nullable();
             $table->integer('position');
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
