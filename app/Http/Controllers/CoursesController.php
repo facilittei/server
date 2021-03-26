@@ -74,6 +74,10 @@ class CoursesController extends Controller
         $user = $request->user();
 
         if ($user->can('view', $course)) {
+            if (($user->id !== $course->user_id) && !$course->is_published) {
+                return response()->json(['message' => trans('messages.not_published')]);
+            }
+
             return $course->load('chapters');
         }
 

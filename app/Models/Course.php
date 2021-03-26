@@ -22,7 +22,7 @@ class Course extends Model
         'slug',
         'description',
         'cover',
-        'is_draft',
+        'is_published',
     ];
 
     /**
@@ -42,7 +42,7 @@ class Course extends Model
      */
     public function students()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     /**
