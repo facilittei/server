@@ -49,48 +49,6 @@ class Lesson extends Model
     }
 
     /**
-     * Set the lesson's audio.
-     *
-     * @param  string  $value
-     * @return void
-     */
-    public function setAudioAttribute($value)
-    {
-        $this->attributes['audio'] = $this->setIframeURL($value);
-    }
-
-    /**
-     * Set the lesson's video.
-     *
-     * @param  string  $value
-     * @return void
-     */
-    public function setVideoAttribute($value)
-    {
-        $this->attributes['video'] = $this->setIframeURL($value);
-    }
-
-    /**
-     * Set attribute as iframe src.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    private function setIframeURL($value)
-    {
-        $dom = new DOMDocument();
-        $dom->loadHTML(str_replace('&', '&amp;', $value));
-        $iframe = $dom->getElementsByTagName('iframe');
-        $url = '';
-
-        if (count($iframe)) {
-            $url = html_entity_decode($iframe[0]->getAttribute('src'));
-        }
-
-        return $url;
-    }
-
-    /**
      * Format lesson with a chapter on top of a query result.
      *
      * @param array $result
