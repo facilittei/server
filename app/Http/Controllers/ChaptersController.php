@@ -20,12 +20,15 @@ class ChaptersController extends Controller
     public function index(Request $request, $course_id)
     {
         $course = Course::findOrFail($course_id);
+        $chapters = null;
         if ($request->user()->can('view', $course)) {
             if ($request->user()->id === $course->user_id) {
-                return $course->chapters;
+                $chapters = $course->chapters()->with('lessons')->get();
             } else {
-                return Chapter::where('course_id', $course->id)->where('is_published', true)->get();
+                $chapters = Chapter::published($course)->get();
             }
+
+            return response()->json(array_merge($course->toArray(), ['chapters' => $chapters]));
         }
 
         return response()->json([

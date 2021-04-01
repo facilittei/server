@@ -26,6 +26,15 @@ class Course extends Model
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'user_id',
+    ];
+
+    /**
      * The user (teacher).
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

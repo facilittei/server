@@ -42,4 +42,17 @@ class Chapter extends Model
     {
         return $this->hasMany(Lesson::class)->orderBy('position');
     }
+
+    /**
+     * Published lessons.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePublished($query, Course $course)
+    {
+        return $query->where('course_id', $course->id)
+            ->where('is_published', true)
+            ->with('lessons');
+    }
 }
