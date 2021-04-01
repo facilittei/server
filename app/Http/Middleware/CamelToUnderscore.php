@@ -56,10 +56,6 @@ class CamelToUnderscore
      */
     public function toUnderscore(?string $key): string
     {
-        if (!$key) {
-            return '';
-        }
-
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $key));
     }
 }
