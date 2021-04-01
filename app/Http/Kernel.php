@@ -63,5 +63,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         // 'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsValid::class,
+        'underscore' => \App\Http\Middleware\UnderscoreToCamel::class,
+        'camelcase' => \App\Http\Middleware\CamelToUnderscore::class,
     ];
 }
