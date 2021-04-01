@@ -84,10 +84,6 @@ class UnderscoreToCamel
      */
     public function toCamel(?string $key): string
     {
-        if (!$key) {
-            return '';
-        }
-
         return lcfirst(str_replace('_', '', ucwords($key, '_')));
     }
 }
