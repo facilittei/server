@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Comment;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -23,5 +24,6 @@ class DatabaseSeeder extends Seeder
         Chapter::factory(30)->create();
         Lesson::factory(100)->create();
         Comment::factory(150)->create();
+        Profile::factory(10)->create();
     }
 }
