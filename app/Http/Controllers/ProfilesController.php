@@ -54,22 +54,41 @@ class ProfilesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $user = $request->user();
+
+        if ($user->profile) {
+            if ($user->profile()->update($request->all())) {
+                return response()->json([
+                    'message' => trans('messages.general_update'),
+                ]);
+            }
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $user = $request->user();
+
+        if ($user->profile) {
+            if ($user->profile()->delete()) {
+                return response()->json([
+                    'message' => trans('messages.general_destroy'),
+                ]);
+            }
+        }
     }
 }

@@ -30,7 +30,9 @@ Route::group(['middleware' => ['locale']], function () {
         Route::get('/users', [UsersController::class, 'show']);
         Route::put('/users', [UsersController::class, 'update']);
         Route::get('/profiles', [ProfilesController::class, 'show']);
-        Route::resource('/profiles', ProfilesController::class)->except(['index', 'create', 'edit', 'show']);
+        Route::post('/profiles', [ProfilesController::class, 'store']);
+        Route::put('/profiles', [ProfilesController::class, 'update']);
+        Route::delete('/profiles', [ProfilesController::class, 'destroy']);
         Route::delete('/logout', [UsersController::class, 'logout']);
         Route::patch('/courses/{course_id}/chapters/reorder', [ChaptersController::class, 'reorder']);
         Route::get('/courses/{course_id}/chapters', [ChaptersController::class, 'index']);
