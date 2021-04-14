@@ -38,12 +38,16 @@ class ProfilesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $user = $request->user();
+
+        return response()->json([
+            'profile' => $user->profile,
+        ]);
     }
 
     /**

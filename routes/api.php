@@ -29,7 +29,8 @@ Route::group(['middleware' => ['locale']], function () {
     Route::group(['middleware' => ['auth:sanctum', 'verified', 'underscore', 'camelcase']], function () {
         Route::get('/users', [UsersController::class, 'show']);
         Route::put('/users', [UsersController::class, 'update']);
-        Route::resource('/profiles', ProfilesController::class)->except(['index', 'create', 'edit']);
+        Route::get('/profiles', [ProfilesController::class, 'show']);
+        Route::resource('/profiles', ProfilesController::class)->except(['index', 'create', 'edit', 'show']);
         Route::delete('/logout', [UsersController::class, 'logout']);
         Route::patch('/courses/{course_id}/chapters/reorder', [ChaptersController::class, 'reorder']);
         Route::get('/courses/{course_id}/chapters', [ChaptersController::class, 'index']);
