@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \App\Http\Middleware\EnsureEmailIsValid::class,
         'underscore' => \App\Http\Middleware\UnderscoreToCamel::class,
         'camelcase' => \App\Http\Middleware\CamelToUnderscore::class,
+        'locale' => \App\Http\Middleware\Locale::class,
     ];
 }
