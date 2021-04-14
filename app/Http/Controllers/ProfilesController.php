@@ -91,4 +91,38 @@ class ProfilesController extends Controller
             }
         }
     }
+
+    /**
+     * Upload the course cover.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'photo' => 'file|mimes:jpeg,png|max:3000',
+        ]);
+
+        $user = $request->user();
+
+        if ($user->profile->photo) {
+            $file = str_replace('profiles/', '', $user->profile->photo);
+            $photo = $request->file('photo')->storePubliclyAs('profiles', $file, 'public');
+        } else {
+            $photo = $request->file('photo')->storePublicly('profiles', 'public');
+        }
+
+        if ($user->profile()->update(['photo' => $photo])) {
+            $user->profile->photo = $photo;
+            return response()->json([
+                'profile' => $user->profile,
+                'message' => trans('messages.general_create'),
+            ]);
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
+    }
 }

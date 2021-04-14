@@ -33,6 +33,7 @@ Route::group(['middleware' => ['locale']], function () {
         Route::post('/profiles', [ProfilesController::class, 'store']);
         Route::put('/profiles', [ProfilesController::class, 'update']);
         Route::delete('/profiles', [ProfilesController::class, 'destroy']);
+        Route::post('/profiles/upload', [ProfilesController::class, 'upload']);
         Route::delete('/logout', [UsersController::class, 'logout']);
         Route::patch('/courses/{course_id}/chapters/reorder', [ChaptersController::class, 'reorder']);
         Route::get('/courses/{course_id}/chapters', [ChaptersController::class, 'index']);
