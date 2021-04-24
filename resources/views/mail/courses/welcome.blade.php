@@ -2,11 +2,11 @@
 
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-{{ trans('ui.hi') }}
+<img src="https://facilittei.com/facilittei.svg" width="225">
 @endcomponent
 @endslot
 
-# {{ trans('mail.course_welcome') }}, {{ $user->name }}.
+# {{ trans('mail.course_welcome') }}, {{ $user->name }}!
 
 {{ trans('mail.course_info') }}: **{{ $course->title }}**
 

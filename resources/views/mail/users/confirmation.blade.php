@@ -2,13 +2,13 @@
 
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-{{ trans('ui.welcome') }}!
+<img src="https://facilittei.com/facilittei.svg" width="225">
 @endcomponent
 @endslot
 
-# {{ trans('messages.register_greeting') }}, {{ $user->name }}
+# {{ trans('messages.register_greeting') }}, {{ $user->name }}!
 
-{{ trans('messages.register_thanks') }}, facilittei.com!
+{{ trans('messages.register_thanks') }}
 
 {{ trans('messages.register_confirm') }}
 
