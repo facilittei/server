@@ -41,6 +41,10 @@ class CoursePresenter
             $data['teaching'] = $teaching;
         }
 
+        if(isset($report['studing'])) {
+            $data['studing'] = $report['studing'];
+        }
+
         return $data;
     }
 

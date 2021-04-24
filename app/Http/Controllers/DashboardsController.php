@@ -38,6 +38,11 @@ class DashboardsController extends Controller
             'comments' => $commentsByCourse,
         ];
 
+        $report['studing'] = [
+            'courses' => $user->enrolled,
+            'favorites' => $user->favorited,
+        ];
+
         return response()->json(CoursePresenter::home($report));
     }
 }
