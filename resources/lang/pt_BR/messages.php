@@ -14,7 +14,7 @@ return [
     'register_success' => 'Registrado com sucesso',
     'register_failed' => 'O registro falhou',
     'register_greeting' => 'Oi',
-    'register_thanks' => 'Obrigado por se inscrever em',
+    'register_thanks' => 'Estamos muito felizes em ter você com a gente!',
     'register_confirm' => 'Para começar, clique no link abaixo para verificar se temos seu endereço de e-mail correto.',
     'general_update' => 'Operação de atualização realizada com sucesso',
     'general_error' => 'Ups, ocorreu um erro, tente novamente',

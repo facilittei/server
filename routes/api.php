@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChaptersController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\CoursesController;
+use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\LessonsController;
 use App\Http\Controllers\ProfilesController;
 use \App\Http\Controllers\UsersController;
@@ -52,5 +53,7 @@ Route::group(['middleware' => ['locale']], function () {
         Route::patch('/chapters/{chapter_id}/lessons/reorder', [LessonsController::class, 'reorder']);
         Route::resource('/chapters/{chapter_id}/lessons', LessonsController::class)->except(['create', 'edit']);
         Route::resource('/lessons/{lesson_id}/comments', CommentsController::class)->except(['show', 'create', 'edit']);
+
+        Route::get('home', [DashboardsController::class, 'home']);
     });
 });
