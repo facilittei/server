@@ -38,6 +38,20 @@ class DashboardsController extends Controller
             'comments' => $commentsByCourse,
         ];
 
+        $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), $queryParams);
+
+        $report['learning'] = [
+            'courses' => $user->enrolled()
+                ->orderBy('courses.updated_at')
+                ->select(
+                    'courses.id',
+                    'courses.title',
+                    'courses.slug',
+                    'courses.cover',
+                )->get(),
+            'latestWatched' => $studentLastestLesson,
+        ];
+
         return response()->json(CoursePresenter::home($report));
     }
 }

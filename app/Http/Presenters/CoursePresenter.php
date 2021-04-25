@@ -41,6 +41,11 @@ class CoursePresenter
             $data['teaching'] = $teaching;
         }
 
+        if (isset($report['learning'])) {
+            $data['learning'] = $report['learning'];
+            $data['learning']['latestWatched'] = CoursePresenter::formatLatestWatchedLesson($report['learning']['latestWatched']);
+        }
+
         return $data;
     }
 
@@ -66,5 +71,34 @@ class CoursePresenter
         }
 
         return $result;
+    }
+
+    /**
+     * Format latest watched lesson.
+     *
+     * @param array $collection
+     * @param int $courseId
+     * @return int
+     */
+    public static function formatLatestWatchedLesson($collection)
+    {
+        if (count($collection) > 0) {
+            return [
+                'course' => [
+                    'id' => $collection[0]->course_id,
+                    'title' => $collection[0]->course_title,
+                    'chapters' => [
+                        'id' => $collection[0]->chapter_id,
+                        'title' => $collection[0]->chapter_title,
+                        'lessons' => [
+                            'id' => $collection[0]->lesson_id,
+                            'title' => $collection[0]->lesson_title,
+                        ]
+                    ],
+                ]
+            ];
+        }
+
+        return [];
     }
 }

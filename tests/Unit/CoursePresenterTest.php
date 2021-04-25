@@ -62,4 +62,40 @@ class CoursePresenterTest extends TestCase
 
         $this->assertEquals(0, CoursePresenter::getCollectionByCourse($collection, 1));
     }
+
+    /**
+     * Collection with latest watched lesson.
+     *
+     * @return void
+     */
+    public function testLatestWatchedLessonCollection()
+    {
+        $rs = new stdClass();
+        $rs->course_id = 1;
+        $rs->course_title = 'Building API';
+        $rs->chapter_id = 2;
+        $rs->chapter_title = 'Introduction';
+        $rs->lesson_id = 3;
+        $rs->lesson_title = 'Getting started';
+        $collection = [$rs];
+
+        $lesson = CoursePresenter::formatLatestWatchedLesson($collection);
+        $this->assertArrayHasKey('id', $lesson['course']);
+        $this->assertArrayHasKey('title', $lesson['course']);
+        $this->assertArrayHasKey('id', $lesson['course']['chapters']);
+        $this->assertArrayHasKey('title', $lesson['course']['chapters']);
+        $this->assertArrayHasKey('id', $lesson['course']['chapters']['lessons']);
+        $this->assertArrayHasKey('title', $lesson['course']['chapters']['lessons']);
+    }
+
+    /**
+     * Collection without latest watched lesson.
+     *
+     * @return void
+     */
+    public function testEmptyLatestWatchedLessonCollection()
+    {
+        $collection = [];
+        $this->assertEquals(0, count(CoursePresenter::formatLatestWatchedLesson($collection)));
+    }
 }
