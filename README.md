@@ -26,6 +26,20 @@ docker-compose exec app composer install
 
 :warning: Create `.env` file from the `.env.example`
 
+### Storage
+
+Set permissions to `storage` and `public` folders
+
+```
+docker-compose exec app chmod -R 777 storage public
+```
+
+Create symbolic link from `storage` to `public` folders
+
+```
+docker-compose exec app php artisan storage:link
+```
+
 ### Database
 
 It will create and populate the tables
