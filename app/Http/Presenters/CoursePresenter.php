@@ -31,6 +31,7 @@ class CoursePresenter
                 $teaching['courses'][] = [
                     'id' => $course->id,
                     'title' => $course->title,
+                    'is_published' => $course->is_published,
                     'students' => CoursePresenter::getCollectionByCourse($teach['courses_students'], $course->id),
                     'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $course->id),
                     'favorites' => CoursePresenter::getCollectionByCourse($teach['favorites'], $course->id),
