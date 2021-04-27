@@ -78,7 +78,7 @@ class CoursePresenter
      *
      * @param array $collection
      * @param int $courseId
-     * @return int
+     * @return array
      */
     public static function formatLatestWatchedLesson($collection)
     {
@@ -87,15 +87,15 @@ class CoursePresenter
                 'course' => [
                     'id' => $collection[0]->course_id,
                     'title' => $collection[0]->course_title,
-                    'chapters' => [
-                        'id' => $collection[0]->chapter_id,
-                        'title' => $collection[0]->chapter_title,
-                        'lessons' => [
-                            'id' => $collection[0]->lesson_id,
-                            'title' => $collection[0]->lesson_title,
-                        ]
-                    ],
-                ]
+                ],
+                'chapters' => [
+                    'id' => $collection[0]->chapter_id,
+                    'title' => $collection[0]->chapter_title,
+                ],
+                'lessons' => [
+                    'id' => $collection[0]->lesson_id,
+                    'title' => $collection[0]->lesson_title,
+                ],
             ];
         }
 

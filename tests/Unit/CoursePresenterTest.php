@@ -82,10 +82,10 @@ class CoursePresenterTest extends TestCase
         $lesson = CoursePresenter::formatLatestWatchedLesson($collection);
         $this->assertArrayHasKey('id', $lesson['course']);
         $this->assertArrayHasKey('title', $lesson['course']);
-        $this->assertArrayHasKey('id', $lesson['course']['chapters']);
-        $this->assertArrayHasKey('title', $lesson['course']['chapters']);
-        $this->assertArrayHasKey('id', $lesson['course']['chapters']['lessons']);
-        $this->assertArrayHasKey('title', $lesson['course']['chapters']['lessons']);
+        $this->assertArrayHasKey('id', $lesson['chapters']);
+        $this->assertArrayHasKey('title', $lesson['chapters']);
+        $this->assertArrayHasKey('id', $lesson['lessons']);
+        $this->assertArrayHasKey('title', $lesson['lessons']);
     }
 
     /**
