@@ -26,6 +26,12 @@ docker-compose exec app composer install
 
 :warning: Create `.env` file from the `.env.example`
 
+Generate app key
+
+```
+docker-compose exec app php artisan key:generate
+```
+
 ### Storage
 
 Set permissions to `storage` and `public` folders
