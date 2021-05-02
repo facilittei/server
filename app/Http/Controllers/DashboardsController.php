@@ -30,7 +30,7 @@ class DashboardsController extends Controller
 
         $report = [];
         $report['teaching'] = [
-            'courses' => $user->courses()->select('id', 'title', 'is_published')->get(),
+            'courses' => $user->courses()->select('id', 'title', 'is_published', 'cover')->get(),
             'students' => $students[0]->total,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
