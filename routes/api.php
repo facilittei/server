@@ -46,6 +46,7 @@ Route::group(['middleware' => ['locale']], function () {
         Route::post('/courses/{id}/enroll-many', [CoursesController::class, 'enrollMany']);
         Route::post('/courses/{id}/enroll', [CoursesController::class, 'enroll']);
         Route::delete('/courses/{id}/annul', [CoursesController::class, 'annul']);
+        Route::delete('/courses/{id}/annul-many', [CoursesController::class, 'annulMany']);
         Route::resource('/courses', CoursesController::class)->except(['create', 'edit']);
         Route::get('/lessons/search', [LessonsController::class, 'search']);
         Route::post('/chapters/{chapter_id}/lessons/{id}/favorited', [LessonsController::class, 'favorited']);

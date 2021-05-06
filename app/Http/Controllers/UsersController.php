@@ -63,6 +63,7 @@ class UsersController extends Controller
 
         return response()->json([
             'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
+            'user' => $user,
         ]);
     }
 

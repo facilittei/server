@@ -97,6 +97,7 @@ class CoursesController extends Controller
     {
         $user = $request->user();
         $course = Course::where('user_id', $user->id)->findOrFail($id);
+        $req['cover'] = $course->cover;
 
         if ($course->update($request->all())) {
             return response()->json([
@@ -282,5 +283,23 @@ class CoursesController extends Controller
         return response()->json([
             'error' => trans('auth.unauthorized'),
         ], 401);
+    }
+
+    /**
+     * Annul a list of users sent as an array
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function annulMany(Request $request, $id)
+    {
+        $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
+
+        if ($course->students()->detach($request->input('users_id'))) {
+            return response()->json(['message' => trans('messages.general_destroy')]);
+        }
+
+        return response()->json(['message' => trans('messages.general_error')], 422);
     }
 }
