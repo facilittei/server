@@ -13,7 +13,7 @@ class StudentQuery
     {
         $query = 'SELECT COUNT(DISTINCT course_user.user_id) AS total FROM course_user ';
         $query .= 'INNER JOIN courses ON courses.id = course_user.course_id ';
-        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at = NULL ';
+        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at IS NULL ';
 
         return $query;
     }
@@ -28,7 +28,7 @@ class StudentQuery
     {
         $query = 'SELECT courses.id, COUNT(course_user.user_id) AS total FROM course_user ';
         $query .= 'INNER JOIN courses ON courses.id = course_user.course_id ';
-        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at = NULL ';
+        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at IS NULL ';
         $query .= 'GROUP BY courses.id ';
 
         return $query;
@@ -48,7 +48,7 @@ class StudentQuery
         $query .= 'INNER JOIN chapters ON courses.id = chapters.course_id ';
         $query .= 'INNER JOIN lessons ON chapters.id = lessons.chapter_id ';
         $query .= 'INNER JOIN lesson_user ON lessons.id = lesson_user.lesson_id ';
-        $query .= 'WHERE lesson_user.user_id = ? AND courses.deleted_at = NULL ';
+        $query .= 'WHERE lesson_user.user_id = ? AND courses.deleted_at IS NULL ';
         $query .= 'ORDER BY lesson_user.updated_at DESC LIMIT 1 ';
 
         return $query;
