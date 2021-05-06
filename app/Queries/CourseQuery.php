@@ -14,7 +14,7 @@ class CourseQuery
         $query = 'SELECT courses.id, COUNT(courses.id) AS total FROM courses ';
         $query .= 'INNER JOIN chapters ON courses.id = chapters.course_id ';
         $query .= 'INNER JOIN lessons ON chapters.id = lessons.chapter_id ';
-        $query .= 'WHERE courses.user_id = ? ';
+        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at = NULL ';
         $query .= 'GROUP BY courses.id ';
 
         return $query;
@@ -31,7 +31,7 @@ class CourseQuery
         $query .= 'INNER JOIN chapters ON courses.id = chapters.course_id ';
         $query .= 'INNER JOIN lessons ON chapters.id = lessons.chapter_id ';
         $query .= 'INNER JOIN favorite_lesson ON lessons.id = favorite_lesson.lesson_id ';
-        $query .= 'WHERE courses.user_id = ? ';
+        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at = NULL ';
         $query .= 'GROUP BY lessons.id ';
 
         return $query;
@@ -46,7 +46,7 @@ class CourseQuery
     {
         $query = 'SELECT courses.id, COUNT(courses.id) AS total FROM courses ';
         $query .= 'INNER JOIN comments ON courses.id = comments.course_id ';
-        $query .= 'WHERE courses.user_id = ? ';
+        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at = NULL  ';
         $query .= 'GROUP BY courses.id ';
 
         return $query;
