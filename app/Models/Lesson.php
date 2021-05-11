@@ -84,13 +84,12 @@ class Lesson extends Model
         if (!$components) {
             return;
         }
-        
-        $params = null;
 
         if (!$components || !isset($components['query']) ) {
             return;
         }
-
+        
+        $params = null;
         parse_str($components['query'], $params);
 
         if (!$params || !isset($params['v'])) {
