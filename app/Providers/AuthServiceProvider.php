@@ -12,6 +12,7 @@ use App\Policies\CoursePolicy;
 use App\Policies\LessonPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Crypt;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -37,7 +38,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         ResetPassword::createUrlUsing(function ($user, string $token) {
-            return config('app.client_url').'/reset-password?token='.$token;
+            $email = Crypt::encryptString($user->email);
+            return config('app.client_url').'/reset-password?token='.$token.'&info='.$email;
         });
     }
 }

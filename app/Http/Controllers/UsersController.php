@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 class UsersController extends Controller
 {
@@ -127,9 +128,11 @@ class UsersController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
+            'info' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
+
+        $request->request->add(['email' => Crypt::decryptString($request->input('info'))]);
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
