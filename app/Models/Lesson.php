@@ -6,6 +6,7 @@ use DOMDocument;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Config;
 
 class Lesson extends Model
 {
@@ -68,5 +69,34 @@ class Lesson extends Model
             ];
         }
         return $lessons;
+    }
+
+    /**
+     * Set the lesson's video.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setVideoAttribute($value)
+    {
+        $components = parse_url($value);
+
+        if (!$components) {
+            return;
+        }
+        
+        $params = null;
+
+        if (!$components || !isset($components['query']) ) {
+            return;
+        }
+
+        parse_str($components['query'], $params);
+
+        if (!$params || !isset($params['v'])) {
+            return;
+        }
+
+        $this->attributes['video'] = config('video.youtube') . $params['v'];
     }
 }
