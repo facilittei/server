@@ -62,9 +62,12 @@ class UsersController extends Controller
             ]);
         }
 
+        $is_teacher = $user->courses->count() > 0;
+        unset($user->courses);
         return response()->json([
             'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
             'user' => $user,
+            'teacher' => $is_teacher,
         ]);
     }
 
