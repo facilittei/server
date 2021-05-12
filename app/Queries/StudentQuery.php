@@ -53,4 +53,40 @@ class StudentQuery
 
         return $query;
     }
+
+    /**
+     * Build a query to get the course status
+     *
+     * @return string
+     */
+    public static function buildCourseStats()
+    {
+        $query = 'SELECT courses.id AS course_id, COUNT(lesson_user.lesson_id) AS watched ';
+        $query .= 'FROM courses ';
+        $query .= 'INNER JOIN chapters ON courses.id = chapters.course_id ';
+        $query .= 'INNER JOIN lessons ON chapters.id = lessons.chapter_id ';
+        $query .= 'INNER JOIN lesson_user ON lessons.id = lesson_user.lesson_id ';
+        $query .= 'WHERE lesson_user.user_id = ? ';
+        $query .= 'GROUP BY lesson_user.lesson_id ';
+
+        return $query;
+    }
+
+    /**
+     * Build a query to get the course status
+     *
+     * @return string
+     */
+    public static function buildCourseLessonStats()
+    {
+        $query = 'SELECT courses.id AS course_id, COUNT(course_user.course_id) AS total ';
+        $query .= 'FROM courses ';
+        $query .= 'INNER JOIN chapters ON courses.id = chapters.course_id ';
+        $query .= 'INNER JOIN lessons ON chapters.id = lessons.chapter_id ';
+        $query .= 'INNER JOIN course_user ON course_user.course_id = courses.id ';
+        $query .= 'WHERE course_user.user_id = ? ';
+        $query .= 'GROUP BY course_user.course_id ';
+
+        return $query;
+    }
 }

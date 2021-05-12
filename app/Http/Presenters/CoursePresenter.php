@@ -103,4 +103,33 @@ class CoursePresenter
 
         return [];
     }
+
+    /**
+     * Format course stats.
+     *
+     * @param array $watcheds
+     * @param array $lessons
+     * @return array
+     */
+    public static function formatCourseStats($watcheds, $lessons)
+    {
+        $watchedStats = [];
+        for($i = 0; $i < count($watcheds); $i++) {
+            $watchedStats[$watcheds[$i]->course_id] = $watcheds[$i]->watched;
+        }
+
+        $lessonStats = [];
+        for($i = 0; $i < count($lessons); $i++) {
+            $lessonStats[$lessons[$i]->course_id] = $lessons[$i]->total;
+        }
+
+        $stats = [];
+        foreach($lessonStats as $key => $value) {
+            if (isset($watchedStats[$key])) {
+                $stats[$key] = floor($watchedStats[$key] / $value * 100);
+            }
+        }
+
+        return $stats;
+    }
 }

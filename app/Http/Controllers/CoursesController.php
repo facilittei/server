@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Queries\StudentQuery;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Presenters\CoursePresenter;
 
 class CoursesController extends Controller
 {
@@ -301,5 +304,21 @@ class CoursesController extends Controller
         }
 
         return response()->json(['message' => trans('messages.general_error')], 422);
+    }
+
+    /**
+     * Display course stats by student.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function stats(Request $request)
+    {
+        $params = [Auth::user()->id];
+        $watcheds = DB::select(StudentQuery::buildCourseStats(), $params);
+        $lessons = DB::select(StudentQuery::buildCourseLessonStats(), $params);
+        $stats = CoursePresenter::formatCourseStats($watcheds, $lessons);
+
+        return response()->json($stats);
     }
 }

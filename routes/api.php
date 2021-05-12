@@ -39,6 +39,7 @@ Route::group(['middleware' => ['locale']], function () {
         Route::patch('/courses/{course_id}/chapters/reorder', [ChaptersController::class, 'reorder']);
         Route::get('/courses/{course_id}/chapters', [ChaptersController::class, 'index']);
         Route::resource('/chapters', ChaptersController::class)->except(['index', 'create', 'edit']);
+        Route::get('/courses/enrolled/stats', [CoursesController::class, 'stats']);
         Route::get('/courses/enrolled', [CoursesController::class, 'enrolled']);
         Route::get('/courses/{id}/students', [CoursesController::class, 'students']);
         Route::get('/courses/{id}/favorites', [CoursesController::class, 'favorites']);
