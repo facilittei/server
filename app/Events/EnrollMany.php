@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Course;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -16,21 +15,21 @@ class EnrollMany
      *
      * @var App\Models\Course
      */
-    public Course $course;
+    public $course;
 
     /**
      * Records to enroll
      *
      * @var array
      */
-    public array $records;
+    public $records;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Course $course, array $records)
+    public function __construct($course, $records)
     {
         $this->course = $course;
         $this->records = $records;
