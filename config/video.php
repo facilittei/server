@@ -11,6 +11,6 @@ return [
     |
     */
 
-    'youtube' => env('EMBED_YOUTUBE'),
+    'youtube' => env('YOUTUBE_EMBED_URL'),
 
 ];

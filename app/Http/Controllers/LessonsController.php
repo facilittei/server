@@ -8,6 +8,8 @@ use App\Models\Lesson;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Goutte\Client;
+use \Exception;
 
 class LessonsController extends Controller
 {
@@ -126,6 +128,23 @@ class LessonsController extends Controller
         $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
 
         if ($request->user()->can('update', $lesson)) {
+            $client = new Client();
+
+            $audioProviderURLPattern = config('audio.soundcloud_url_pattern');
+
+            if ($req['audio'] && preg_match($audioProviderURLPattern, $req['audio'])) {
+                try {
+                    $audioProviderELM = config('audio.soundcloud_elm_pattern');
+                    $crawler = $client->request('GET', $req['audio']);
+                    $audio = $crawler->filter('meta[property="twitter:app:url:googleplay"]')->attr('content');
+                    $audio_id = str_replace($audioProviderELM, '', $audio);
+                    $req['audio'] = config('audio.soundcloud') . $audio_id;
+                }catch(Exception $e) {
+                    return response()->json([
+                        'error' => trans('messages.audio_error'),
+                    ], 422);
+                }
+            }
 
             if ($lesson->update($req)) {
                 return response()->json([

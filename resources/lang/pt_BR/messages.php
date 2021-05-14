@@ -23,5 +23,6 @@ return [
     'general_success' => 'Operação realizada com sucesso',
     'queue_enroll_many' => 'Estamos importando seus alunos, estaremos de volta em breve',
     'not_published' => 'O conteúdo ainda não foi publicado',
+    'audio_error' => 'Tivemos um problema ao processar o seu áudio',
 
 ];
