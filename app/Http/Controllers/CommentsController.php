@@ -120,4 +120,16 @@ class CommentsController extends Controller
             'error' => trans('auth.unauthorized'),
         ], 401);
     }
+
+    /**
+     * Display a listing of the comments by authenticated user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function user(Request $request)
+    {
+        $comments = Comment::where('user_id', $request->user()->id)->get();
+        return response()->json(['comments' => $comments]);
+    }
 }
