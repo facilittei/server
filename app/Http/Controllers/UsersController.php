@@ -169,10 +169,21 @@ class UsersController extends Controller
     {
         $user = $request->user();
         $hasPassword = $request->input('password') && strlen($request->input('password')) >= 8;
+        $password = $user->password;
+
+        if ($hasPassword) {
+            if (!Hash::check($request->input('old_password'), $password)) {
+                return response()->json([
+                    'error' => trans('messages.general_error'),
+                ], 401);
+            }
+
+            $password = Hash::make($request->input('password'));
+        }
 
         $req = [
             'name' => $request->input('name') ?? $user->name,
-            'password' => $hasPassword ? Hash::make($request->input('password')) : $user->password,
+            'password' => $password,
         ];
 
         if ($request->user()->update($req)) {
