@@ -37,6 +37,8 @@ class CoursePresenter
                     'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $course->id),
                     'favorites' => CoursePresenter::getCollectionByCourse($teach['favorites'], $course->id),
                     'comments' => CoursePresenter::getCollectionByCourse($teach['comments'], $course->id),
+                    'created_at' => $course->created_at,
+                    'updated_at' => $course->updated_at,
                 ];
             }
 

@@ -30,7 +30,7 @@ class DashboardsController extends Controller
 
         $report = [];
         $report['teaching'] = [
-            'courses' => $user->courses()->select('id', 'title', 'is_published', 'cover')->get(),
+            'courses' => $user->courses()->select('id', 'title', 'is_published', 'cover', 'created_at', 'updated_at')->get(),
             'students' => $students[0]->total,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
@@ -48,6 +48,8 @@ class DashboardsController extends Controller
                     'courses.title',
                     'courses.slug',
                     'courses.cover',
+                    'courses.created_at',
+                    'courses.updated_at',
                 )->get(),
             'latestWatched' => $studentLastestLesson,
         ];
