@@ -39,6 +39,8 @@ class DashboardsController extends Controller
         ];
 
         $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), $queryParams);
+        $studentLessonsFavoritedByCourse = DB::select(StudentQuery::buildGetTotalFavorites(), $queryParams);
+        $studentCommentsByCourse = DB::select(StudentQuery::buildGetTotalComments(), $queryParams);
 
         $report['learning'] = [
             'courses' => $user->enrolled()
@@ -52,6 +54,8 @@ class DashboardsController extends Controller
                     'courses.updated_at',
                 )->get(),
             'latestWatched' => $studentLastestLesson,
+            'favorites' => $studentLessonsFavoritedByCourse,
+            'comments' => $studentCommentsByCourse,
         ];
 
         return response()->json(CoursePresenter::home($report));

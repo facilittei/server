@@ -48,6 +48,8 @@ class CoursePresenter
         if (isset($report['learning'])) {
             $data['learning'] = $report['learning'];
             $data['learning']['latestWatched'] = CoursePresenter::formatLatestWatchedLesson($report['learning']['latestWatched']);
+            $data['learning']['lessons'] => CoursePresenter::getCollectionByCourse($report['learning']['lessons'], $course->id),
+            $data['learning']['favorites'] => CoursePresenter::getCollectionByCourse($report['learning']['favorites'], $course->id),
         }
 
         return $data;

@@ -89,4 +89,35 @@ class StudentQuery
 
         return $query;
     }
+
+    /**
+     * Build a query to get the number of comments by courses.
+     *
+     * @return string
+     */
+    public static function buildGetTotalComments()
+    {
+        $query = 'SELECT course_id, COUNT(comments.id) AS total FROM comments ';
+        $query .= 'WHERE comments.user_id = ? ';
+        $query .= 'GROUP BY course_id ';
+        
+        return $query;
+    }
+
+    /**
+     * Build a query to get the number of favorites by courses.
+     *
+     * @return string
+     */
+    public static function buildGetTotalFavorites()
+    {
+        $query = 'SELECT courses.id, COUNT(favorite_lesson.id) AS total FROM favorite_lesson ';
+        $query .= 'INNER JOIN lessons ON favorite_lesson.lesson_id = lessons.id ';
+        $query .= 'INNER JOIN chapters ON lessons.chapter_id = chapters.id ';
+        $query .= 'INNER JOIN courses ON chapters.course_id = courses.id ';
+        $query .= 'WHERE favorite_lesson.user_id = ? ';
+        $query .= 'GROUP BY courses.id ';
+        
+        return $query;
+    }
 }
