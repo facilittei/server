@@ -4,7 +4,9 @@ namespace App\Listeners;
 
 use App\Events\EnrollMany;
 use App\Mail\CourseEnrollManyMail;
+use App\Mail\CourseInviteMail;
 use App\Models\User;
+use App\Models\CourseInvite;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -24,21 +26,19 @@ class BulkStudent implements ShouldQueue
             $user = explode(',', $event->records[$i]);
             if (count($user) == 2) {
                 list($name, $email) = $user;
-                $userDB = null;
                 $isUser = User::where('email', $email)->select('id', 'name', 'email')->first();
                 if ($isUser) {
                     $students[] = $isUser->id;
-                    $userDB = $isUser;
+                    Mail::to($isUser->email)->queue(new CourseEnrollManyMail($event->course, $isUser));
                 } else {
-                    $newUser = User::create([
+                    $invite = CourseInvite::firstOrCreate([
+                        'course_id' => $event->course->id,
                         'name' => $name,
                         'email' => $email,
-                        'password' => bcrypt(Str::random(10)),
+                        'token' => Str::uuid(),
                     ]);
-                    $students[] = $newUser->id;
-                    $userDB = $newUser;
+                    Mail::to($invite->email)->queue(new CourseInviteMail($event->course, $invite));
                 }
-                Mail::to($userDB->email)->queue(new CourseEnrollManyMail($event->course, $userDB));
             }
         }
         $event->course->students()->syncWithoutDetaching($students);
