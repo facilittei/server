@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 use App\Queries\StudentQuery;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Presenters\CoursePresenter;
+use App\Models\CourseInvite;
+use App\Mail\CourseInviteMail;
 
 class CoursesController extends Controller
 {
@@ -209,9 +211,14 @@ class CoursesController extends Controller
 
         if (!$student) {
             $req = $request->all();
-            $req['password'] = bcrypt(Str::random(10));
-            $student = User::create($req);
-            Mail::to($student->email)->queue(new UserConfirmationMail($student));
+            $invite = CourseInvite::firstOrCreate([
+                'course_id' => $course->id,
+                'name' => $req['name'],
+                'email' => $req['email'],
+                'token' => Str::uuid(),
+            ]);
+            Mail::to($invite->email)->queue(new CourseInviteMail($course, $invite));
+            return response()->json(['message' => trans('messages.general_success')]);
         }
 
         if ($course->students()->syncWithoutDetaching($student->id)) {
