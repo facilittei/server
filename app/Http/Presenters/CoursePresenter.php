@@ -46,10 +46,22 @@ class CoursePresenter
         }
 
         if (isset($report['learning'])) {
-            $data['learning'] = $report['learning'];
-            $data['learning']['latestWatched'] = CoursePresenter::formatLatestWatchedLesson($report['learning']['latestWatched']);
-            $data['learning']['lessons'] = CoursePresenter::getCollectionByCourse($report['learning']['lessons'], $course->id);
-            $data['learning']['favorites'] = CoursePresenter::getCollectionByCourse($report['learning']['favorites'], $course->id);
+            $learn = $report['learning'];
+            $courses = $learn['courses'];
+            
+            $learning = [];
+            $learning['latestWatched'] = CoursePresenter::formatLatestWatchedLesson($learn['latestWatched']);
+
+            for ($i = 0; $i < count($courses); $i++) {
+                $course = $courses[$i];
+
+                $learning['courses'][] = [
+                    'favorites' => CoursePresenter::getCollectionByCourse($learn['favorites'], $course->id),
+                    'comments' => CoursePresenter::getCollectionByCourse($learn['comments'], $course->id),
+                ];
+            }
+
+            $data['learning'] = $learning;
         }
 
         return $data;
