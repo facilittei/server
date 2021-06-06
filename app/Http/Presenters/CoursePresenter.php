@@ -56,6 +56,12 @@ class CoursePresenter
                 $course = $courses[$i];
 
                 $learning['courses'][] = [
+                    'id' => $course->id,
+                    'title' => $course->title,
+                    'slug' => $course->slug,
+                    'cover' => $course->cover,
+                    'created_at' => $course->created_at,
+                    'updated_at' => $course->updated_at,
                     'favorites' => CoursePresenter::getCollectionByCourse($learn['favorites'], $course->id),
                     'comments' => CoursePresenter::getCollectionByCourse($learn['comments'], $course->id),
                 ];
