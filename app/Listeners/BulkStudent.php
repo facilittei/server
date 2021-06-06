@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Models\CourseInvite;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 class BulkStudent implements ShouldQueue
 {
@@ -35,7 +34,7 @@ class BulkStudent implements ShouldQueue
                         'course_id' => $event->course->id,
                         'name' => $name,
                         'email' => $email,
-                        'token' => Str::uuid(),
+                        'token' => (new CourseInvite)->generateToken($event->course->id),
                     ]);
                     Mail::to($invite->email)->queue(new CourseInviteMail($event->course, $invite));
                 }

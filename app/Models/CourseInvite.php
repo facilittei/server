@@ -51,7 +51,6 @@ class CourseInvite extends Model
                 $components = explode('-', $invite);
                 return [
                     'course_id' => array_shift($components),
-                    'token' => implode('-', $components),
                 ];
             } catch (DecryptException $e) {
                 return [

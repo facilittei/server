@@ -38,7 +38,6 @@ class CourseInviteTest extends TestCase
         $identify = $courseInvite->identifyToken($invite);
 
         $this->assertArrayHasKey('course_id', $identify);
-        $this->assertArrayHasKey('token', $identify);
         $this->assertEquals($courseId, $identify['course_id']);
     }
 

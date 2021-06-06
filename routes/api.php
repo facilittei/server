@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\LessonsController;
 use App\Http\Controllers\ProfilesController;
 use \App\Http\Controllers\UsersController;
+use \App\Http\Controllers\CourseInvitesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,7 @@ Route::group(['middleware' => ['locale']], function () {
     Route::get('/verify/{hash}', [UsersController::class, 'verify']);
     Route::post('/recover', [UsersController::class, 'recover']);
     Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
+    Route::post('/invites/{token}', [CourseInvitesController::class, 'accept']);
 
     Route::group(['middleware' => ['auth:sanctum', 'verified', 'underscore', 'camelcase']], function () {
         Route::get('/users', [UsersController::class, 'show']);

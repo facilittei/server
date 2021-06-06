@@ -12,7 +12,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Queries\StudentQuery;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Presenters\CoursePresenter;
@@ -215,7 +214,7 @@ class CoursesController extends Controller
                 'course_id' => $course->id,
                 'name' => $req['name'],
                 'email' => $req['email'],
-                'token' => Str::uuid(),
+                'token' => (new CourseInvite)->generateToken($course->id),
             ]);
             Mail::to($invite->email)->queue(new CourseInviteMail($course, $invite));
             return response()->json(['message' => trans('messages.general_success')]);
