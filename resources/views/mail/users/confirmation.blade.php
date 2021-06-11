@@ -14,7 +14,9 @@
 
 @slot('subcopy')
 @component('mail::subcopy')
-<a href="{{ config('app.client_url') . '/verify/' . $verification }}">{{ config('app.client_url') . '/verify/' . $verification }}</a>
+<span class="break-all">
+    <a href="{{ config('app.client_url') . '/verify/' . $verification }}">{{ config('app.client_url') . '/verify/' . $verification }}</a>
+</span>
 @endcomponent
 @endslot
 

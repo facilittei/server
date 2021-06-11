@@ -8,8 +8,9 @@
 
 # TODO: message content
 
-{{ $invite->token }}
-
+<span class="break-all">
+    {{ $invite->token }}
+</span>
 
 @slot('footer')
 @component('mail::footer')
