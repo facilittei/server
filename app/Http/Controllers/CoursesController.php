@@ -256,7 +256,8 @@ class CoursesController extends Controller
     public function students(Request $request, $id)
     {
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
-        return $course->students;
+        $courseInvite = CourseInvite::where('course_id', $id)->get();
+        return array_merge($course->students->toArray(), $courseInvite->toArray());
     }
 
     /**

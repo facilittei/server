@@ -25,6 +25,15 @@ class CourseInvite extends Model
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'token',
+    ];
+
+    /**
      * Generate the token that identifies the invite.
      *
      * @param int $course_id
