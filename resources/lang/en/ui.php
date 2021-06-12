@@ -15,5 +15,6 @@ return [
     'welcome' => 'Welcome',
     'thanks' => 'Thanks',
     'hi' => 'Howdy',
+    'access' => 'Access',
 
 ];

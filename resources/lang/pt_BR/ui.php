@@ -15,5 +15,6 @@ return [
     'welcome' => 'Bem vindo',
     'thanks' => 'Obrigado',
     'hi' => 'Olá',
+    'access' => 'Acessar',
 
 ];

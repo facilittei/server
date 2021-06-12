@@ -10,9 +10,9 @@
 
 {{ trans('mail.course_info') }}: **{{ $course->title }}**
 
-{{ trans('mail.course_password_reset') }}:
-
-<a href="{{ config('app.client_url') . '/forgot-password' }}">{{ trans('mail.course_password_reset_link') }}</a>
+@component('mail::button', ['url' => config('app.client_url') . '/view-course/' . $course->id])
+{{ trans('ui.access') }}
+@endcomponent
 
 @slot('footer')
 @component('mail::footer')
