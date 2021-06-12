@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Presenters\CoursePresenter;
 use App\Models\CourseInvite;
 use App\Mail\CourseInviteMail;
+use App\Http\Requests\CourseAnnulRequest;
 
 class CoursesController extends Controller
 {
@@ -256,8 +257,19 @@ class CoursesController extends Controller
     public function students(Request $request, $id)
     {
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
-        $courseInvite = CourseInvite::where('course_id', $id)->get();
-        return array_merge($course->students->toArray(), $courseInvite->toArray());
+        return $course->students;
+    }
+
+    /**
+     * Display a listing of the resource (invites).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function invites(Request $request, $id)
+    {
+        return CourseInvite::where('course_id', $id)->get();
     }
 
     /**
@@ -302,11 +314,35 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function annulMany(Request $request, $id)
+    public function annulMany(CourseAnnulRequest $request, $id)
     {
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
 
         if ($course->students()->detach($request->input('users_id'))) {
+            return response()->json(['message' => trans('messages.general_destroy')]);
+        }
+
+        return response()->json(['message' => trans('messages.general_error')], 422);
+    }
+
+    /**
+     * Annul a list of invites sent as an array
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function annulInvites(CourseAnnulRequest $request, $id)
+    {
+        $course = Course::findOrFail($id);
+        if ($request->user()->id != $course->user_id) {
+            return response()->json([
+                'error' => trans('auth.unauthorized'),
+            ], 401);
+        }
+
+        $courseInvite = CourseInvite::whereIn('id', $request->input('users_id'));
+        if ($courseInvite->delete()) {
             return response()->json(['message' => trans('messages.general_destroy')]);
         }
 
