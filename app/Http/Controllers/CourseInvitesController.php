@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CourseInvite;
 use App\Models\User;
+use App\Models\Course;
 use Carbon\Carbon;
 
 class CourseInvitesController extends Controller
@@ -50,6 +51,8 @@ class CourseInvitesController extends Controller
 
         if ($user) {
             $courseInvite->delete();
+            $course = Course::findOrFail($identify['course_id']);
+            $course->students()->syncWithoutDetaching($user->id);
             return response()->json([
                 'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
                 'user' => $user,
