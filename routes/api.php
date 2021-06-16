@@ -8,6 +8,8 @@ use App\Http\Controllers\LessonsController;
 use App\Http\Controllers\ProfilesController;
 use \App\Http\Controllers\UsersController;
 use \App\Http\Controllers\CourseInvitesController;
+use App\Http\Controllers\GroupInvitesController;
+use App\Http\Controllers\GroupsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +26,11 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['locale']], function () {
     Route::post('/register', [UsersController::class, 'register']);
     Route::post('/login', [UsersController::class, 'login']);
+    Route::post('/groups', [GroupsController::class, 'create']);
+    Route::get('/groups', [GroupsController::class, 'list']);
+    Route::delete('/groups/{group_id}', [GroupsController::class, 'destroy']);
+    Route::post('/group-invites', [GroupInvitesController::class, 'invite']);
+    Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
     Route::get('/verify/{hash}', [UsersController::class, 'verify']);
     Route::post('/recover', [UsersController::class, 'recover']);
     Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
