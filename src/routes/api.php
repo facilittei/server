@@ -10,6 +10,7 @@ use \App\Http\Controllers\UsersController;
 use \App\Http\Controllers\CourseInvitesController;
 use App\Http\Controllers\GroupInvitesController;
 use App\Http\Controllers\GroupsController;
+use \App\Http\Controllers\CommonsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('healthcheck', [CommonsController::class, 'healthcheck']);
 
 Route::group(['middleware' => ['locale']], function () {
     Route::post('/register', [UsersController::class, 'register']);

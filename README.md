@@ -18,8 +18,19 @@ docker-compose down
 
 ### Setup
 
+### :warning: Alternative
+Access the running container
+
 ```
-docker-compose exec app composer install
+docker exec -it php-fpm bash
+```
+
+Then you can run all the other steps sequentially without **docker-compose exec php-fpm**
+
+### Other steps
+
+```
+docker-compose exec php-fpm composer install
 ```
 
 ### Environment variables
@@ -29,7 +40,7 @@ docker-compose exec app composer install
 Generate app key
 
 ```
-docker-compose exec app php artisan key:generate
+docker-compose exec php-fpm php artisan key:generate
 ```
 
 ### Storage
@@ -37,13 +48,13 @@ docker-compose exec app php artisan key:generate
 Set permissions to `storage` and `public` folders
 
 ```
-docker-compose exec app chmod -R 777 storage public
+docker-compose exec php-fpm chmod -R 777 storage public
 ```
 
 Create symbolic link from `storage` to `public` folders
 
 ```
-docker-compose exec app php artisan storage:link
+docker-compose exec php-fpm php artisan storage:link
 ```
 
 ### Database
@@ -51,7 +62,7 @@ docker-compose exec app php artisan storage:link
 It will create and populate the tables
 
 ```
-docker-compose exec app php artisan migrate:fresh --seed
+docker-compose exec php-fpm php artisan migrate:fresh --seed
 ```
 
 ### Queue
@@ -59,5 +70,5 @@ docker-compose exec app php artisan migrate:fresh --seed
 Emails are sent in background
 
 ```
-docker-compose exec app php artisan queue:work
+docker-compose exec php-fpm php artisan queue:work
 ```
