@@ -83,6 +83,7 @@ class GroupInvitesController extends Controller
 
         if ($user) {
             $user->groups()->attach($group_id);
+            $user->loadMissing('groups');
             $groupInvite->delete();
             return response()->json([
                 'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
