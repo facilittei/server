@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
 use App\Mail\UserConfirmationMail;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -204,7 +205,7 @@ class UsersController extends Controller
     public function show(Request $request)
     {
         $user = $request->user();
-
+        $user->loadMissing('groups:code');
         return response()->json(['user' => $user]);
     }
 }
