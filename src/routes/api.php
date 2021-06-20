@@ -8,9 +8,9 @@ use App\Http\Controllers\LessonsController;
 use App\Http\Controllers\ProfilesController;
 use \App\Http\Controllers\UsersController;
 use \App\Http\Controllers\CourseInvitesController;
-use \App\Http\Controllers\CommonsController;
 use App\Http\Controllers\GroupInvitesController;
 use App\Http\Controllers\GroupsController;
+use \App\Http\Controllers\CommonsController;
 use Illuminate\Support\Facades\Route;
 
 /*
