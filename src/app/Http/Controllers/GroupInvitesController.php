@@ -23,9 +23,9 @@ class GroupInvitesController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
-            'group_id' => 'required'
+            'groupId' => 'required'
         ]);
-        $group = Group::findOrFail($request->input('group_id'));
+        $group = Group::findOrFail($request->input('groupId'));
         $user = User::where('email', $request->input('email'))->first();
         if (!$user) {
             $invite = GroupInvite::firstOrCreate([
@@ -93,5 +93,17 @@ class GroupInvitesController extends Controller
         return response()->json([
             'error' => trans('messages.general_error'),
         ], 422);
+    }
+
+    /**
+     * Display a listing of the resource (invites).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function invites(Request $request)
+    {
+        return response()->json(GroupInvite::all());
     }
 }

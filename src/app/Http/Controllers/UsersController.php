@@ -208,4 +208,17 @@ class UsersController extends Controller
         $user->loadMissing('groups:code');
         return response()->json(['user' => $user]);
     }
+
+    /**
+     * List users.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        $users = User::all();
+        $users->loadMissing('groups');
+        return response()->json($users);
+    }
 }
