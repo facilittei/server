@@ -82,13 +82,17 @@ class GroupInvitesController extends Controller
         ]);
 
         if ($user) {
-            $user->groups()->attach($group_id);
-            $user->loadMissing('groups');
+            $user->groups()->toggle($group_id);
+            $groups = $user->groups->map(function ($group) {
+                return $group->code;
+            });
+            unset($user->groups);
+            $user['groups'] = $groups;
             $groupInvite->delete();
-            return response()->json([
-                'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
-                'user' => $user,
-            ]);
+
+            $user['groups'] = $groups;
+            $user['token'] = $user->createToken($request->header('User-Agent'))->plainTextToken;
+            return response()->json($user);
         }
 
         return response()->json([
