@@ -23,7 +23,6 @@ class CommentFactory extends Factory
     {
         return [
             'course_id' => random_int(1, 10),
-            'chapter_id' => random_int(1, 10),
             'lesson_id' => random_int(1, 100),
             'user_id' => random_int(1, 10),
             'description' => implode(' ', $this->faker->sentences(3)),
