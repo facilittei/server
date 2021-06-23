@@ -19,7 +19,6 @@ class Comment extends Model
         'course_id',
         'lesson_id',
         'user_id',
-        'chapter_id',
         'description',
     ];
 
@@ -31,16 +30,6 @@ class Comment extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
-    }
-
-    /**
-     * The course.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function chapter()
-    {
-        return $this->belongsTo(Chapter::class);
     }
 
     /**
