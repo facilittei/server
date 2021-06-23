@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -25,5 +26,6 @@ class DatabaseSeeder extends Seeder
         Lesson::factory(100)->create();
         Comment::factory(150)->create();
         Profile::factory(10)->create();
+        Group::factory(1)->create();
     }
 }

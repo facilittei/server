@@ -218,8 +218,7 @@ class UsersController extends Controller
      */
     public function list(Request $request)
     {
-        $users = User::all();
-        $users->loadMissing('groups');
+        $users = User::has('groups')->get();
         return response()->json($users);
     }
 }

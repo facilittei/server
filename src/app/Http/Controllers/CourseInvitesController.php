@@ -53,10 +53,8 @@ class CourseInvitesController extends Controller
             $courseInvite->delete();
             $course = Course::findOrFail($identify['course_id']);
             $course->students()->syncWithoutDetaching($user->id);
-            return response()->json([
-                'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
-                'user' => $user,
-            ]);
+            $user['token'] = $user->createToken($request->header('User-Agent'))->plainTextToken;
+            return response()->json($user);
         }
 
         return response()->json([
