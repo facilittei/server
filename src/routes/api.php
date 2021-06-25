@@ -33,17 +33,19 @@ Route::group(['middleware' => ['locale']], function () {
     Route::post('/recover', [UsersController::class, 'recover']);
     Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
     Route::post('/invites/{token}', [CourseInvitesController::class, 'accept']);
-    // Admin related
-    Route::post('/groups', [GroupsController::class, 'create']);
-    Route::get('/groups', [GroupsController::class, 'list']);
-    Route::get('/all-users', [UsersController::class, 'list']);
-    Route::delete('/groups/{group_id}', [GroupsController::class, 'destroy']);
-    Route::delete('/groups/{group_id}/users/{user_id}', [GroupsController::class, 'annul']);
-    Route::get('/group-invites', [GroupInvitesController::class, 'invites']);
-    Route::post('/group-invites', [GroupInvitesController::class, 'invite']);
-    Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
 
     Route::group(['middleware' => ['auth:sanctum', 'verified', 'underscore', 'camelcase']], function () {
+        Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
+            Route::post('/groups', [GroupsController::class, 'create']);
+            Route::get('/groups', [GroupsController::class, 'list']);
+            Route::get('/all-users', [UsersController::class, 'list']);
+            Route::delete('/groups/{group_id}', [GroupsController::class, 'destroy']);
+            Route::delete('/groups/{group_id}/users/{user_id}', [GroupsController::class, 'annul']);
+            Route::get('/group-invites', [GroupInvitesController::class, 'invites']);
+            Route::post('/group-invites', [GroupInvitesController::class, 'invite']);
+            Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
+        });
+
         Route::get('/users', [UsersController::class, 'show']);
         Route::put('/users', [UsersController::class, 'update']);
         Route::get('/profiles', [ProfilesController::class, 'show']);
