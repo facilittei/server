@@ -62,6 +62,8 @@ class CoursePresenter
                     'cover' => $course->cover,
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
+                    'students' => CoursePresenter::getCollectionByCourse($learn['courses_students'], $course->id),
+                    'lessons' => CoursePresenter::getCollectionByCourse($learn['courses_lessons'], $course->id),
                     'favorites' => CoursePresenter::getCollectionByCourse($learn['favorites'], $course->id),
                     'comments' => CoursePresenter::getCollectionByCourse($learn['comments'], $course->id),
                 ];

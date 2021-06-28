@@ -9,11 +9,11 @@ class StudentQuery
      *
      * @return string
      */
-    public static function buildGetTotalByTeacher()
+    public static function buildGetTotal()
     {
         $query = 'SELECT COUNT(DISTINCT course_user.user_id) AS total FROM course_user ';
         $query .= 'INNER JOIN courses ON courses.id = course_user.course_id ';
-        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at IS NULL ';
+        $query .= 'WHERE courses.deleted_at IS NULL ';
 
         return $query;
     }
@@ -24,11 +24,11 @@ class StudentQuery
      *
      * @return string
      */
-    public static function buildGetTotalByCourseTeacher()
+    public static function buildGetTotalByCourse()
     {
         $query = 'SELECT courses.id, COUNT(course_user.user_id) AS total FROM course_user ';
         $query .= 'INNER JOIN courses ON courses.id = course_user.course_id ';
-        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at IS NULL ';
+        $query .= 'WHERE courses.deleted_at IS NULL ';
         $query .= 'GROUP BY courses.id ';
 
         return $query;

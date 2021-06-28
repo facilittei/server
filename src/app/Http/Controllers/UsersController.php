@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
 use App\Mail\UserConfirmationMail;
-use App\Models\Group;
+use App\Models\GroupInvite;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -219,6 +219,7 @@ class UsersController extends Controller
     public function list(Request $request)
     {
         $users = User::has('groups')->get();
-        return response()->json($users);
+        $invites = GroupInvite::all()->merge($users);
+        return response()->json($invites);
     }
 }

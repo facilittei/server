@@ -33,7 +33,8 @@ Route::group(['middleware' => ['locale']], function () {
     Route::post('/recover', [UsersController::class, 'recover']);
     Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
     Route::post('/invites/{token}', [CourseInvitesController::class, 'accept']);
-
+    Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
+    
     Route::group(['middleware' => ['auth:sanctum', 'verified', 'underscore', 'camelcase']], function () {
         Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
             Route::post('/groups', [GroupsController::class, 'create']);
@@ -42,8 +43,7 @@ Route::group(['middleware' => ['locale']], function () {
             Route::delete('/groups/{group_id}', [GroupsController::class, 'destroy']);
             Route::delete('/groups/{group_id}/users/{user_id}', [GroupsController::class, 'annul']);
             Route::get('/group-invites', [GroupInvitesController::class, 'invites']);
-            Route::post('/group-invites', [GroupInvitesController::class, 'invite']);
-            Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
+            Route::post('/group-invite/{group_id}', [GroupInvitesController::class, 'invite']);
         });
 
         Route::get('/users', [UsersController::class, 'show']);

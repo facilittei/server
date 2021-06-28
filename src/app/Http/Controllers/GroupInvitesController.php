@@ -18,14 +18,14 @@ class GroupInvitesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function invite(Request $request)
+    public function invite(Request $request, $group_id)
     {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
-            'groupId' => 'required'
         ]);
-        $group = Group::findOrFail($request->input('groupId'));
+
+        $group = Group::findOrFail($group_id);
         $user = User::where('email', $request->input('email'))->first();
         if (!$user) {
             $invite = GroupInvite::firstOrCreate([
