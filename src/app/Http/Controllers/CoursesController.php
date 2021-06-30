@@ -241,6 +241,8 @@ class CoursesController extends Controller
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
 
         if ($course->students()->detach($request->input('user_id'))) {
+            $ids = is_array($request->input('user_id')) ? $request->input('user_id') : [$request->input('user_id')];
+            DB::table('lesson_user')->whereIn('user_id', $ids)->delete();
             return response()->json(['message' => trans('messages.general_destroy')]);
         }
 
@@ -319,6 +321,7 @@ class CoursesController extends Controller
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
 
         if ($course->students()->detach($request->input('users_id'))) {
+            DB::table('lesson_user')->whereIn('user_id', $request->input('users_id'))->delete();
             return response()->json(['message' => trans('messages.general_destroy')]);
         }
 

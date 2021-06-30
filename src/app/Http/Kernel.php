@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'underscore' => \App\Http\Middleware\UnderscoreToCamel::class,
         'camelcase' => \App\Http\Middleware\CamelToUnderscore::class,
         'locale' => \App\Http\Middleware\Locale::class,
+        'admin' => \App\Http\Middleware\Authenticate::class,
     ];
 }

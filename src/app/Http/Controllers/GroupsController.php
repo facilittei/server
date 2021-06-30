@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -67,5 +68,21 @@ class GroupsController extends Controller
             ]);
         }
         return response()->json(['error' => trans('messages.register_failed')], 422);
+    }
+
+    /**
+     * Remove user from group.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function annul(Request $request, $group_id, $user_id)
+    {
+        $group = Group::findOrFail($group_id);
+        $user = User::findOrFail($user_id);
+        $user->groups()->toggle($group->id);
+        return response()->json([
+            'message' => trans('messages.register_success'),
+        ]);
     }
 }

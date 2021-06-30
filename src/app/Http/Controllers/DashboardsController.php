@@ -22,16 +22,26 @@ class DashboardsController extends Controller
         $user = $request->user();
 
         $queryParams = [$user->id];
-        $students = DB::select(StudentQuery::buildGetTotalByTeacher(), $queryParams);
-        $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourseTeacher(), $queryParams);
+        $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
+        $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), $queryParams);
         $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), $queryParams);
         $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
+        $coursesCount = $user->courses()->count();
 
         $report = [];
         $report['teaching'] = [
-            'courses' => $user->courses()->select('id', 'title', 'is_published', 'cover', 'created_at', 'updated_at')->get(),
+            'courses' => $user->courses()
+                ->select(
+                    'id', 
+                    'title', 
+                    'is_published', 
+                    'cover', 
+                    'created_at', 
+                    'updated_at'
+                )->limit($request->query('limit') ?? $coursesCount)->get(),
             'students' => $students[0]->total,
+            'courses_total' => $coursesCount,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
             'favorites' => $lessonsFavoritedByCourse,
@@ -39,8 +49,7 @@ class DashboardsController extends Controller
         ];
 
         $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), $queryParams);
-        $studentLessonsFavoritedByCourse = DB::select(StudentQuery::buildGetTotalFavorites(), $queryParams);
-        $studentCommentsByCourse = DB::select(StudentQuery::buildGetTotalComments(), $queryParams);
+        $enrolledCount = $user->enrolled()->count();
 
         $report['learning'] = [
             'courses' => $user->enrolled()
@@ -52,10 +61,13 @@ class DashboardsController extends Controller
                     'courses.cover',
                     'courses.created_at',
                     'courses.updated_at',
-                )->get(),
+                )->limit($request->query('limit') ?? $enrolledCount)->get(),
             'latestWatched' => $studentLastestLesson,
-            'favorites' => $studentLessonsFavoritedByCourse,
-            'comments' => $studentCommentsByCourse,
+            'courses_total' => $enrolledCount,
+            'courses_students' => $studentsByCourse,
+            'courses_lessons' => $lessonsByCourse,
+            'favorites' => $lessonsFavoritedByCourse,
+            'comments' => $commentsByCourse,
         ];
 
         return response()->json(CoursePresenter::home($report));

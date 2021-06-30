@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
 use App\Mail\UserConfirmationMail;
-use App\Models\Group;
+use App\Models\GroupInvite;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -63,13 +63,14 @@ class UsersController extends Controller
             ]);
         }
 
-        $is_teacher = $user->courses->count() > 0;
-        unset($user->courses);
-        return response()->json([
-            'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
-            'user' => $user,
-            'teacher' => $is_teacher,
-        ]);
+        $groups = $user->groups->map(function ($group) {
+            return $group->code;
+        });
+        unset($user->groups);
+        $user['groups'] = $groups;
+        $user['token'] = $user->createToken($request->header('User-Agent'))->plainTextToken;
+
+        return response()->json($user);
     }
 
     /**
@@ -207,5 +208,18 @@ class UsersController extends Controller
         $user = $request->user();
         $user->loadMissing('groups:code');
         return response()->json(['user' => $user]);
+    }
+
+    /**
+     * List users.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        $users = User::has('groups')->get();
+        $invites = GroupInvite::all()->merge($users);
+        return response()->json($invites);
     }
 }

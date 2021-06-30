@@ -30,4 +30,16 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the photo image URL.
+     *
+     * @return string
+     */
+    public function getPhotoAttribute()
+    {
+        if ($this->attributes['photo']) {
+            return url('storage/' . $this->attributes['photo']);
+        }
+    }
 }

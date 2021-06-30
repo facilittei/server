@@ -29,17 +29,23 @@ Route::get('healthcheck', [CommonsController::class, 'healthcheck']);
 Route::group(['middleware' => ['locale']], function () {
     Route::post('/register', [UsersController::class, 'register']);
     Route::post('/login', [UsersController::class, 'login']);
-    Route::post('/groups', [GroupsController::class, 'create']);
-    Route::get('/groups', [GroupsController::class, 'list']);
-    Route::delete('/groups/{group_id}', [GroupsController::class, 'destroy']);
-    Route::post('/group-invites', [GroupInvitesController::class, 'invite']);
-    Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
     Route::get('/verify/{hash}', [UsersController::class, 'verify']);
     Route::post('/recover', [UsersController::class, 'recover']);
     Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
     Route::post('/invites/{token}', [CourseInvitesController::class, 'accept']);
-
+    Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
+    
     Route::group(['middleware' => ['auth:sanctum', 'verified', 'underscore', 'camelcase']], function () {
+        Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
+            Route::post('/groups', [GroupsController::class, 'create']);
+            Route::get('/groups', [GroupsController::class, 'list']);
+            Route::get('/all-users', [UsersController::class, 'list']);
+            Route::delete('/groups/{group_id}', [GroupsController::class, 'destroy']);
+            Route::delete('/groups/{group_id}/users/{user_id}', [GroupsController::class, 'annul']);
+            Route::get('/group-invites', [GroupInvitesController::class, 'invites']);
+            Route::post('/group-invite/{group_id}', [GroupInvitesController::class, 'invite']);
+        });
+
         Route::get('/users', [UsersController::class, 'show']);
         Route::put('/users', [UsersController::class, 'update']);
         Route::get('/profiles', [ProfilesController::class, 'show']);

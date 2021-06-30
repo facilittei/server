@@ -21,7 +21,7 @@ class CreateCommentsTable extends Migration
             $table->text('description');
             $table->timestamps();
             $table->softDeletes();
-
+                  
             $table->foreign('course_id')
                   ->references('id')
                   ->on('courses')

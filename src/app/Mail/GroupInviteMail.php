@@ -45,6 +45,6 @@ class GroupInviteMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject(trans('mail.course_subject'))->markdown('mail.courses.invite');
+        return $this->subject(trans('mail.groups_subject'))->markdown('mail.groups.invite');
     }    
 }

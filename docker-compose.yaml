@@ -11,6 +11,7 @@ services:
     working_dir: /var/www/html/public
     volumes:
       - ./src/public:/var/www/html/public
+      - ./src/storage/app:/var/www/html/storage/app:ro
       - ./infra/nginx/conf.d/:/etc/nginx/conf.d/
     networks:
       - app-network

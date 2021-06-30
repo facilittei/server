@@ -18,14 +18,14 @@ class GroupInvitesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function invite(Request $request)
+    public function invite(Request $request, $group_id)
     {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
-            'group_id' => 'required'
         ]);
-        $group = Group::findOrFail($request->input('group_id'));
+
+        $group = Group::findOrFail($group_id);
         $user = User::where('email', $request->input('email'))->first();
         if (!$user) {
             $invite = GroupInvite::firstOrCreate([
@@ -82,16 +82,33 @@ class GroupInvitesController extends Controller
         ]);
 
         if ($user) {
-            $user->groups()->attach($group_id);
+            $user->groups()->toggle($group_id);
+            $groups = $user->groups->map(function ($group) {
+                return $group->code;
+            });
+            unset($user->groups);
+            $user['groups'] = $groups;
             $groupInvite->delete();
-            return response()->json([
-                'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
-                'user' => $user,
-            ]);
+
+            $user['groups'] = $groups;
+            $user['token'] = $user->createToken($request->header('User-Agent'))->plainTextToken;
+            return response()->json($user);
         }
 
         return response()->json([
             'error' => trans('messages.general_error'),
         ], 422);
+    }
+
+    /**
+     * Display a listing of the resource (invites).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function invites(Request $request)
+    {
+        return response()->json(GroupInvite::all());
     }
 }

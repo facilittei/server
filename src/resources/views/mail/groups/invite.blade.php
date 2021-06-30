@@ -15,14 +15,14 @@
 @slot('subcopy')
 @component('mail::subcopy')
 <span class="break-all">
-    <a href="{{ config('app.client_url') . '/invites/' . $invite->token  }}">
-        {{ config('app.client_url') . '/invites/' . $invite->token }}
+    <a href="{{ config('app.client_url') . '/group-invites/' . $invite->token  }}">
+        {{ config('app.client_url') . '/group-invites/' . $invite->token }}
     </a>
 </span>
 @endcomponent
 @endslot
 
-@component('mail::button', ['url' => config('app.client_url') . '/invites/' . $invite->token])
+@component('mail::button', ['url' => config('app.client_url') . '/group-invites/' . $invite->token])
 {{ trans('ui.confirm') }}
 @endcomponent
 
