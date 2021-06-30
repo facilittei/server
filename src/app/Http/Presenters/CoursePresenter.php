@@ -22,7 +22,10 @@ class CoursePresenter
             $teaching['courses'] = [];
 
             if (count($courses)) {
-                $teaching['students'] = $teach['students'];
+                $teaching['stats'] = [
+                    'courses' => $teach['courses_total'],
+                    'students' => $teach['students']
+                ];
             }
 
             for ($i = 0; $i < count($courses); $i++) {
@@ -51,6 +54,9 @@ class CoursePresenter
             
             $learning = [];
             $learning['latestWatched'] = CoursePresenter::formatLatestWatchedLesson($learn['latestWatched']);
+            $learning['stats'] = [
+                'courses' => $learn['courses_total']
+            ];
 
             for ($i = 0; $i < count($courses); $i++) {
                 $course = $courses[$i];
