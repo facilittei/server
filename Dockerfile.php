@@ -24,7 +24,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www/html
 COPY ./infra/php/local.ini /usr/local/etc/php/conf.d/local.ini
 COPY src .
-RUN cp .env.example .env && rm -rf vendor && mkdir vendor && composer install && php artisan key:generate
+RUN cp .env.example .env \
+    && rm -rf vendor || true \
+    && mkdir vendor \
+    && composer install \
+    && php artisan key:generate \
+    && php artisan test
 
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
