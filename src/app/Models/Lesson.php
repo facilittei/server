@@ -66,6 +66,10 @@ class Lesson extends Model
                     'id' => $res->chapter_id,
                     'title' => $res->chapter_title,
                 ],
+                'course' => [
+                    'id' => $res->course_id,
+                    'title' => $res->course_title,
+                ],
             ];
         }
         return $lessons;
@@ -85,10 +89,10 @@ class Lesson extends Model
             return;
         }
 
-        if (!$components || !isset($components['query']) ) {
+        if (!$components || !isset($components['query'])) {
             return;
         }
-        
+
         $params = null;
         parse_str($components['query'], $params);
 

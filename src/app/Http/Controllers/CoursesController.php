@@ -281,32 +281,28 @@ class CoursesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function favorites(Request $request, $id)
+    public function favorites(Request $request)
     {
-        $course = Course::findOrFail($id);
         $user = $request->user();
 
-        if ($user->can('view', $course)) {
-            $result = DB::table('lessons')
-                ->join('favorite_lesson', 'lessons.id', '=', 'favorite_lesson.lesson_id')
-                ->join('chapters', 'chapters.id', '=', 'lessons.chapter_id')
-                ->join('courses', 'courses.id', '=', 'chapters.course_id')
-                ->where('favorite_lesson.user_id', '=', $user->id)
-                ->where('courses.id', '=', $course->id)
-                ->select(
-                    'lessons.id as lesson_id',
-                    'lessons.title as lesson_title',
-                    'chapters.id as chapter_id',
-                    'chapters.title as chapter_title',
-                )
-                ->get();
+        $result = DB::table('lessons')
+            ->join('favorite_lesson', 'lessons.id', '=', 'favorite_lesson.lesson_id')
+            ->join('chapters', 'chapters.id', '=', 'lessons.chapter_id')
+            ->join('courses', 'courses.id', '=', 'chapters.course_id')
+            ->where('favorite_lesson.user_id', '=', $user->id)
+            ->whereIn('courses.id', $request->user()->enrolled()->pluck('courses.id'))
+            ->select(
+                'lessons.id as lesson_id',
+                'lessons.title as lesson_title',
+                'chapters.id as chapter_id',
+                'chapters.title as chapter_title',
+                'courses.id as course_id',
+                'courses.title as course_title',
+                'courses.cover as course_cover',
+            )
+            ->get();
 
-            return Lesson::formatResultWithChapter($result);
-        }
-
-        return response()->json([
-            'error' => trans('auth.unauthorized'),
-        ], 401);
+        return Lesson::formatResultWithChapter($result);
     }
 
     /**
