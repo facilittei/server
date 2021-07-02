@@ -2,6 +2,9 @@ name: CI
 
 on:
   push:
+    branches:
+      - "dev"
+      - "main"
 
 jobs:
   build:
@@ -22,14 +25,25 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Development image tag
+        if: github.ref == 'refs/heads/dev'
+        id: image-tag
+        run: echo '::set-output name=IMAGE_TAG::${{ github.sha }}'
+
+      - name: Production image tag
+        if: github.ref == 'refs/heads/main'
+        id: image-tag
+        run: echo '::set-output name=IMAGE_TAG::latest'
+
       - name: Build and push nginx
         id: build-image-nginx
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: nginx
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ steps.image-tag.outputs.IMAGE_TAG }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.nginx .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.nginx . \
+            --build-arg 'VERSION=${{ github.sha }}'
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Build and push php-fpm
@@ -37,7 +51,8 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: php-fpm
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ steps.image-tag.outputs.IMAGE_TAG }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.php .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.php . \
+            --build-arg 'VERSION=${{ github.sha }}'
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
