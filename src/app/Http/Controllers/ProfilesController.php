@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\StorageServiceContract;
 
 class ProfilesController extends Controller
 {
+    public function __construct(
+        private StorageServiceContract $storageService,
+    ) {}
+
     /**
      * Store a newly created resource in storage.
      *
@@ -106,12 +111,17 @@ class ProfilesController extends Controller
 
         $user = $request->user();
 
-        if ($user->profile->photo) {
-            $file = str_replace('profiles/', '', $user->profile->photo);
-            $photo = $request->file('photo')->storePubliclyAs('profiles', $file, 'public');
-        } else {
-            $photo = $request->file('photo')->storePublicly('profiles', 'public');
+        if (!$user->profile) {
+            return response()->json([
+                'error' => trans('messages.general_error'),
+            ], 422);
         }
+
+        if ($user->profile->photo) {
+            $this->storageService->destroy($user->profile->photo);
+        }
+        
+        $photo = $this->storageService->upload($request, 'photo', 'profiles');
 
         if ($user->profile()->update(['photo' => $photo])) {
             $user->profile->photo = $photo;
