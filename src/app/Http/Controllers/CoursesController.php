@@ -18,9 +18,14 @@ use App\Http\Presenters\CoursePresenter;
 use App\Models\CourseInvite;
 use App\Mail\CourseInviteMail;
 use App\Http\Requests\CourseAnnulRequest;
+use App\Services\StorageServiceContract;
 
 class CoursesController extends Controller
 {
+    public function __construct(
+        private StorageServiceContract $storageService,
+    ) {}
+
     /**
      * Display a listing of the resource (teacher).
      *
@@ -154,15 +159,14 @@ class CoursesController extends Controller
         $cover = '';
 
         if ($course->cover) {
-            $file = str_replace('courses/', '', $course->cover);
-            $cover = $request->file('cover')->storePubliclyAs('courses', $file, 'public');
-        } else {
-            $cover = $request->file('cover')->storePublicly('courses', 'public');
+            $this->storageService->destroy($course->cover);
         }
+        
+        $cover = $this->storageService->upload($request, 'cover', 'courses');
 
         if ($course->update(['cover' => $cover])) {
             return response()->json([
-                'cover' => $cover,
+                'cover' => $course->cover,
                 'message' => trans('messages.general_create'),
             ]);
         }
