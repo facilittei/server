@@ -7,6 +7,7 @@ use App\Queries\CourseQuery;
 use App\Queries\StudentQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardsController extends Controller
 {
@@ -20,6 +21,11 @@ class DashboardsController extends Controller
     public function home(Request $request)
     {
         $user = $request->user();
+        $cache = 'dashboards:home:'.$user->id;
+
+        if (Cache::has($cache)) {
+            return response()->json(Cache::get($cache));
+        }
 
         $queryParams = [$user->id];
         $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
@@ -70,6 +76,9 @@ class DashboardsController extends Controller
             'comments' => $commentsByCourse,
         ];
 
-        return response()->json(CoursePresenter::home($report));
+        $rs = CoursePresenter::home($report);
+        Cache::put($cache, $rs, 900);
+
+        return response()->json($rs);
     }
 }
