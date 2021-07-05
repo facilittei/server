@@ -7,6 +7,7 @@ use App\Queries\CourseQuery;
 use App\Queries\StudentQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardsController extends Controller
 {
@@ -20,10 +21,15 @@ class DashboardsController extends Controller
     public function home(Request $request)
     {
         $user = $request->user();
+        $cache = 'dashboards:home:'.$user->id;
+
+        if (Cache::has($cache)) {
+            return response()->json(Cache::get($cache));
+        }
 
         $queryParams = [$user->id];
-        $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
-        $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), $queryParams);
+        $students = DB::select(StudentQuery::buildGetTotal(), [$user->id, $user->id]);
+        $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), [$user->id, $user->id]);
         $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), $queryParams);
         $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
@@ -70,6 +76,9 @@ class DashboardsController extends Controller
             'comments' => $commentsByCourse,
         ];
 
-        return response()->json(CoursePresenter::home($report));
+        $rs = CoursePresenter::home($report);
+        Cache::put($cache, $rs, 900);
+
+        return response()->json($rs);
     }
 }
