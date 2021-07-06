@@ -94,7 +94,7 @@ class Course extends Model
     public function getCoverAttribute()
     {
         if ($this->attributes['cover']) {
-            return url('storage/' . $this->attributes['cover']);
+            return config('app.assets_url') .'/'. $this->attributes['cover'];
         }
     }
 }

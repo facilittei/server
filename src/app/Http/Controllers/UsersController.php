@@ -69,6 +69,7 @@ class UsersController extends Controller
         unset($user->groups);
         $user['groups'] = $groups;
         $user['token'] = $user->createToken($request->header('User-Agent'))->plainTextToken;
+        $user['profile'] = $user->profile;
 
         return response()->json($user);
     }

@@ -61,7 +61,7 @@ Route::group(['middleware' => ['locale']], function () {
         Route::get('/courses/enrolled', [CoursesController::class, 'enrolled']);
         Route::get('/courses/{id}/students', [CoursesController::class, 'students']);
         Route::get('/courses/{id}/invites', [CoursesController::class, 'invites']);
-        Route::get('/courses/{id}/favorites', [CoursesController::class, 'favorites']);
+        Route::get('/courses/favorites', [CoursesController::class, 'favorites']);
         Route::post('/courses/{id}/upload', [CoursesController::class, 'upload']);
         Route::post('/courses/{id}/enroll-many', [CoursesController::class, 'enrollMany']);
         Route::post('/courses/{id}/enroll', [CoursesController::class, 'enroll']);

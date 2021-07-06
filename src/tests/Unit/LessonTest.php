@@ -28,12 +28,18 @@ class LessonTest extends TestCase
         $res->lesson_title = 'Hic similique nam quibusdam.';
         $res->chapter_id = 31;
         $res->chapter_title = 'Lorem ipsum';
+        $res->course_id = 31;
+        $res->course_title = 'Lorem ipsum';
 
         $expected = [
             [
                 'id' => 5,
                 'title' => 'Hic similique nam quibusdam.',
                 "chapter" => [
+                    'id' => 31,
+                    'title' => 'Lorem ipsum'
+                ],
+                "course" => [
                     'id' => 31,
                     'title' => 'Lorem ipsum'
                 ],
