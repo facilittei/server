@@ -23,14 +23,14 @@ class DashboardsController extends Controller
         $user = $request->user();
         $cache = 'dashboards:home:'.$user->id;
 
-        if (Cache::has($cache)) {
-            return response()->json(Cache::get($cache));
-        }
+        // if (Cache::has($cache)) {
+        //     return response()->json(Cache::get($cache));
+        // }
 
         $queryParams = [$user->id];
         $students = DB::select(StudentQuery::buildGetTotal(), [$user->id, $user->id]);
         $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), [$user->id, $user->id]);
-        $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), $queryParams);
+        $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), [$user->id, $user->id]);
         $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();

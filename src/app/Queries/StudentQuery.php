@@ -26,10 +26,12 @@ class StudentQuery
      */
     public static function buildGetTotalByCourse()
     {
-        $query = 'SELECT courses.id, COUNT(course_user.user_id) AS total FROM course_user ';
-        $query .= 'INNER JOIN courses ON courses.id = course_user.course_id ';
-        $query .= 'WHERE (courses.user_id = ? OR course_user.user_id = ?) AND courses.deleted_at IS NULL ';
-        $query .= 'GROUP BY courses.id ';
+        $query = <<<QUERY
+        SELECT courses.id, COUNT(courses.id) AS total FROM courses 
+        INNER JOIN course_user ON courses.id = course_user.course_id 
+        WHERE courses.id IN (SELECT course_id FROM course_user WHERE user_id = ?) OR courses.user_id = ? 
+        GROUP BY courses.id 
+        QUERY;
 
         return $query;
     }
