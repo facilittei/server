@@ -27,9 +27,9 @@ class DashboardsController extends Controller
             return response()->json(Cache::get($cache));
         }
 
-        $queryParams = [$user->id];
-        $students = DB::select(StudentQuery::buildGetTotal(), [$user->id, $user->id]);
-        $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), [$user->id, $user->id]);
+        $queryParams = [$user->id, $user->id];
+        $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
+        $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), $queryParams);
         $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), $queryParams);
         $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
@@ -54,7 +54,7 @@ class DashboardsController extends Controller
             'comments' => $commentsByCourse,
         ];
 
-        $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), $queryParams);
+        $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), [$queryParams[0]]);
         $enrolledCount = $user->enrolled()->count();
 
         $report['learning'] = [
