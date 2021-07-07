@@ -38,13 +38,25 @@ class CourseQuery
      */
     public static function buildGetTotalFavorites()
     {
-        $query = 'SELECT courses.id, COUNT(lessons.id) AS total FROM courses ';
-        $query .= 'INNER JOIN chapters ON courses.id = chapters.course_id ';
-        $query .= 'INNER JOIN lessons ON chapters.id = lessons.chapter_id ';
-        $query .= 'INNER JOIN favorite_lesson ON lessons.id = favorite_lesson.lesson_id ';
-        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at IS NULL ';
-        $query .= 'AND lessons.deleted_at IS NULL AND chapters.deleted_at IS NULL ';
-        $query .= 'GROUP BY lessons.id ';
+        $query = <<<QUERY
+        SELECT courses.id, COUNT(courses.id) AS total FROM courses 
+        INNER JOIN chapters ON courses.id = chapters.course_id 
+        INNER JOIN lessons ON chapters.id = lessons.chapter_id 
+        INNER JOIN favorite_lesson ON lessons.id = favorite_lesson.lesson_id 
+        WHERE (
+            courses.user_id = ?
+            OR
+            courses.id IN (
+                SELECT courses.id FROM courses
+                INNER JOIN chapters ON courses.id = chapters.course_id
+                INNER JOIN lessons ON chapters.id = lessons.chapter_id
+                INNER JOIN favorite_lesson ON lessons.id = favorite_lesson.lesson_id
+                WHERE favorite_lesson.user_id = ?
+            )
+        ) AND courses.deleted_at IS NULL 
+        AND lessons.deleted_at IS NULL AND chapters.deleted_at IS NULL 
+        GROUP BY courses.id;
+        QUERY;
 
         return $query;
     }

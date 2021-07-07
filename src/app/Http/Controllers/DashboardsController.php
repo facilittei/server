@@ -31,7 +31,7 @@ class DashboardsController extends Controller
         $students = DB::select(StudentQuery::buildGetTotal(), [$user->id, $user->id]);
         $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), [$user->id, $user->id]);
         $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), [$user->id, $user->id]);
-        $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
+        $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), [$user->id, $user->id]);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();
 
