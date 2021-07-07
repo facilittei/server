@@ -68,10 +68,19 @@ class CourseQuery
      */
     public static function buildGetTotalComments()
     {
-        $query = 'SELECT courses.id, COUNT(courses.id) AS total FROM courses ';
-        $query .= 'INNER JOIN comments ON courses.id = comments.course_id ';
-        $query .= 'WHERE courses.user_id = ? AND courses.deleted_at IS NULL  ';
-        $query .= 'GROUP BY courses.id ';
+        $query = <<<QUERY
+        SELECT courses.id, COUNT(courses.id) AS total FROM courses 
+        INNER JOIN comments ON courses.id = comments.course_id 
+        WHERE (
+            courses.user_id = ?
+            OR
+            courses.id IN (
+                SELECT course_user.course_id FROM course_user
+                WHERE course_user.user_id = ?
+            )
+        ) AND courses.deleted_at IS NULL  
+        GROUP BY courses.id;
+        QUERY;
 
         return $query;
     }
