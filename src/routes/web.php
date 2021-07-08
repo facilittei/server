@@ -15,9 +15,5 @@ use App\Http\Controllers\CommonsController;
 */
 
 Route::get('/', function () {
-    if (App::environment('local')) {
-        return view('welcome');
-    }
-
     return response()->json([]);
 });
