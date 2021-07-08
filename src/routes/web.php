@@ -19,7 +19,5 @@ Route::get('/', function () {
         return view('welcome');
     }
 
-    return response()->json([
-        'error' => 'Unauthorized',
-    ], 401);
+    return response()->json([]);
 });
