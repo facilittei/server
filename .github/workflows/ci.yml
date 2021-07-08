@@ -44,7 +44,7 @@ jobs:
           IMAGE_TAG: ${{ github.ref != 'refs/heads/main' && github.sha || 'latest' }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.php . \
-            --build-arg 'APP_ENV=${{ github.ref != 'refs/heads/main' && 'production' || 'local' }}' \
+            --build-arg 'APP_ENV=${{ github.ref != 'refs/heads/main' && 'local' || 'production' }}' \
             --build-arg 'APP_DEBUG=${{ github.ref != 'refs/heads/main' && 'true' || 'false' }}' \
             --build-arg 'APP_ASSETS_URL=${{ secrets.APP_ASSETS_URL }}' \
             --build-arg 'DB_CONNECTION=${{ secrets.DB_CONNECTION }}' \

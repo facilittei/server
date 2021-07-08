@@ -19,5 +19,7 @@ Route::get('/', function () {
         return view('welcome');
     }
 
-    return (new CommonsController)->healthcheck();
+    return response()->json([
+        'error' => 'Unauthorized',
+    ], 401);
 });
