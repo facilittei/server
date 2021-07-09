@@ -44,7 +44,8 @@ jobs:
           IMAGE_TAG: ${{ github.ref != 'refs/heads/main' && github.sha || 'latest' }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.php . \
-            --build-arg 'APP_ENV=${{ github.ref != 'refs/heads/main' && 'production' || 'local' }}' \
+            --build-arg 'VERSION=${{ github.sha }}' \
+            --build-arg 'APP_ENV=${{ github.ref != 'refs/heads/main' && 'local' || 'production' }}' \
             --build-arg 'APP_DEBUG=${{ github.ref != 'refs/heads/main' && 'true' || 'false' }}' \
             --build-arg 'APP_ASSETS_URL=${{ secrets.APP_ASSETS_URL }}' \
             --build-arg 'DB_CONNECTION=${{ secrets.DB_CONNECTION }}' \
@@ -69,6 +70,5 @@ jobs:
             --build-arg 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' \
             --build-arg 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' \
             --build-arg 'AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}' \
-            --build-arg 'AWS_BUCKET=${{ secrets.AWS_BUCKET }}' \
-            --build-arg 'VERSION=${{ github.sha }}'
+            --build-arg 'AWS_BUCKET=${{ secrets.AWS_BUCKET }}'
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
