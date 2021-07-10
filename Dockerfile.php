@@ -36,8 +36,7 @@ ARG APP_ENV
 ENV APP_ENV=$APP_ENV
 
 RUN if [ "$APP_ENV" = "production" ]; then \
-        php artisan config:cache \
-        && php artisan route:cache \
+        php artisan route:cache \
         && rm -rf vendor || true \
         && composer install --no-dev; \
     fi
@@ -64,6 +63,7 @@ ARG QUEUE_CONNECTION
 ARG QUEUE_DRIVER
 ARG SQS_PREFIX
 ARG SQS_QUEUE
+ARG REDIS_CLIENT
 ARG REDIS_HOST
 ARG REDIS_PORT
 ARG MAIL_MAILER
@@ -96,6 +96,7 @@ ENV QUEUE_CONNECTION=$QUEUE_CONNECTION
 ENV QUEUE_DRIVER=$QUEUE_DRIVER
 ENV SQS_PREFIX=$SQS_PREFIX
 ENV SQS_QUEUE=$SQS_QUEUE
+ENV REDIS_CLIENT=$REDIS_CLIENT
 ENV REDIS_HOST=$REDIS_HOST
 ENV REDIS_PORT=$REDIS_PORT
 ENV MAIL_MAILER=$MAIL_MAILER
