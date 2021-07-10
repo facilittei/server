@@ -47,6 +47,9 @@ jobs:
             --build-arg 'VERSION=${{ github.sha }}' \
             --build-arg 'APP_ENV=${{ github.ref != 'refs/heads/main' && 'local' || 'production' }}' \
             --build-arg 'APP_DEBUG=${{ github.ref != 'refs/heads/main' && 'true' || 'false' }}' \
+            --build-arg 'APP_URL=${{ secrets.APP_URL }}' \
+            --build-arg 'APP_WEBSITE_URL=${{ secrets.APP_WEBSITE_URL }}' \
+            --build-arg 'APP_CLIENT_URL=${{ secrets.APP_CLIENT_URL }}' \
             --build-arg 'APP_ASSETS_URL=${{ secrets.APP_ASSETS_URL }}' \
             --build-arg 'DB_CONNECTION=${{ secrets.DB_CONNECTION }}' \
             --build-arg 'DB_HOST=${{ secrets.DB_HOST }}' \
@@ -54,9 +57,12 @@ jobs:
             --build-arg 'DB_DATABASE=${{ secrets.DB_DATABASE }}' \
             --build-arg 'DB_USERNAME=${{ secrets.DB_USERNAME }}' \
             --build-arg 'DB_PASSWORD=${{ secrets.DB_PASSWORD }}' \
+            --build-arg 'CACHE_DRIVER=${{ secrets.CACHE_DRIVER }}' \
             --build-arg 'QUEUE_CONNECTION=${{ secrets.QUEUE_CONNECTION }}' \
+            --build-arg 'QUEUE_DRIVER=${{ secrets.QUEUE_DRIVER }}' \
             --build-arg 'SQS_PREFIX=${{ secrets.SQS_PREFIX }}' \
             --build-arg 'SQS_QUEUE=${{ secrets.SQS_QUEUE }}' \
+            --build-arg 'REDIS_CLIENT=${{ secrets.REDIS_CLIENT }}' \
             --build-arg 'REDIS_HOST=${{ secrets.REDIS_HOST }}' \
             --build-arg 'REDIS_PORT=${{ secrets.REDIS_PORT }}' \
             --build-arg 'MAIL_MAILER=${{ secrets.MAIL_MAILER }}' \
