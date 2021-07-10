@@ -30,7 +30,11 @@ RUN cp .env.example .env \
     && mkdir vendor \
     && composer install \
     && php artisan key:generate \
-    && php artisan test
+    && php artisan test \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && rm -rf vendor || true \
+    && composer install --no-dev
 
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
