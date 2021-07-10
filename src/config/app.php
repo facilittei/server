@@ -58,6 +58,8 @@ return [
 
     'client_url' => env('APP_CLIENT_URL', 'http://localhost:3000'),
 
+    'website_url' => env('APP_WEBSITE_URL', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

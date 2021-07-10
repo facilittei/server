@@ -1,7 +1,7 @@
 @component('mail::layout')
 
 @slot('header')
-@component('mail::header', ['url' => config('app.url')])
+@component('mail::header', ['url' => config('app.website_url')])
 <img src="https://facilittei.com/facilittei.svg" width="225">
 @endcomponent
 @endslot
