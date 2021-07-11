@@ -2,7 +2,7 @@
 
 @slot('header')
 @component('mail::header', ['url' => config('app.website_url')])
-<img src="https://facilittei.com/facilittei.svg" width="225">
+Facilittei
 @endcomponent
 @endslot
 
