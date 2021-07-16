@@ -42,10 +42,12 @@ jobs:
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/key.pem
+            StrictHostKeyChecking no
           HOST $SSH_HOST_VM
             User $SSH_USER
             IdentityFile ~/.ssh/key.pem
             ProxyCommand ssh bastion -W %h:%p
+            StrictHostKeyChecking no
           END
       - name: Listing files
         run: ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_PROXY_HOST_0 }} 'ls /home'
