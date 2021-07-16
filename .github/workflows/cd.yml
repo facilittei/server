@@ -26,16 +26,26 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: ssh proxy command
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          port: ${{ secrets.EC2_PORT }}
-          proxy_host: ${{ secrets.EC2_PROXY_HOST_0 }}
-          proxy_username: ${{ secrets.EC2_USER }}
-          proxy_key: ${{ secrets.EC2_KEY }}
-          proxy_port: ${{ secrets.EC2_PORT }}
-          script: |
-            ls -al
+      - name: Bastion
+        id: bastion
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
+          SSH_HOST_VM: ${{ secrets.EC_HOST_VM }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/key.pem
+          chmod 600 ~/.ssh/key.pem
+          cat >>~/.ssh/config <<END
+          Host bastion
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+          HOST $SSH_HOST_VM
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+            ProxyCommand ssh bastion -W %h:%p
+          END
+      - name: Listing files
+        run: ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_PROXY_HOST_0 }} 'ls /home'
