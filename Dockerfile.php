@@ -25,11 +25,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www/html
 COPY ./infra/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
+RUN rm -rf vendor || true \
+    && mkdir vendor
+
 COPY src/composer.json .
 
-RUN rm -rf vendor || true \
-    && mkdir vendor \
-    && composer install
+RUN composer install
 
 COPY src .
 
