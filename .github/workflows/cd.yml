@@ -25,4 +25,4 @@ jobs:
           proxy_username: ${{ secrets.EC2_USER }}
           proxy_key: ${{ secrets.EC2_KEY }}
           script: |
-            ls -a
+            ls
