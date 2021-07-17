@@ -1,0 +1,72 @@
+name: CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "The tag version to deploy"
+        required: true
+
+jobs:
+  build:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: SSH Bastion
+        id: bastion
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/key.pem
+          chmod 600 ~/.ssh/key.pem
+          cat >>~/.ssh/config <<CFG
+          Host bastion
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+            StrictHostKeyChecking no
+          CFG
+
+      - name: SSH Host_0
+        id: host_0
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_PROXY_HOST_0 }}
+        run: |
+          cat >>~/.ssh/config <<CFG
+          Host host_0
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+            ProxyCommand ssh bastion -W %h:%p
+            StrictHostKeyChecking no
+          CFG
+
+      - name: Run proxy host 0
+        run: ssh host_0 'ls -la && export EC2_TAG=${{ github.event.inputs.tag }} && ./run.sh'
+
+      - name: SSH Host_1
+        id: host_1
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_PROXY_HOST_1 }}
+        run: |
+          cat >>~/.ssh/config <<CFG
+          Host host_1
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+            ProxyCommand ssh bastion -W %h:%p
+            StrictHostKeyChecking no
+          CFG
+
+      - name: Run to proxy host 1
+        run: ssh host_1 'cd /tmp && ls -la'
