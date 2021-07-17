@@ -49,5 +49,10 @@ jobs:
             StrictHostKeyChecking no
           CFG
 
-      - name: Run command on proxy host 0
+      - name: Connect to proxy host 0
         run: .github/workflows/deployment.sh
+
+      - name: Run command on proxy host 0
+        run: |
+          cd /tmp
+          ls -la

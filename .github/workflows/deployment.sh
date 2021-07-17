@@ -1,3 +1,2 @@
 #!/bin/bash
-ssh host_0 'cd /tmp &&
-    ls -la'
+ssh host_0
