@@ -50,9 +50,10 @@ jobs:
           CFG
 
       - name: Connect to proxy host 0
-        run: .github/workflows/deployment.sh
+        run: ssh host_0
 
       - name: Run command on proxy host 0
-        run: |
-          cd /tmp
-          ls -la
+        run: .github/workflows/deployment.sh
+
+      - name: Exit from proxy host 0
+        run: exit
