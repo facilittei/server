@@ -1,4 +1,4 @@
 #!/bin/bash
 cd /tmp
 ls -la
-docker ps
+docker ps -a

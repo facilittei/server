@@ -33,7 +33,7 @@ jobs:
             StrictHostKeyChecking no
           CFG
 
-      - name: SSH Host0
+      - name: SSH Host_0
         id: host_0
         env:
           SSH_USER: ${{ secrets.EC2_USER }}
@@ -56,4 +56,29 @@ jobs:
         run: .github/workflows/deployment.sh
 
       - name: Exit from proxy host 0
+        run: exit
+
+      - name: SSH Host_1
+        id: host_1
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_PROXY_HOST_1 }}
+        run: |
+          cat >>~/.ssh/config <<CFG
+          Host host_1
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+            ProxyCommand ssh bastion -W %h:%p
+            StrictHostKeyChecking no
+          CFG
+
+      - name: Connect to proxy host 1
+        run: ssh host_1
+
+      - name: Run command on proxy host 1
+        run: .github/workflows/deployment.sh
+
+      - name: Exit from proxy host 1
         run: exit
