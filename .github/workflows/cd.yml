@@ -15,23 +15,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install SSH key of bastion
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.EC2_KEY }}
-          name: id_rsa-bastion
-          known_hosts: ${{ secrets.EC2_KNOWN_HOSTS }}
-          config: ${{ secrets.EC2_CONFIG }}
-
-      - name: Install SSH key of target
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.EC2_KEY }}
-          name: id_rsa-target
-          known_hosts: ${{ secrets.EC2_KNOWN_HOSTS_0 }}
-          config: ${{ secrets.EC2_CONFIG_0 }}
-
-      - name: Proxy host command
+      - name: SSH into Bastion
+        id: bastion
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_PROXY_HOST_0 }}
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/key.pem
+          chmod 600 ~/.ssh/key.pem
+          cat >>~/.ssh/config <<CFG
+          Host bastion
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+            StrictHostKeyChecking no
+          CFG
+
+      - name: Run command on Bastion server
+        run: |
+          ssh bastion
           ls
