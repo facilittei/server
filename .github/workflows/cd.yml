@@ -50,13 +50,8 @@ jobs:
           CFG
 
       - name: Connect to proxy host 0
-        run: ssh host_0
-
-      - name: Run command on proxy host 0
-        run: .github/workflows/deployment.sh
-
-      - name: Exit from proxy host 0
-        run: exit
+        run: ssh host_0 'ls -la && \
+          docker ps -a'
 
       - name: SSH Host_1
         id: host_1
@@ -75,10 +70,5 @@ jobs:
           CFG
 
       - name: Connect to proxy host 1
-        run: ssh host_1
-
-      - name: Run command on proxy host 1
-        run: .github/workflows/deployment.sh
-
-      - name: Exit from proxy host 1
-        run: exit
+        run: ssh host_1 'ls -la && \
+          docker ps -a'
