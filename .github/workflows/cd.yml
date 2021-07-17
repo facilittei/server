@@ -34,6 +34,4 @@ jobs:
           CFG
 
       - name: Run command on Bastion server
-        run: |
-          ssh bastion
-          ls
+        run: .github/workflows/deployment.sh
