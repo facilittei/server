@@ -50,8 +50,7 @@ jobs:
           CFG
 
       - name: Connect to proxy host 0
-        run: ssh host_0 'ls -la && \
-          docker ps -a'
+        run: ssh host_0 'ls -la && cat server.txt'
 
       - name: SSH Host_1
         id: host_1
@@ -70,5 +69,4 @@ jobs:
           CFG
 
       - name: Connect to proxy host 1
-        run: ssh host_1 'ls -la && \
-          docker ps -a'
+        run: ssh host_1 'cd /tmp && ls -la'
