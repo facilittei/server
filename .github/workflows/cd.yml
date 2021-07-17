@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: SSH into Bastion
+      - name: SSH Bastion
         id: bastion
         env:
           SSH_USER: ${{ secrets.EC2_USER }}
@@ -33,5 +33,21 @@ jobs:
             StrictHostKeyChecking no
           CFG
 
-      - name: Run command on Bastion server
+      - name: SSH Host0
+        id: host_0
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_PROXY_HOST_0 }}
+        run: |
+          cat >>~/.ssh/config <<CFG
+          Host host_0
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/key.pem
+            ProxyCommand ssh bastion -W %h:%p
+            StrictHostKeyChecking no
+          CFG
+
+      - name: Run command on proxy host 0
         run: .github/workflows/deployment.sh

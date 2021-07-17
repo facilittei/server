@@ -1,3 +1,3 @@
 #!/bin/bash
-ssh bastion 'cd /tmp &&
+ssh host_0 'cd /tmp &&
     ls -la'
