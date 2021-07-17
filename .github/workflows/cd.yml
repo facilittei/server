@@ -15,22 +15,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: ls -a via ssh
-        uses: fifsky/ssh-action@master
-        with:
-          command: |
-            cd /tmp
-            ls -a
-          host: ${{ secrets.EC2_HOST }}
-          user: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-
-      - name: executing remote ssh commands using password
+      - name: ssh proxy command
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
+          proxy_host: ${{ secrets.EC2_PROXY_HOST_0 }}
+          proxy_username: ${{ secrets.EC2_USER }}
+          proxy_key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /tmp
             ls -a
