@@ -74,32 +74,4 @@ class Lesson extends Model
         }
         return $lessons;
     }
-
-    /**
-     * Set the lesson's video.
-     *
-     * @param  string  $value
-     * @return void
-     */
-    public function setVideoAttribute($value)
-    {
-        $components = parse_url($value);
-
-        if (!$components) {
-            return;
-        }
-
-        if (!$components || !isset($components['query'])) {
-            return;
-        }
-
-        $params = null;
-        parse_str($components['query'], $params);
-
-        if (!$params || !isset($params['v'])) {
-            return;
-        }
-
-        $this->attributes['video'] = config('video.youtube') . $params['v'];
-    }
 }

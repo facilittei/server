@@ -49,31 +49,4 @@ class LessonTest extends TestCase
         $actual = Lesson::formatResultWithChapter([$res]);
         $this->assertEquals($expected, $actual);
     }
-
-    public function testYoutubeLink() {
-        $url = 'https://www.youtube.com/watch?v=TbCECWFdNBg';
-        $expected = 'https://www.youtube.com/embed/TbCECWFdNBg';
-        $lesson = new Lesson();
-
-        $lesson->__set('video', $url);
-        $this->assertEquals($expected, $lesson->video);
-    }
-
-    public function testYoutubeLinkWithoutVideoOnQuery() {
-        $url = 'https://www.youtube.com/watch';
-        $expected = 'https://www.youtube.com/embed/TbCECWFdNBg';
-        $lesson = new Lesson();
-
-        $lesson->__set('video', $url);
-        $this->assertNull($lesson->video);
-    }
-
-    public function testYoutubeLinkWithMoreParamsOnQuery() {
-        $url = 'https://www.youtube.com/watch?v=TbCECWFdNBg&something=else';
-        $expected = 'https://www.youtube.com/embed/TbCECWFdNBg';
-        $lesson = new Lesson();
-
-        $lesson->__set('video', $url);
-        $this->assertEquals($expected, $lesson->video);
-    }
 }

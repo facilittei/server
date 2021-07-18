@@ -45,7 +45,16 @@ class DashboardsController extends Controller
                     'cover', 
                     'created_at', 
                     'updated_at'
-                )->limit($request->query('limit') ?? $coursesCount)->get(),
+                )->where('is_published', true)->limit($request->query('limit') ?? $coursesCount)->get(),
+            'drafts' => $user->courses()
+                ->select(
+                    'id', 
+                    'title', 
+                    'is_published', 
+                    'cover', 
+                    'created_at', 
+                    'updated_at'
+                )->where('is_published', false)->limit($request->query('limit') ?? $coursesCount)->get(),
             'students' => $students[0]->total,
             'courses_total' => $coursesCount,
             'courses_students' => $studentsByCourse,

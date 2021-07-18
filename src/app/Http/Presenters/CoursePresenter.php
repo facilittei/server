@@ -17,6 +17,7 @@ class CoursePresenter
         if (isset($report['teaching'])) {
             $teach = $report['teaching'];
             $courses = $teach['courses'];
+            $drafts = $teach['drafts'];
 
             $teaching = [];
             $teaching['courses'] = [];
@@ -42,6 +43,21 @@ class CoursePresenter
                     'comments' => CoursePresenter::getCollectionByCourse($teach['comments'], $course->id),
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
+                ];
+            }
+
+            for ($i = 0; $i < count($drafts); $i++) {
+                $draft = $drafts[$i];
+
+                $teaching['drafts'][] = [
+                    'id' => $draft->id,
+                    'title' => $draft->title,
+                    'is_published' => $draft->is_published,
+                    'cover' => $draft->cover,
+                    'students' => CoursePresenter::getCollectionByCourse($teach['courses_students'], $draft->id),
+                    'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $draft->id),
+                    'created_at' => $draft->created_at,
+                    'updated_at' => $draft->updated_at,
                 ];
             }
 

@@ -74,6 +74,7 @@ Route::group(['middleware' => ['locale']], function () {
         Route::post('/chapters/{chapter_id}/lessons/{id}/watched', [LessonsController::class, 'watched']);
         Route::patch('/chapters/{chapter_id}/lessons/reorder', [LessonsController::class, 'reorder']);
         Route::resource('/chapters/{chapter_id}/lessons', LessonsController::class)->except(['create', 'edit']);
+        Route::post('/chapters/{chapter_id}/lessons/{id}/upload', [LessonsController::class, 'upload']);
         Route::get('/comments', [CommentsController::class, 'user']);
         Route::resource('/lessons/{lesson_id}/comments', CommentsController::class)->except(['show', 'create', 'edit']);
 
