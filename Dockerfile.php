@@ -43,7 +43,7 @@ ENV APP_ENV=$APP_ENV
 
 RUN if [ "$APP_ENV" = "production" ]; then \
         php artisan route:cache \
-        && rm -rf vendor || true \
+        # && rm -rf vendor || true \
         # && composer install --no-dev; \
     fi
 
