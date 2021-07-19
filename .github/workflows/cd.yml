@@ -50,7 +50,7 @@ jobs:
           CFG
 
       - name: Run proxy host 0
-        run: ssh host_0 'ls -la && export EC2_TAG=${{ github.event.inputs.tag }} && ./run.sh'
+        run: ssh host_0 'export EC2_TAG=${{ github.event.inputs.tag }} && ./run.sh'
 
       - name: SSH Host_1
         id: host_1
@@ -69,4 +69,4 @@ jobs:
           CFG
 
       - name: Run to proxy host 1
-        run: ssh host_1 'ls -la && export EC2_TAG=${{ github.event.inputs.tag }} && ./run.sh'
+        run: ssh host_1 'export EC2_TAG=${{ github.event.inputs.tag }} && ./run.sh'

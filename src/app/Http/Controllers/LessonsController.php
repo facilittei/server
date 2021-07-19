@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LessonRequest;
 use App\Models\Chapter;
 use App\Models\Lesson;
+use App\Services\StorageServiceContract;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Goutte\Client;
-use \Exception;
 
 class LessonsController extends Controller
 {
+    public function __construct(
+        private StorageServiceContract $storageService,
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -128,24 +132,6 @@ class LessonsController extends Controller
         $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
 
         if ($request->user()->can('update', $lesson)) {
-            $client = new Client();
-
-            $audioProviderURLPattern = config('audio.soundcloud_url_pattern');
-
-            if ($req['audio'] && preg_match($audioProviderURLPattern, $req['audio'])) {
-                try {
-                    $audioProviderELM = config('audio.soundcloud_elm_pattern');
-                    $crawler = $client->request('GET', $req['audio']);
-                    $audio = $crawler->filter('meta[property="twitter:app:url:googleplay"]')->attr('content');
-                    $audio_id = str_replace($audioProviderELM, '', $audio);
-                    $req['audio'] = config('audio.soundcloud') . $audio_id;
-                }catch(Exception $e) {
-                    return response()->json([
-                        'error' => trans('messages.audio_error'),
-                    ], 422);
-                }
-            }
-
             if ($lesson->update($req)) {
                 return response()->json([
                     'lesson' => $lesson,
@@ -335,5 +321,39 @@ class LessonsController extends Controller
             ->paginate();
 
         return Lesson::formatResultWithChapter($result);
+    }
+
+
+    /**
+     * Upload lesson's video.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function upload(Request $request, $chapter_id, $id)
+    {
+        $request->validate([
+            'video' => 'file|mimes:mp4,webm,mpeg',
+        ]);
+        $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
+
+        if ($request->user()->can('update', $lesson)) {
+            $lesson->update($lesson);
+            if ($lesson->video) {
+                $this->storageService->destroy($lesson->video);
+            }
+
+            $video = $this->storageService->upload($request, 'video', 'lessons');
+            if ($lesson->update(['video' => $video])) {
+                return response()->json([
+                    'video' => $lesson->video,
+                    'message' => trans('messages.general_create'),
+                ]);
+            }
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 }
