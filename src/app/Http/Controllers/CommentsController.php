@@ -130,7 +130,8 @@ class CommentsController extends Controller
     public function user(Request $request)
     {
         $comments = Comment::where('user_id', $request->user()->id)
-            ->join('chapters', 'comments.course_id', '=', 'chapters.course_id')
+            ->join('lessons', 'comments.lesson_id', '=', 'lessons.id')
+            ->join('chapters', 'lessons.chapter_id', '=', 'chapters.id')
             ->select('comments.*', 'chapters.id as chapter_id')
             ->get();
         return response()->json(['comments' => $comments]);
