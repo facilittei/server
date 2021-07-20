@@ -15,6 +15,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cache;
 
 class UsersController extends Controller
 {
@@ -82,6 +83,8 @@ class UsersController extends Controller
      */
     public function logout(Request $request)
     {
+        $cache = 'dashboards:home:'.$request->user()->id;
+        Cache::forget($cache);
         $request->user()->currentAccessToken()->delete();
     }
 

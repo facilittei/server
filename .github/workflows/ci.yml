@@ -30,7 +30,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: nginx
-          IMAGE_TAG: ${{ github.ref != 'refs/heads/main' && github.sha || 'latest' }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.nginx . \
             --build-arg 'VERSION=${{ github.sha }}'
@@ -41,7 +41,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: php-fpm
-          IMAGE_TAG: ${{ github.ref != 'refs/heads/main' && github.sha || 'latest' }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.php . \
             --build-arg 'VERSION=${{ github.sha }}' \

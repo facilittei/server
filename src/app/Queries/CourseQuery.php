@@ -25,6 +25,7 @@ class CourseQuery
                 WHERE course_user.user_id = ?
             )
         )
+        AND lessons.deleted_at IS NULL AND chapters.deleted_at IS NULL 
         GROUP BY courses.id;
         QUERY;
 
