@@ -89,8 +89,9 @@ class CoursesController extends Controller
             }
 
             $course->load('chapters');
-            $course['lessons'] = Lesson::where('chapter_id', $course->chapters[0]->id)->count();
-            $course->chapters[0]['lessons'] = Lesson::where('chapter_id', $course->chapters[0]->id)->where('position', 1)->get();
+            if (count($course->chapters) && count($course->chapters[0]->lessons)) {
+                $course['lessons'] = Lesson::whereIn('chapter_id', $course->chapters->pluck('id'))->count();
+            }
             return $course;
         }
 
