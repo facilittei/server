@@ -88,7 +88,10 @@ class CoursesController extends Controller
                 return response()->json(['message' => trans('messages.not_published')]);
             }
 
-            return $course->load('chapters');
+            $course->load('chapters');
+            $course['lessons'] = Lesson::where('chapter_id', $course->chapters[0]->id)->count();
+            $course->chapters[0]['lessons'] = Lesson::where('chapter_id', $course->chapters[0]->id)->where('position', 1)->get();
+            return $course;
         }
 
         return response()->json([

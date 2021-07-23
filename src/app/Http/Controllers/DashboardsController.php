@@ -23,9 +23,9 @@ class DashboardsController extends Controller
         $user = $request->user();
         $cache = 'dashboards:home:'.$user->id;
 
-        if (Cache::has($cache)) {
-            return response()->json(Cache::get($cache));
-        }
+        // if (Cache::has($cache)) {
+        //     return response()->json(Cache::get($cache));
+        // }
 
         $queryParams = [$user->id, $user->id];
         $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
