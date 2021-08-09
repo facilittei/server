@@ -21,6 +21,7 @@ class CoursePresenter
 
             $teaching = [];
             $teaching['courses'] = [];
+            $teaching['drafts'] = [];
 
             if (count($courses)) {
                 $teaching['stats'] = [
