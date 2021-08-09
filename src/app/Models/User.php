@@ -134,4 +134,29 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPassword($token, $this));
     }
+
+    /**
+     * Courses by status (published)
+     * 
+     * @param bool $is_published
+     * @param int $limit
+     * @return Array<Course> 
+     */
+    public function getCourseByStatus($is_published, $limit)
+    {
+        $courses = $this->courses()->select(
+            'id', 
+            'title', 
+            'is_published', 
+            'cover', 
+            'created_at', 
+            'updated_at'
+        )->where('is_published', true)->limit($limit)->get();
+
+        if (count($courses)) {
+            return $courses;
+        }
+
+        return [];
+    }
 }

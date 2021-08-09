@@ -27,6 +27,11 @@ class CoursePresenter
                     'courses' => $teach['courses_total'],
                     'students' => $teach['students']
                 ];
+            } else {
+                $teaching['stats'] = [
+                    'courses' => 0,
+                    'students' => 0
+                ];
             }
 
             for ($i = 0; $i < count($courses); $i++) {

@@ -28,27 +28,12 @@ class DashboardsController extends Controller
         $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();
+        $limit = $request->query('limit') ?? $coursesCount;
 
         $report = [];
         $report['teaching'] = [
-            'courses' => $user->courses()
-                ->select(
-                    'id', 
-                    'title', 
-                    'is_published', 
-                    'cover', 
-                    'created_at', 
-                    'updated_at'
-                )->where('is_published', true)->limit($request->query('limit') ?? $coursesCount)->get(),
-            'drafts' => $user->courses()
-                ->select(
-                    'id', 
-                    'title', 
-                    'is_published', 
-                    'cover', 
-                    'created_at', 
-                    'updated_at'
-                )->where('is_published', false)->limit($request->query('limit') ?? $coursesCount)->get(),
+            'courses' => $user->getCourseByStatus(true, $limit),
+            'drafts' => $user->getCourseByStatus(false, $limit),
             'students' => $students[0]->total,
             'courses_total' => $coursesCount,
             'courses_students' => $studentsByCourse,
@@ -81,6 +66,6 @@ class DashboardsController extends Controller
 
         $rs = CoursePresenter::home($report);
 
-        return response()->json($rs);
+        return json_encode($rs);
     }
 }
