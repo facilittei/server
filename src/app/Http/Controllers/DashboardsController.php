@@ -21,12 +21,6 @@ class DashboardsController extends Controller
     public function home(Request $request)
     {
         $user = $request->user();
-        $cache = 'dashboards:home:'.$user->id;
-
-        if (Cache::has($cache)) {
-            return response()->json(Cache::get($cache));
-        }
-
         $queryParams = [$user->id, $user->id];
         $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
         $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), $queryParams);
@@ -86,7 +80,6 @@ class DashboardsController extends Controller
         ];
 
         $rs = CoursePresenter::home($report);
-        Cache::put($cache, $rs, 900);
 
         return response()->json($rs);
     }
