@@ -153,20 +153,7 @@ class CoursePresenter
             ];
         }
 
-        return [
-            'course' => [
-                'id' => 0,
-                'title' => '',
-            ],
-            'chapters' => [
-                'id' => 0,
-                'title' => '',
-            ],
-            'lessons' => [
-                'id' => 0,
-                'title' => '',
-            ],
-        ];
+        return null;
     }
 
     /**
