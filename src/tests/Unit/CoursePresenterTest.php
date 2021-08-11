@@ -96,6 +96,6 @@ class CoursePresenterTest extends TestCase
     public function testEmptyLatestWatchedLessonCollection()
     {
         $collection = [];
-        $this->assertEquals(0, count(CoursePresenter::formatLatestWatchedLesson($collection)));
+        $this->assertNull(CoursePresenter::formatLatestWatchedLesson($collection));
     }
 }
