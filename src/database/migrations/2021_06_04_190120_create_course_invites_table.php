@@ -18,7 +18,7 @@ class CreateCourseInvitesTable extends Migration
             $table->bigInteger('course_id')->unsigned();
             $table->string('name');
             $table->string('email');
-            $table->string('token');
+            $table->text('token');
             $table->timestamps();
 
             $table->foreign('course_id')
