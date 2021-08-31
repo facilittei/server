@@ -6,6 +6,7 @@ use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
+use App\Http\Presenters\CommentPresenter;
 
 class CommentsController extends Controller
 {
@@ -129,11 +130,20 @@ class CommentsController extends Controller
      */
     public function user(Request $request)
     {
-        $comments = Comment::where('user_id', $request->user()->id)
+        $user_id = $request->user()->id;
+        $comments = Comment::distinct()
             ->join('lessons', 'comments.lesson_id', '=', 'lessons.id')
             ->join('chapters', 'lessons.chapter_id', '=', 'chapters.id')
-            ->select('comments.*', 'chapters.id as chapter_id')
-            ->get();
-        return response()->json(['comments' => $comments]);
+            ->join('courses', 'chapters.course_id', '=', 'courses.id')
+            ->leftJoin('users', 'comments.user_id', '=', 'users.id')
+            ->select('comments.*', 'chapters.id as chapter_id', 'users.name as user_name')
+            ->where(function($query) use ($user_id){
+                $query->where('comments.user_id', $user_id)
+                      ->orWhere('courses.user_id', $user_id);
+            })
+            ->latest()
+            ->get()
+            ->toArray();
+        return response()->json(['comments' => CommentPresenter::user($comments)]);
     }
 }
