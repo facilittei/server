@@ -22,7 +22,7 @@ services:
   php-fpm:
     build:
       context: .
-      dockerfile: Dockerfile.php
+      dockerfile: Dockerfile.dev.php
     container_name: php-fpm
     restart: unless-stopped
     tty: true
