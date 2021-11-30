@@ -21,13 +21,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(10)->create();
-        Course::factory(30)->create();
-        Chapter::factory(30)->create();
-        Lesson::factory(100)->create();
-        Comment::factory(150)->create();
-        Profile::factory(10)->create();
-        Group::factory(1)->create();
+        $this->call([
+            BaseSeeder::class,
+        ]);
+
+        // User::factory(10)->create();
+        // Course::factory(30)->create();
+        // Chapter::factory(30)->create();
+        // Lesson::factory(100)->create();
+        // Comment::factory(150)->create();
+        // Profile::factory(10)->create();
+        // Group::factory(1)->create();
+        
         User::create([
             'name' => 'Admin',
             'email' => 'hey@facilittei.com',
