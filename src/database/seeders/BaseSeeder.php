@@ -6,13 +6,21 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
+use Faker\Factory as Faker;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Chapter;
 use App\Models\Lesson;
+use App\Models\Comment;
 
 class BaseSeeder extends Seeder
 {
+    private $faker;
+
+    function __construct() {
+        $this->faker = Faker::create();
+    }
+
     /**
      * Run the database seeds.
      *
@@ -25,6 +33,7 @@ class BaseSeeder extends Seeder
         $course = $this->createCourse($teacher, $students);
         $chapters = $this->createChapters($course);
         $lessons = $this->createLessons($chapters);
+        $this->createComments($lessons);
     }
 
     /**
@@ -54,12 +63,18 @@ class BaseSeeder extends Seeder
      * @return void
      */
     private function createUser($name, $email) {
-        return User::create([
+        $user = User::create([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
+
+        $user->profile()->create([
+            'bio' => $name . ' ' . implode(' ', $this->faker->sentences(3)),
+        ]);
+
+        return $user;
     }
 
     /**
@@ -133,5 +148,23 @@ class BaseSeeder extends Seeder
             $lesson3,
             $lesson4,
         ];
+    }
+
+    /**
+     * Create comments.
+     *
+     * @return void
+     */
+    private function createComments($lessons) {
+        foreach ($lessons as $lesson) {
+            for ($i = 1; $i <= 3; $i++) {
+                Comment::create([
+                    'course_id' => $lesson->chapter->course_id,
+                    'lesson_id' => $lesson->id,
+                    'user_id' => random_int(1, 3), // teacher and students
+                    'description' => $this->faker->sentence(),
+                ]);
+            }
+        }
     }
 }
