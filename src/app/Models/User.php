@@ -151,7 +151,7 @@ class User extends Authenticatable
             'cover', 
             'created_at', 
             'updated_at'
-        )->where('is_published', true)->limit($limit)->get();
+        )->where('is_published', $is_published)->limit($limit)->get();
 
         if (count($courses)) {
             return $courses;
