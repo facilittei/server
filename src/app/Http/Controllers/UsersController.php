@@ -6,6 +6,7 @@ use App\Http\Requests\UserCreateRequest;
 use App\Mail\UserConfirmationMail;
 use App\Models\GroupInvite;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -32,6 +33,9 @@ class UsersController extends Controller
 
         $user = User::create($req);
         if ($user) {
+            $group = Group::where('code', $request->input('group_code'))->first();
+            $user->groups()->toggle($group->id);
+            
             Mail::to($user->email)->queue(new UserConfirmationMail($user));
             return response()->json([
                 'message' => trans('messages.register_success'),
