@@ -12,6 +12,7 @@ use App\Models\Course;
 use App\Models\Chapter;
 use App\Models\Lesson;
 use App\Models\Comment;
+use App\Models\Group;
 
 class BaseSeeder extends Seeder
 {
@@ -34,6 +35,9 @@ class BaseSeeder extends Seeder
         $chapters = $this->createChapters($course);
         $lessons = $this->createLessons($chapters);
         $this->createComments($lessons);
+        $this->createGroup($teacher); // beta group
+        $this->watchLessons($students, $lessons);
+        $this->favoriteLessons($students, $lessons);
     }
 
     /**
@@ -86,6 +90,7 @@ class BaseSeeder extends Seeder
         $course = Course::create([
             'user_id' => $teacher->id,
             'title' => 'Startup Business',
+            'description' => '{"blocks":[{"key":"e92u9","text":"The Startup of the year.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}',
             'is_published' => true,
         ]);
         $course->students()->attach([$students[0]->id, $students[1]->id]);
@@ -102,16 +107,19 @@ class BaseSeeder extends Seeder
             'course_id' => $course->id,
             'title' => 'Introduction',
             'position' => 1,
+            'is_published' => true,
         ]);
         $chapter2 = Chapter::create([
             'course_id' => $course->id,
             'title' => 'Getting started',
             'position' => 2,
+            'is_published' => true,
         ]);
         $chapter3 = Chapter::create([
             'course_id' => $course->id,
             'title' => 'About business',
             'position' => 3,
+            'is_published' => true,
         ]);
         return [$chapter1, $chapter2, $chapter3];
     }
@@ -122,32 +130,19 @@ class BaseSeeder extends Seeder
      * @return void
      */
     private function createLessons($chapters) {
-        $lesson1 = Lesson::create([
-            'chapter_id' => $chapters[0]->id,
-            'title' => 'Introduction - Lesson 01',
-            'position' => 1,
-        ]);
-        $lesson2 = Lesson::create([
-            'chapter_id' => $chapters[0]->id,
-            'title' => 'Introduction - Lesson 02',
-            'position' => 2,
-        ]);
-        $lesson3 = Lesson::create([
-            'chapter_id' => $chapters[1]->id,
-            'title' => 'Getting started - Lesson 03',
-            'position' => 1,
-        ]);
-        $lesson4 = Lesson::create([
-            'chapter_id' => $chapters[2]->id,
-            'title' => 'About business - Lesson 04',
-            'position' => 1,
-        ]);
-        return [
-            $lesson1,
-            $lesson2,
-            $lesson3,
-            $lesson4,
-        ];
+        $lessons = [];
+        $chaptersAssoc = [0,0,1,2];
+        for ($i = 0; $i < 4; $i++) {
+            $description = '{"blocks":[{"key":"e92u9","text":"Content of lesson 0'. $i .'","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}';
+            $lessons[] = Lesson::create([
+                'chapter_id' => $chapters[$chaptersAssoc[$i]]->id,
+                'title' => 'Lesson 0'. $i + 1,
+                'description' => $description,
+                'position' => $i == 1 ? 2 : 1,
+                'is_published' => true,
+            ]);
+        }
+        return $lessons;
     }
 
     /**
@@ -165,6 +160,55 @@ class BaseSeeder extends Seeder
                     'description' => $this->faker->sentence(),
                 ]);
             }
+        }
+    }
+
+    /**
+     * Create group.
+     *
+     * @return void
+     */
+    private function createGroup($teacher) {
+        $group = Group::create([
+            'name' => 'Beta',
+            'code' => 'usuarios_beta',
+        ]);
+        $group->users()->attach([$teacher->id]);
+    }
+
+    /**
+     * Watch lessons.
+     * 
+     * We have four lessons and will apply the watched flag
+     * to users but differently
+     * 
+     * @return void
+     */
+    private function watchLessons($students, $lessons) {
+        for ($i = 0; $i < 4; $i++) {
+            $students[0]->watched()->attach($lessons[$i]->id);
+        }
+
+        for ($i = 0; $i < 3; $i++) {
+            $students[1]->watched()->attach($lessons[$i]->id);
+        }
+    }
+
+    /**
+     * Favorites lessons.
+     * 
+     * We have four lessons and will apply the favorite flag
+     * to users but differently
+     * 
+     * @return void
+     */
+    private function favoriteLessons($students, $lessons) {
+        for ($i = 0; $i < 2; $i++) {
+            $students[0]->favorited()->attach($lessons[$i]->id);
+        }
+
+        for ($i = 0; $i < 1; $i++) {
+            $students[1]->favorited()->attach($lessons[$i]->id);
         }
     }
 }
