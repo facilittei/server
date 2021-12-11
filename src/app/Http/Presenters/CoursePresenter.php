@@ -167,7 +167,8 @@ class CoursePresenter
     {
         $watchedStats = [];
         for($i = 0; $i < count($watcheds); $i++) {
-            $watchedStats[$watcheds[$i]->course_id] = $watcheds[$i]->watched;
+            $total = $watchedStats[$watcheds[$i]->course_id] ?? 0; 
+            $watchedStats[$watcheds[$i]->course_id] = ++$total;
         }
 
         $lessonStats = [];
