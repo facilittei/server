@@ -117,8 +117,7 @@ class StudentQuery
         $query .= 'INNER JOIN lessons ON favorite_lesson.lesson_id = lessons.id ';
         $query .= 'INNER JOIN chapters ON lessons.chapter_id = chapters.id ';
         $query .= 'INNER JOIN courses ON chapters.course_id = courses.id ';
-        $query .= 'INNER JOIN course_user ON courses.id = course_user.course_id ';
-        $query .= 'WHERE course_user.user_id = ? ';
+        $query .= 'WHERE favorite_lesson.user_id = ? ';
         $query .= 'GROUP BY courses.id ';
         
         return $query;
