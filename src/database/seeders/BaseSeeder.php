@@ -58,6 +58,7 @@ class BaseSeeder extends Seeder
         return [
             $this->createUser('Jeff Bezos', 'jeff@amazon.com'), 
             $this->createUser('Larry Page', 'larry@google.com'),
+            $this->createUser('Mark Zuckerberg', 'mark@facebook.com'),
         ];
     }
 
@@ -101,7 +102,7 @@ class BaseSeeder extends Seeder
             'is_published' => false,
         ]);
 
-        $course->students()->attach([$students[0]->id, $students[1]->id]);
+        $course->students()->attach([$students[0]->id, $students[1]->id, $students[2]->id]);
         return $course;
     }
 

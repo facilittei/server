@@ -113,11 +113,12 @@ class StudentQuery
      */
     public static function buildGetTotalFavorites()
     {
-        $query = 'SELECT courses.id, COUNT(favorite_lesson.id) AS total FROM favorite_lesson ';
+        $query = 'SELECT courses.id, COUNT(favorite_lesson.id) AS total FROM favorite_lesson '; 
         $query .= 'INNER JOIN lessons ON favorite_lesson.lesson_id = lessons.id ';
         $query .= 'INNER JOIN chapters ON lessons.chapter_id = chapters.id ';
         $query .= 'INNER JOIN courses ON chapters.course_id = courses.id ';
-        $query .= 'WHERE favorite_lesson.user_id = ? ';
+        $query .= 'INNER JOIN course_user ON courses.id = course_user.course_id ';
+        $query .= 'WHERE course_user.user_id = ? ';
         $query .= 'GROUP BY courses.id ';
         
         return $query;

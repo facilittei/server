@@ -26,6 +26,7 @@ class DashboardsController extends Controller
         $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), $queryParams);
         $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), $queryParams);
         $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
+        $lessonsFavoritedByCourseForStudent = DB::select(StudentQuery::buildGetTotalFavorites(), [$queryParams[0]]);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();
         $limit = $request->query('limit') ?? $coursesCount;
@@ -60,7 +61,7 @@ class DashboardsController extends Controller
             'courses_total' => $enrolledCount,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
-            'favorites' => $lessonsFavoritedByCourse,
+            'favorites' => $lessonsFavoritedByCourseForStudent,
             'comments' => $commentsByCourse,
         ];
 
