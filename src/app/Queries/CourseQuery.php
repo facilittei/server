@@ -79,7 +79,9 @@ class CourseQuery
                 SELECT course_user.course_id FROM course_user
                 WHERE course_user.user_id = ?
             )
-        ) AND courses.deleted_at IS NULL  
+        ) 
+        AND courses.deleted_at IS NULL 
+        AND comments.deleted_at IS NULL 
         GROUP BY courses.id;
         QUERY;
 
