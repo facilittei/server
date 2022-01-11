@@ -21,6 +21,7 @@ class ChaptersController extends Controller
     {
         $course = Course::findOrFail($course_id);
         $chapters = null;
+        $profile = null;
         if ($request->user()->can('view', $course)) {
             if ($request->user()->id === $course->user_id) {
                 $chapters = $course->chapters()->with('lessons')->get();
@@ -28,7 +29,22 @@ class ChaptersController extends Controller
                 $chapters = Chapter::published($course)->get();
             }
 
-            return response()->json(array_merge($course->toArray(), ['chapters' => $chapters]));
+            $profile = [
+                'name' => $course->user->name,
+                'bio' => $course->user->profile->bio,
+                'photo' => $course->user->profile->photo,
+            ];
+            unset($course->user);
+
+            return response()->json(
+                array_merge(
+                    $course->toArray(),
+                    [
+                        'chapters' => $chapters,
+                        'profile' => $profile
+                    ]
+                )
+            );
         }
 
         return response()->json([
