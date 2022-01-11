@@ -100,7 +100,7 @@ class StudentQuery
     public static function buildGetTotalComments()
     {
         $query = 'SELECT course_id as id, COUNT(comments.id) AS total FROM comments ';
-        $query .= 'WHERE comments.user_id = ? ';
+        $query .= 'WHERE comments.user_id = ? AND deleted_at IS NULL';
         $query .= 'GROUP BY course_id ';
         
         return $query;
