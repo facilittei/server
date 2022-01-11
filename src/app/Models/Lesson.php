@@ -27,6 +27,7 @@ class Lesson extends Model
         'doc',
         'position',
         'is_published',
+        'is_preview',
     ];
 
     /**
