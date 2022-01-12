@@ -31,6 +31,16 @@ class Lesson extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_published' => 'boolean',
+        'is_preview' => 'boolean',
+    ];
+
+    /**
      * The chapter.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

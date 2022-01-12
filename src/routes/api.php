@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('healthcheck', [CommonsController::class, 'healthcheck']);
 
-Route::group(['middleware' => ['locale']], function () {
+Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function () {
     Route::post('/register', [UsersController::class, 'register']);
     Route::post('/login', [UsersController::class, 'login']);
     Route::get('/verify/{hash}', [UsersController::class, 'verify']);
@@ -34,8 +34,9 @@ Route::group(['middleware' => ['locale']], function () {
     Route::post('/reset', [UsersController::class, 'reset'])->name('password.reset');
     Route::post('/invites/{token}', [CourseInvitesController::class, 'accept']);
     Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
+    Route::get('/courses/{course_id}/view', [ChaptersController::class, 'view']);
     
-    Route::group(['middleware' => ['auth:sanctum', 'verified', 'underscore', 'camelcase']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
             Route::post('/groups', [GroupsController::class, 'create']);
             Route::get('/groups', [GroupsController::class, 'list']);
