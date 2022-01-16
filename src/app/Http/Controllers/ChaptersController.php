@@ -54,13 +54,29 @@ class ChaptersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function view($course_id)
+    public function view(Request $request, $course_id)
     {
-        $course = Course::findOrFail($course_id);
-        $chapters = null;
-        $profile = null;
+        $common_fields = ['id', 'title', 'description'];
+        $course = Course::select(...array_merge(['id', 'user_id', 'slug', 'cover'], $common_fields))
+        ->with(['chapters' => function($query) use ($common_fields) {
+            $query->where('is_published', true)
+            ->select('course_id', 'id', 'title')
+            ->with(['lessons' => function($query) use ($common_fields) {
+                $fields = ['chapter_id', 'video', 'audio', 'doc', 'is_preview'];
+                $query->where('is_published', true)
+                ->select(...array_merge($fields, $common_fields));
+            }]);
+        }])
+        ->with(['user' => function($query) {
+            $query->select('id', 'name');
+            $query->with(['profile' => function($query) {
+                $query->select('user_id', 'bio', 'photo');
+            }]);
+        }])
+        ->where('id', $course_id)
+        ->where('is_published', true)
+        ->first();
 
-        $chapters = Chapter::published($course)->get();
         $profile = [
             'name' => $course->user->name,
             'bio' => $course->user->profile->bio,
@@ -72,8 +88,7 @@ class ChaptersController extends Controller
             array_merge(
                 $course->toArray(),
                 [
-                    'chapters' => $chapters,
-                    'profile' => $profile
+                    'profile' => $profile,
                 ]
             )
         );

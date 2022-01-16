@@ -107,9 +107,10 @@ class CoursesController extends Controller
     {
         $user = $request->user();
         $course = Course::where('user_id', $user->id)->findOrFail($id);
+        $req = $request->all();
         $req['cover'] = $course->cover;
 
-        if ($course->update($request->all())) {
+        if ($course->update($req)) {
             return response()->json([
                 'message' => trans('messages.general_update'),
             ]);
