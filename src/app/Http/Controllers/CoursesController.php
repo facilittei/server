@@ -81,19 +81,27 @@ class CoursesController extends Controller
     public function show(Request $request, $id)
     {
         $course = Course::findOrFail($id);
-        $user = $request->user();
+        $lessonsCount = $course->lessons()->count();
+        $profile = [
+            'name' => $course->user->name,
+            'bio' => $course->user->profile->bio,
+            'photo' => $course->user->profile->photo,
+        ];
+        unset($course->user);
 
-        if ($user->can('view', $course)) {
-            if (($user->id !== $course->user_id) && !$course->is_published) {
-                return response()->json(['message' => trans('messages.not_published')]);
-            }
-
-            return $course->load('chapters');
+        if ($course->is_published) {
+            return array_merge(
+                $course->toArray(),
+                [
+                    'profile' => $profile,
+                    'lessons' => $lessonsCount
+                ]
+            );
         }
 
         return response()->json([
-            'error' => trans('auth.unauthorized'),
-        ], 401);
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**

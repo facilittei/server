@@ -85,6 +85,16 @@ class Course extends Model
     }
 
     /**
+     * The lessons.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function lessons()
+    {
+        return $this->hasManyThrough(Lesson::class, Chapter::class);
+    }
+
+    /**
      * Set the slug by title.
      *
      * @param  string  $value
