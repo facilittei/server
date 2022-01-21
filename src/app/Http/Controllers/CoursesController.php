@@ -81,6 +81,29 @@ class CoursesController extends Controller
     public function show(Request $request, $id)
     {
         $course = Course::findOrFail($id);
+        $user = $request->user();
+        if ($user->can('view', $course)) {
+            if (($user->id !== $course->user_id) && !$course->is_published) {
+                return response()->json(['message' => trans('messages.not_published')]);
+            }
+            return $course->load('chapters');
+        }
+
+        return response()->json([
+            'error' => trans('auth.unauthorized'),
+        ], 401);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function info(Request $request, $id)
+    {
+        $course = Course::findOrFail($id);
         $lessonsCount = $course->lessons()->count();
         $profile = [
             'name' => $course->user->name,

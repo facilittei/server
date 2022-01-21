@@ -35,7 +35,7 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
     Route::post('/invites/{token}', [CourseInvitesController::class, 'accept']);
     Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
     Route::get('/courses/{course_id}/view', [ChaptersController::class, 'view']);
-    
+
     Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
             Route::post('/groups', [GroupsController::class, 'create']);
@@ -58,6 +58,7 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
         Route::patch('/courses/{course_id}/chapters/reorder', [ChaptersController::class, 'reorder']);
         Route::get('/courses/{course_id}/chapters', [ChaptersController::class, 'index']);
         Route::resource('/chapters', ChaptersController::class)->except(['index', 'create', 'edit']);
+        Route::get('/courses/{course_id}/info', [CoursesController::class, 'info']);
         Route::get('/courses/enrolled/stats', [CoursesController::class, 'stats']);
         Route::get('/courses/enrolled', [CoursesController::class, 'enrolled']);
         Route::get('/courses/{id}/students', [CoursesController::class, 'students']);
