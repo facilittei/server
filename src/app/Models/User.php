@@ -126,6 +126,16 @@ class User extends Authenticatable
     }
 
     /**
+     * The orders.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
      * Send user password reset notification link.
      *
      * @return void
