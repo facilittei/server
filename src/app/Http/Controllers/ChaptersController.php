@@ -58,13 +58,13 @@ class ChaptersController extends Controller
     {
         $common_fields = ['id', 'title', 'description'];
         $course = Course::select(...array_merge(['id', 'user_id', 'slug', 'cover'], $common_fields))
-        ->with(['chapters' => function($query) use ($common_fields) {
+        ->with(['chapters' => function($query) {
             $query->where('is_published', true)
             ->select('course_id', 'id', 'title')
-            ->with(['lessons' => function($query) use ($common_fields) {
-                $fields = ['chapter_id', 'video', 'audio', 'doc', 'is_preview'];
+            ->with(['lessons' => function($query) {
+                $fields = ['id', 'title', 'chapter_id', 'is_preview'];
                 $query->where('is_published', true)
-                ->select(...array_merge($fields, $common_fields));
+                ->select($fields);
             }]);
         }])
         ->with(['user' => function($query) {
