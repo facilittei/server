@@ -35,6 +35,7 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
     Route::post('/invites/{token}', [CourseInvitesController::class, 'accept']);
     Route::post('/group-invites/{token}', [GroupInvitesController::class, 'accept']);
     Route::get('/courses/{course_id}/view', [ChaptersController::class, 'view']);
+    Route::get('/chapters/{chapter_id}/lessons/{id}/view', [LessonsController::class, 'view']);
 
     Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
