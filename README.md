@@ -72,3 +72,7 @@ Emails are sent in background
 ```
 docker-compose exec php-fpm php artisan queue:work
 ```
+
+### Prometheus
+
+If you want to update
