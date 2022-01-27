@@ -72,3 +72,19 @@ Emails are sent in background
 ```
 docker-compose exec php-fpm php artisan queue:work
 ```
+
+### Monitoring
+
+Application monitoring is done with [Prometheus](https://prometheus.io/).
+
+[http://localhost:9090](http://localhost:9090)
+
+The endpoint that Prometheus scrapes is [http://localhost/metrics](http://localhost/metrics)
+
+### Visualization
+
+Application metrics can be visualized with [Grafana](https://grafana.com/).
+
+[http://localhost:3000](http://localhost:3000)
+
+Default login: admin/admin

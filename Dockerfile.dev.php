@@ -20,6 +20,9 @@ RUN docker-php-ext-install pdo_mysql zip exif pcntl bcmath
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install gd
 
+RUN pecl install redis && docker-php-ext-enable redis
+RUN pecl install apcu && docker-php-ext-enable apcu
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
