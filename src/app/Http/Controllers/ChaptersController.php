@@ -57,7 +57,7 @@ class ChaptersController extends Controller
     public function view(Request $request, $course_id)
     {
         $common_fields = ['id', 'title', 'description'];
-        $course = Course::select(...array_merge(['id', 'user_id', 'slug', 'cover'], $common_fields))
+        $course = Course::select(...array_merge(['id', 'user_id', 'slug', 'cover', 'price'], $common_fields))
         ->with(['chapters' => function($query) {
             $query->where('is_published', true)
             ->select('course_id', 'id', 'title')
