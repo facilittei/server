@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChaptersController;
+use App\Http\Controllers\CheckoutsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\DashboardsController;
@@ -38,6 +39,8 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
     Route::get('/chapters/{chapter_id}/lessons/{id}/view', [LessonsController::class, 'view']);
 
     Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+        Route::post('/checkouts', [CheckoutsController::class, 'store']);
+
         Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
             Route::post('/groups', [GroupsController::class, 'create']);
             Route::get('/groups', [GroupsController::class, 'list']);

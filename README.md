@@ -85,6 +85,6 @@ The endpoint that Prometheus scrapes is [http://localhost/metrics](http://localh
 
 Application metrics can be visualized with [Grafana](https://grafana.com/).
 
-[http://localhost:3000](http://localhost:3000)
+[http://localhost:3001](http://localhost:3001)
 
 Default login: admin/admin
