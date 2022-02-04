@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\CheckoutRequest;
+use App\Services\Payments\JunoService;
 
 class CheckoutsController extends Controller
 {
@@ -15,7 +17,10 @@ class CheckoutsController extends Controller
      */
     public function store(CheckoutRequest $request)
     {
-        return response()->json($request->all());
+        $response = JunoService::Authenticate();
+        return response()->json([
+            $response->json(),
+        ], $response->status());
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Storage;
-
 interface StorageServiceContract {
     /**
      * Upload file to storage.
