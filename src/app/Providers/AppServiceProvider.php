@@ -19,10 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(StorageServiceContract::class, function($app) {
+        $this->app->singleton(StorageServiceContract::class, function ($app) {
             return $app->make(StorageServiceS3::class);
         });
-        $this->app->singleton(PaymentServiceContract::class, function($app) {
+        $this->app->singleton(PaymentServiceContract::class, function ($app) {
             return $app->make(JunoService::class);
         });
     }
@@ -35,7 +35,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Http::macro('juno', function () {
-            return Http::baseUrl(config('services.juno.url'));
+            return Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'X-Api-Version' => config('services.juno.version'),
+                'X-Resource-Token' => config('services.juno.resource_token'),
+            ])
+                ->baseUrl(config('services.juno.url'));
         });
     }
 }

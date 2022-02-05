@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\CheckoutRequest;
 use App\Services\Payments\PaymentServiceContract;
 
@@ -21,7 +20,8 @@ class CheckoutsController extends Controller
      */
     public function store(CheckoutRequest $request)
     {
-        return response()->json(['token' => $this->paymentService->getAccessToken()]);
+        $response = $this->paymentService->charge($request);
+        return response()->json($response->json(), $response->status());
     }
 
     /**
