@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use App\Http\Requests\CheckoutRequest;
-use App\Services\Payments\JunoService;
+use App\Services\Payments\PaymentServiceContract;
 
 class CheckoutsController extends Controller
 {
+    public function __construct(
+        private PaymentServiceContract $paymentService,
+    ) {
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -17,10 +21,7 @@ class CheckoutsController extends Controller
      */
     public function store(CheckoutRequest $request)
     {
-        $response = JunoService::Authenticate();
-        return response()->json([
-            $response->json(),
-        ], $response->status());
+        return response()->json(['token' => $this->paymentService->getAccessToken()]);
     }
 
     /**

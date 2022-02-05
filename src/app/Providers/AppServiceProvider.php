@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Http;
 
 use App\Services\StorageServiceContract;
 use App\Services\StorageServiceS3;
+use App\Services\Payments\PaymentServiceContract;
+use App\Services\Payments\JunoService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(StorageServiceContract::class, function($app) {
             return $app->make(StorageServiceS3::class);
         });
+        $this->app->singleton(PaymentServiceContract::class, function($app) {
+            return $app->make(JunoService::class);
+        });
     }
 
     /**
@@ -30,10 +35,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Http::macro('juno', function () {
-            return Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'X-Api-Version' => config('services.juno.version'),
-            ])->baseUrl(config('services.juno.url'));
+            return Http::baseUrl(config('services.juno.url'));
         });
     }
 }
