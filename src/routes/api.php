@@ -39,8 +39,6 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
     Route::get('/chapters/{chapter_id}/lessons/{id}/view', [LessonsController::class, 'view']);
 
     Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
-        Route::post('/checkouts', [CheckoutsController::class, 'store']);
-
         Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
             Route::post('/groups', [GroupsController::class, 'create']);
             Route::get('/groups', [GroupsController::class, 'list']);
@@ -51,6 +49,7 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
             Route::post('/group-invite/{group_id}', [GroupInvitesController::class, 'invite']);
         });
 
+        Route::post('/checkouts', [CheckoutsController::class, 'store']);
         Route::get('/users', [UsersController::class, 'show']);
         Route::put('/users', [UsersController::class, 'update']);
         Route::get('/profiles', [ProfilesController::class, 'show']);

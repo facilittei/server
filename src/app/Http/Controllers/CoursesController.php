@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\EnrollMany;
 use App\Http\Requests\CourseRequest;
 use App\Mail\CourseEnrollManyMail;
-use App\Mail\UserConfirmationMail;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\User;
