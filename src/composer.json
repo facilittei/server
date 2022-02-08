@@ -1,33 +1,31 @@
 {
-    "name": "laravel/laravel",
+    "name": "facilittei",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Facilittei",
     "keywords": [
         "framework",
         "laravel"
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
-        "arquivei/laravel-prometheus-exporter": "^2.0",
+        "php": "^8.0",
         "aws/aws-sdk-php": "~3.0",
-        "fabpot/goutte": "^4.0",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0",
-        "laravel/framework": "^8.14",
-        "laravel/sanctum": "^2.8",
-        "laravel/tinker": "^2.5",
-        "league/flysystem-aws-s3-v3": "~1.0",
+        "fruitcake/laravel-cors": "^2.0.5",
+        "guzzlehttp/guzzle": "^7.2",
+        "laravel/framework": "^9.0",
+        "laravel/sanctum": "^2.14",
+        "laravel/tinker": "^2.7",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "predis/predis": "^1.1",
         "stripe/stripe-php": "^7.125"
     },
     "require-dev": {
-        "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
-        "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^6.1",
+        "phpunit/phpunit": "^9.5.10",
+        "spatie/laravel-ignition": "^1.0"
     },
     "config": {
         "optimize-autoloader": true,
