@@ -24,8 +24,8 @@ interface PaymentServiceContract
     /**
      * New charge request.
      * 
-     * @param  \Illuminate\Http\Request $request
+     * @param  array $request
      * @return \Illuminate\Http\Client\Response
      */
-    public function charge(Request $request): Response;
+    public function charge(array $request): Response;
 }

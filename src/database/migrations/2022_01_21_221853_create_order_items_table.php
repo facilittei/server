@@ -19,18 +19,17 @@ class CreateOrderItemsTable extends Migration
             $table->bigInteger('course_id')->unsigned();
             $table->string('title');
             $table->decimal('price', 8, 2);
-            $table->integer('quantity')->default(1);
             $table->timestamps();
 
             $table->foreign('order_id')
-                  ->references('id')
-                  ->on('orders')
-                  ->onDelete('cascade');
-            
+                ->references('id')
+                ->on('orders')
+                ->onDelete('cascade');
+
             $table->foreign('course_id')
-                  ->references('id')
-                  ->on('courses')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('courses')
+                ->onDelete('cascade');
         });
     }
 

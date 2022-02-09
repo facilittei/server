@@ -26,6 +26,8 @@ class CreateOrdersTable extends Migration
             $table->string('address_city');
             $table->string('address_state');
             $table->string('address_postcode');
+            $table->decimal('total', 8, 2)->nullable();
+            $table->string('reference')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

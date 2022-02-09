@@ -19,7 +19,6 @@ class OrderItem extends Model
         'course_id',
         'title',
         'price',
-        'quantity',
     ];
 
     /**

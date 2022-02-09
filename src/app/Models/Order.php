@@ -28,6 +28,8 @@ class Order extends Model
         'address_city',
         'address_state',
         'address_postcode',
+        'total',
+        'reference',
     ];
 
     /**
@@ -63,24 +65,25 @@ class Order extends Model
     /**
      * Store order request.
      * 
-     * @param Illuminate\Http\Request $request
+     * @param array $request
      * @param int $user_id
      * @return App\Models\Order
      */
-    public static function store(Request $request, int $user_id): Order
+    public static function store(array $request, int $user_id): Order
     {
         return self::create([
             'user_id' => $user_id,
-            'name' => $request->input('customer.name'),
-            'email' => $request->input('customer.email'),
-            'phone' => $request->input('customer.phone'),
-            'document' => $request->input('customer.document'),
-            'address_street' => $request->input('customer.address.street'),
-            'address_number' => $request->input('customer.address.number'),
-            'address_complement' => $request->input('customer.address.complement'),
-            'address_city' => $request->input('customer.address.city'),
-            'address_state' => $request->input('customer.address.state'),
-            'address_postcode' => $request->input('customer.address.post_code'),
+            'name' => $request['customer']['name'],
+            'email' => $request['customer']['email'],
+            'phone' => $request['customer']['phone'] ?? '',
+            'document' => $request['customer']['document'],
+            'address_street' => $request['customer']['address']['street'],
+            'address_number' => $request['customer']['address']['number'],
+            'address_complement' => $request['customer']['address']['complement'] ?? '',
+            'address_city' => $request['customer']['address']['city'],
+            'address_state' => $request['customer']['address']['state'],
+            'address_postcode' => $request['customer']['address']['post_code'],
+            'total' => $request['total'],
         ]);
     }
 }

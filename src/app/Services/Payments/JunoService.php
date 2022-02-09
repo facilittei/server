@@ -58,10 +58,10 @@ class JunoService implements PaymentServiceContract
      * 1. Creates and register the charge
      * 2. Sends payment details to be processed
      * 
-     * @param  \Illuminate\Http\Request $request
+     * @param  array $request
      * @return \Illuminate\Http\Client\Response
      */
-    public function charge(Request $request): Response
+    public function charge(array $request): Response
     {
         $token = $this->getAccessToken();
         $response = Http::juno()
@@ -72,7 +72,7 @@ class JunoService implements PaymentServiceContract
             return $response;
         }
 
-        $charge_id = $response->json()['content'][0]['id'];
+        $charge_id = $response->json()['_embedded']['charges'][0]['id'];
         $response = Http::juno()
             ->withToken($token)
             ->post('/api-integration/payments', $this->chargePayRequest($request, $charge_id));
@@ -82,22 +82,22 @@ class JunoService implements PaymentServiceContract
     /**
      * Create charge payload request.
      * 
-     * @param  \Illuminate\Http\Request $request
+     * @param array $request
      * @param  \Illuminate\Http\Request $request
      * @return array
      */
-    private function chargeCreateRequest(Request $request): array
+    private function chargeCreateRequest(array $request): array
     {
         return [
             'charge' => [
-                'description' => $request->input('description'),
-                'amount' => $request->input('amount'),
+                'description' => $request['description'],
+                'amount' => $request['amount'],
                 'paymentTypes' => ['CREDIT_CARD'],
             ],
             'billing' => [
-                'name' => $request->input('customer.name'),
-                'document' => $request->input('customer.document'),
-                'email' => $request->input('customer.email'),
+                'name' => $request['customer']['name'],
+                'document' => $request['customer']['document'],
+                'email' => $request['customer']['email'],
                 'address' => $this->chargeAddressRequest($request),
             ],
         ];
@@ -107,20 +107,20 @@ class JunoService implements PaymentServiceContract
      * Pay charge payload request.
      * 
      * @param string $charge_id;
-     * @param  \Illuminate\Http\Request $request
+     * @param  array $request
      * @param  \Illuminate\Http\Request $request
      * @return array
      */
-    private function chargePayRequest(Request $request, string $charge_id): array
+    private function chargePayRequest(array $request, string $charge_id): array
     {
         return [
             'chargeId' => $charge_id,
             'billing' => [
-                'email' => $request->input('customer.email'),
+                'email' => $request['customer']['email'],
                 'address' => $this->chargeAddressRequest($request),
             ],
             'creditCardDetails' => [
-                'creditCardHash' => $request->input('credit_card.hash'),
+                'creditCardHash' => $request['credit_card']['hash'],
             ],
         ];
     }
@@ -128,17 +128,17 @@ class JunoService implements PaymentServiceContract
     /**
      * Charge address payload request.
      * 
-     * @param  \Illuminate\Http\Request $request
+     * @param  array $request
      * @return array
      */
-    private function chargeAddressRequest(Request $request): array
+    private function chargeAddressRequest(array $request): array
     {
         return [
-            'street' => $request->input('customer.address.street'),
-            'number' => $request->input('customer.address.number'),
-            'city' => $request->input('customer.address.city'),
-            'state' => $request->input('customer.address.state'),
-            'postCode' => $request->input('customer.address.post_code'),
+            'street' => $request['customer']['address']['street'],
+            'number' => $request['customer']['address']['number'],
+            'city' => $request['customer']['address']['city'],
+            'state' => $request['customer']['address']['state'],
+            'postCode' => $request['customer']['address']['post_code'],
         ];
     }
 }

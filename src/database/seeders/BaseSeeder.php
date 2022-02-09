@@ -96,6 +96,7 @@ class BaseSeeder extends Seeder
             'title' => 'Startup Business',
             'description' => '{"blocks":[{"key":"e92u9","text":"The Startup of the year.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}',
             'is_published' => true,
+            'price' => 10,
         ]);
 
         Course::create([
@@ -103,6 +104,7 @@ class BaseSeeder extends Seeder
             'title' => 'Startup Business 2',
             'description' => '{"blocks":[{"key":"e92u9","text":"The Startup of the year.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}',
             'is_published' => false,
+            'price' => 10,
         ]);
 
         $course->students()->attach([$students[0]->id, $students[1]->id, $students[2]->id]);
