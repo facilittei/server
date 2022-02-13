@@ -9,12 +9,14 @@ use App\Services\Payments\PaymentServiceContract;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\OrderStatus;
 use App\Models\Course;
+use App\Services\Metrics\MetricContract;
 use Illuminate\Support\Facades\Log;
 
 class CheckoutsController extends Controller
 {
     public function __construct(
         private PaymentServiceContract $paymentService,
+        private MetricContract $metricService,
     ) {
     }
 
@@ -26,6 +28,7 @@ class CheckoutsController extends Controller
      */
     public function store(CheckoutRequest $request)
     {
+        $start = microtime(true);
         $req = $request->all();
         $course = Course::findOrFail($req['courses'][0]['id']);
 
@@ -55,7 +58,13 @@ class CheckoutsController extends Controller
             if ($status == OrderStatus::STATUS['CONFIRMED'] || $status == OrderStatus::STATUS['PAID']) {
                 $course->students()->syncWithoutDetaching(Auth::user()->id);
             }
-            
+
+            $this->metricService->histogram(
+                'payment_request_duration_seconds',
+                microtime(true) - $start,
+                ['keys' => ['provider'], 'values' => ['juno']],
+            );
+
             return response()->json([
                 'order_id' => $order->id,
                 'status' => $status,

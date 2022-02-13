@@ -9,6 +9,8 @@ use App\Services\StorageServiceContract;
 use App\Services\StorageServiceS3;
 use App\Services\Payments\PaymentServiceContract;
 use App\Services\Payments\JunoService;
+use App\Services\Metrics\MetricContract;
+use App\Services\Metrics\PrometheusService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton(PaymentServiceContract::class, function ($app) {
             return $app->make(JunoService::class);
+        });
+        $this->app->singleton(MetricContract::class, function ($app) {
+            return $app->make(PrometheusService::class);
         });
     }
 
