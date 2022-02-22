@@ -42,6 +42,7 @@ class Course extends Model
      */
     protected $casts = [
         'is_published' => 'boolean',
+        'price' => 'float'
     ];
 
     /**

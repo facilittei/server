@@ -120,7 +120,7 @@ class JunoService implements PaymentServiceContract
                 'address' => $this->chargeAddressRequest($request),
             ],
             'creditCardDetails' => [
-                'creditCardHash' => $request['credit_card']['hash'],
+                'creditCardHash' => $request['credit_card'],
             ],
         ];
     }

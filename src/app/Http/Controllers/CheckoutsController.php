@@ -30,7 +30,7 @@ class CheckoutsController extends Controller
     {
         $start = microtime(true);
         $req = $request->all();
-        $course = Course::findOrFail($req['courses'][0]['id']);
+        $course = Course::findOrFail($req['course_id']);
 
         $req['total'] = $course->price;
         $req['amount'] = $course->price;
@@ -48,6 +48,7 @@ class CheckoutsController extends Controller
         try {
             $resp = $response->json();
             $status = OrderStatus::STATUS[$resp['payments'][0]['status']] ?? OrderStatus::STATUS['PENDING'];
+
             $order->histories()->create([
                 'status' => $status,
                 'reference' => $resp['payments'][0]['chargeId'] . '|' . $resp['payments'][0]['id'],

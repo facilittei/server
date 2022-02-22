@@ -22,6 +22,7 @@ class CheckoutRequest extends BaseRequest
             'customer.address.state' => 'required',
             'customer.address.post_code' => 'required',
             'credit_card' => 'required',
+            'course_id' => 'required',
         ];
     }
 }
