@@ -78,5 +78,7 @@ jobs:
             --build-arg 'AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}' \
             --build-arg 'AWS_BUCKET=${{ secrets.AWS_BUCKET }}' \
             --build-arg 'LOG_LEVEL=${{ secrets.LOG_LEVEL }}' \
+            --build-arg 'PAPERTRAIL_URL=${{ secrets.PAPERTRAIL_URL }}' \
+            --build-arg 'PAPERTRAIL_PORT=${{ secrets.PAPERTRAIL_PORT }}' \
             --build-arg 'LOG_SLACK_WEBHOOK_URL=${{ secrets.LOG_SLACK_WEBHOOK_URL }}'
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
