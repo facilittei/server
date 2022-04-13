@@ -21,19 +21,77 @@ class ChaptersController extends Controller
     {
         $course = Course::findOrFail($course_id);
         $chapters = null;
-        if ($request->user()->can('view', $course)) {
-            if ($request->user()->id === $course->user_id) {
-                $chapters = $course->chapters()->with('lessons')->get();
-            } else {
-                $chapters = Chapter::published($course)->get();
-            }
-
-            return response()->json(array_merge($course->toArray(), ['chapters' => $chapters]));
+        $profile = null;
+        
+        if ($request->user()->id === $course->user_id) {
+            $chapters = $course->chapters()->with('lessons')->get();
+        } else {
+            $chapters = Chapter::published($course)->get();
         }
 
-        return response()->json([
-            'error' => trans('auth.unauthorized'),
-        ], 401);
+        $profile = [
+            'name' => $course->user->name,
+            'bio' => $course->user->profile->bio,
+            'photo' => $course->user->profile->photo,
+        ];
+        unset($course->user);
+
+        return response()->json(
+            array_merge(
+                $course->toArray(),
+                [
+                    'chapters' => $chapters,
+                    'profile' => $profile,
+                    'hasAccess' => $request->user()->can('view', $course)
+                ]
+            )
+        );
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function view(Request $request, $course_id)
+    {
+        $common_fields = ['id', 'title', 'description'];
+        $course = Course::select(...array_merge(['id', 'user_id', 'slug', 'cover', 'price'], $common_fields))
+        ->with(['chapters' => function($query) {
+            $query->where('is_published', true)
+            ->select('course_id', 'id', 'title')
+            ->with(['lessons' => function($query) {
+                $fields = ['id', 'title', 'chapter_id', 'is_preview'];
+                $query->where('is_published', true)
+                ->select($fields);
+            }]);
+        }])
+        ->with(['user' => function($query) {
+            $query->select('id', 'name');
+            $query->with(['profile' => function($query) {
+                $query->select('user_id', 'bio', 'photo');
+            }]);
+        }])
+        ->where('id', $course_id)
+        ->where('is_published', true)
+        ->first();
+
+        $profile = [
+            'name' => $course->user->name,
+            'bio' => $course->user->profile->bio,
+            'photo' => $course->user->profile->photo,
+        ];
+        unset($course->user);
+
+        return response()->json(
+            array_merge(
+                $course->toArray(),
+                [
+                    'profile' => $profile,
+                ]
+            )
+        );
     }
 
     /**

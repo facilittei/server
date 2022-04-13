@@ -78,5 +78,22 @@ jobs:
             --build-arg 'AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}' \
             --build-arg 'AWS_BUCKET=${{ secrets.AWS_BUCKET }}' \
             --build-arg 'LOG_LEVEL=${{ secrets.LOG_LEVEL }}' \
+            --build-arg 'JUNO_API_URL=${{ secrets.JUNO_API_URL }}' \
+            --build-arg 'JUNO_API_AUTHORIZATION_BASIC=${{ secrets.JUNO_API_AUTHORIZATION_BASIC }}' \
+            --build-arg 'JUNO_API_VERSION=${{ secrets.JUNO_API_VERSION }}' \
+            --build-arg 'JUNO_API_RESOURCE_TOKEN=${{ secrets.JUNO_API_RESOURCE_TOKEN }}' \
+            --build-arg 'PROMETHEUS_METRICS_ROUTE_ENABLED=${{ secrets.PROMETHEUS_METRICS_ROUTE_ENABLED }}' \
+            --build-arg 'PROMETHEUS_METRICS_ROUTE_PATH=${{ secrets.PROMETHEUS_METRICS_ROUTE_PATH }}' \
+            --build-arg 'PROMETHEUS_METRICS_ROUTE_MIDDLEWARE=${{ secrets.PROMETHEUS_METRICS_ROUTE_MIDDLEWARE }}' \
+            --build-arg 'PROMETHEUS_COLLECT_FULL_SQL_QUERY=${{ secrets.PROMETHEUS_COLLECT_FULL_SQL_QUERY }}' \
+            --build-arg 'PROMETHEUS_STORAGE_ADAPTER=${{ secrets.PROMETHEUS_STORAGE_ADAPTER }}' \
+            --build-arg 'PROMETHEUS_REDIS_HOST=${{ secrets.PROMETHEUS_REDIS_HOST }}' \
+            --build-arg 'PROMETHEUS_REDIS_PORT=${{ secrets.PROMETHEUS_REDIS_PORT }}' \
+            --build-arg 'PROMETHEUS_REDIS_TIMEOUT=${{ secrets.PROMETHEUS_REDIS_TIMEOUT }}' \
+            --build-arg 'PROMETHEUS_REDIS_READ_TIMEOUT=${{ secrets.PROMETHEUS_REDIS_READ_TIMEOUT }}' \
+            --build-arg 'PROMETHEUS_REDIS_PERSISTENT_CONNECTIONS=${{ secrets.PROMETHEUS_REDIS_PERSISTENT_CONNECTIONS }}' \
+            --build-arg 'PROMETHEUS_REDIS_PREFIX=${{ secrets.PROMETHEUS_REDIS_PREFIX }}' \
+            --build-arg 'PAPERTRAIL_URL=${{ secrets.PAPERTRAIL_URL }}' \
+            --build-arg 'PAPERTRAIL_PORT=${{ secrets.PAPERTRAIL_PORT }}' \
             --build-arg 'LOG_SLACK_WEBHOOK_URL=${{ secrets.LOG_SLACK_WEBHOOK_URL }}'
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\EnrollMany;
 use App\Http\Requests\CourseRequest;
 use App\Mail\CourseEnrollManyMail;
-use App\Mail\UserConfirmationMail;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\User;
@@ -82,18 +81,49 @@ class CoursesController extends Controller
     {
         $course = Course::findOrFail($id);
         $user = $request->user();
-
         if ($user->can('view', $course)) {
             if (($user->id !== $course->user_id) && !$course->is_published) {
                 return response()->json(['message' => trans('messages.not_published')]);
             }
-
             return $course->load('chapters');
         }
 
         return response()->json([
             'error' => trans('auth.unauthorized'),
         ], 401);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function info(Request $request, $id)
+    {
+        $course = Course::findOrFail($id);
+        $lessonsCount = $course->lessons()->count();
+        $profile = [
+            'name' => $course->user->name,
+            'bio' => $course->user->profile->bio,
+            'photo' => $course->user->profile->photo,
+        ];
+        unset($course->user);
+
+        if ($course->is_published) {
+            return array_merge(
+                $course->toArray(),
+                [
+                    'profile' => $profile,
+                    'lessons' => $lessonsCount
+                ]
+            );
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**
@@ -107,9 +137,10 @@ class CoursesController extends Controller
     {
         $user = $request->user();
         $course = Course::where('user_id', $user->id)->findOrFail($id);
+        $req = $request->all();
         $req['cover'] = $course->cover;
 
-        if ($course->update($request->all())) {
+        if ($course->update($req)) {
             return response()->json([
                 'message' => trans('messages.general_update'),
             ]);

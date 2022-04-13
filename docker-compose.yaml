@@ -14,10 +14,12 @@ services:
       - ./src/storage/app:/var/www/html/storage/app:ro
       - ./infra/nginx/conf.d/:/etc/nginx/conf.d/
     networks:
-      - app-network
+      - api-network
     depends_on:
       - php-fpm
       - db
+      - redis
+      - prometheus
 
   php-fpm:
     build:
@@ -34,7 +36,7 @@ services:
       - ./src:/var/www/html
       - ./infra/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - app-network
+      - api-network
 
   db:
     platform: linux/x86_64
@@ -53,7 +55,7 @@ services:
       - dbdata:/var/lib/mysql/
       - ./infra/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
-      - app-network
+      - api-network
   
   redis:
     image: redis
@@ -66,10 +68,31 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: redis
     networks:
-      - app-network
+      - api-network
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - api-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    container_name: grafana
+    depends_on:
+      - prometheus
+    networks:
+      - api-network
 networks:
-  app-network:
+  api-network:
     driver: bridge
 volumes:
   dbdata:

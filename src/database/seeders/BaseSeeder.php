@@ -55,6 +55,8 @@ class BaseSeeder extends Seeder
      * @return void
      */
     private function createStudents() {
+        $this->createUser('Elon Musk', 'elon@tesla.com');
+
         return [
             $this->createUser('Jeff Bezos', 'jeff@amazon.com'), 
             $this->createUser('Larry Page', 'larry@google.com'),
@@ -90,9 +92,11 @@ class BaseSeeder extends Seeder
     private function createCourse($teacher, $students) {
         $course = Course::create([
             'user_id' => $teacher->id,
+            'price' => $this->faker->randomFloat(2),
             'title' => 'Startup Business',
             'description' => '{"blocks":[{"key":"e92u9","text":"The Startup of the year.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}',
             'is_published' => true,
+            'price' => 10,
         ]);
 
         Course::create([
@@ -100,6 +104,7 @@ class BaseSeeder extends Seeder
             'title' => 'Startup Business 2',
             'description' => '{"blocks":[{"key":"e92u9","text":"The Startup of the year.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}',
             'is_published' => false,
+            'price' => 10,
         ]);
 
         $course->students()->attach([$students[0]->id, $students[1]->id, $students[2]->id]);
@@ -149,6 +154,7 @@ class BaseSeeder extends Seeder
                 'description' => $description,
                 'position' => $i == 1 ? 2 : 1,
                 'is_published' => true,
+                'is_preview' => $i % 2 ? true : false,
             ]);
         }
         return $lessons;

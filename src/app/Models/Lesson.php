@@ -27,6 +27,17 @@ class Lesson extends Model
         'doc',
         'position',
         'is_published',
+        'is_preview',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_published' => 'boolean',
+        'is_preview' => 'boolean',
     ];
 
     /**

@@ -95,6 +95,27 @@ class LessonsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function view(Request $request, $chapter_id, $id)
+    {
+        $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
+
+        if (!$lesson->is_published || !$lesson->is_preview) {
+            return response()->json([
+                'error' => trans('auth.unauthorized'),
+            ], 401);
+        }
+
+        return response()->json($lesson);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $chapter_id
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show(Request $request, $chapter_id, $id)
     {
         $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);

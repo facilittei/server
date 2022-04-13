@@ -19,6 +19,7 @@ class Course extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'price',
         'slug',
         'description',
         'cover',
@@ -32,6 +33,16 @@ class Course extends Model
      */
     protected $hidden = [
         'user_id',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_published' => 'boolean',
+        'price' => 'float'
     ];
 
     /**
@@ -72,6 +83,16 @@ class Course extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * The lessons.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function lessons()
+    {
+        return $this->hasManyThrough(Lesson::class, Chapter::class);
     }
 
     /**

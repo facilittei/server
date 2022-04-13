@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'juno' => [
+        'url' => env('JUNO_API_URL'),
+        'version' => env('JUNO_API_VERSION'),
+        'resource_token' => env('JUNO_API_RESOURCE_TOKEN'),
+        'authorization_basic' => env('JUNO_API_AUTHORIZATION_BASIC'),
+    ],
+
 ];
