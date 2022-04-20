@@ -37,7 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['slack', 'papertrail'],
+            'channels' => ['slack'],
             'ignore_exceptions' => false,
         ],
 
