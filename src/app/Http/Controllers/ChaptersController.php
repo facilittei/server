@@ -25,7 +25,7 @@ class ChaptersController extends Controller
         $watched = null;
         
         if ($request->user()->id === $course->user_id) {
-            $chapters = $course->chapters()->with('lessons', 'lessons.watched')->get();
+            $chapters = $course->chapters()->with('lessons')->get();
         } else {
             $chapters = Chapter::published($course)->get();
             $lesson_ids = [];
@@ -38,7 +38,7 @@ class ChaptersController extends Controller
             if ($request->user()) {
                 $lesson_user = DB::table('lesson_user')
                 ->where('user_id', $request->user()->id)
-                ->whereIn('lesson_id', $lesson_ids)->select('id')->get();
+                ->whereIn('lesson_id', $lesson_ids)->select('lesson_id as id')->get();
 
                 foreach($lesson_user as $lesson) {
                     $watched[] = $lesson->id;
