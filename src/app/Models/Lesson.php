@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use DOMDocument;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Config;
 
 class Lesson extends Model
 {
@@ -58,6 +56,16 @@ class Lesson extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class)->latest();
+    }
+
+    /**
+     * The watched.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function watched()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     /**
