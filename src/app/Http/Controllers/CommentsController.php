@@ -20,7 +20,7 @@ class CommentsController extends Controller
     {
         $lesson = Lesson::findOrFail($lesson_id);
         if ($request->user()->can('view', $lesson->chapter->course)) {
-            return $lesson->comments->load('user');
+            return $lesson->comments()->whereNull('parent_id')->with('user', 'comments')->get();
         }
 
         return response()->json(['comments' => []]);
