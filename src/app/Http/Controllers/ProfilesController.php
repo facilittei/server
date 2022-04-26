@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\StorageServiceContract;
+use App\Services\Storages\StorageServiceContract;
 
 class ProfilesController extends Controller
 {

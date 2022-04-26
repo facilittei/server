@@ -22,11 +22,28 @@ class ChaptersController extends Controller
         $course = Course::findOrFail($course_id);
         $chapters = null;
         $profile = null;
+        $watched = null;
         
         if ($request->user()->id === $course->user_id) {
             $chapters = $course->chapters()->with('lessons')->get();
         } else {
             $chapters = Chapter::published($course)->get();
+            $lesson_ids = [];
+            foreach($chapters as $chapter) {
+                foreach($chapter->lessons as $lesson) {
+                    $lesson_ids[] = $lesson->id;
+                }
+            }
+
+            if ($request->user()) {
+                $lesson_user = DB::table('lesson_user')
+                ->where('user_id', $request->user()->id)
+                ->whereIn('lesson_id', $lesson_ids)->select('lesson_id as id')->get();
+
+                foreach($lesson_user as $lesson) {
+                    $watched[] = $lesson->id;
+                }
+            }
         }
 
         $profile = [
@@ -42,7 +59,8 @@ class ChaptersController extends Controller
                 [
                     'chapters' => $chapters,
                     'profile' => $profile,
-                    'hasAccess' => $request->user()->can('view', $course)
+                    'hasAccess' => $request->user()->can('view', $course),
+                    'watched' => $watched,
                 ]
             )
         );

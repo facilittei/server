@@ -17,7 +17,7 @@ use App\Http\Presenters\CoursePresenter;
 use App\Models\CourseInvite;
 use App\Mail\CourseInviteMail;
 use App\Http\Requests\CourseAnnulRequest;
-use App\Services\StorageServiceContract;
+use App\Services\Storages\StorageServiceContract;
 
 class CoursesController extends Controller
 {

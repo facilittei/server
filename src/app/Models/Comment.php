@@ -19,6 +19,7 @@ class Comment extends Model
         'course_id',
         'lesson_id',
         'user_id',
+        'parent_id',
         'description',
     ];
 
@@ -50,5 +51,15 @@ class Comment extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The comments.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'parent_id')->with('user');
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Storages;
 
 use Illuminate\Support\Facades\Storage;
-use App\Services\StorageServiceContract;
+use App\Services\Storages\StorageServiceContract;
 
 class StorageServiceS3 implements StorageServiceContract
 {
