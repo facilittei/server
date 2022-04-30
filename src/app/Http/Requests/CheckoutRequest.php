@@ -12,8 +12,6 @@ class CheckoutRequest extends BaseRequest
     public function rules()
     {
         return [
-            'description' => 'required',
-            'amount' => 'required|numeric',
             'customer.name' => 'required',
             'customer.email' => 'required|email',
             'customer.document' => 'required|max:11',

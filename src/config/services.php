@@ -37,4 +37,9 @@ return [
         'authorization_basic' => env('JUNO_API_AUTHORIZATION_BASIC'),
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+    ],
+
 ];
