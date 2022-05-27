@@ -6,7 +6,7 @@ class OrderStatus
 {
     const STATUS = [
         'STARTED' => 'started',
-        'SUCCEED' => 'succeed',
+        'SUCCEED' => 'succeeded',
         'PENDING' => 'pending',
         'FAILED'   => 'failed',
     ];

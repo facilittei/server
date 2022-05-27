@@ -18,5 +18,6 @@ return [
     'course_info' => 'Aqui está o curso em que você se inscreveu',
     'course_password_reset' => 'Redefina a senha para ter acesso à sua conta',
     'course_password_reset_link' => 'Redefinir senha',
+    'order_subject' => 'Detalhes do pedido',
 
 ];

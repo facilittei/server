@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
 
 class Order extends Model
 {
@@ -67,7 +66,7 @@ class Order extends Model
      * 
      * @param array $request
      * @param int $user_id
-     * @return App\Models\Order
+     * @return \App\Models\Order
      */
     public static function store(array $request, int $user_id): Order
     {

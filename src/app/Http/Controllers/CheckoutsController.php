@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Order;
 use App\Services\Payments\PaymentServiceContract;
-use Illuminate\Support\Facades\Auth;
+use App\Services\Metrics\MetricContract;
 use App\Enums\OrderStatus;
 use App\Models\Course;
-use App\Services\Metrics\MetricContract;
-use Illuminate\Support\Facades\Log;
+use App\Mail\OrderMail;
 
 class CheckoutsController extends Controller
 {
@@ -55,16 +57,21 @@ class CheckoutsController extends Controller
             ]);
 
             $order->update(['reference' => $resp['id']]);
+            Log::info('info', ['status'=>$status, 's'=>OrderStatus::STATUS['SUCCEED']]);
             if ($status == OrderStatus::STATUS['SUCCEED']) {
                 $course->students()->syncWithoutDetaching(Auth::user()->id);
             }
+
+            Mail::to(Auth::user()->email)->queue(
+                new OrderMail($order, $course, Auth::user(), true),
+            );
 
             $this->metricService->histogram(
                 'payment_request_duration_seconds',
                 microtime(true) - $start,
                 ['keys' => ['provider'], 'values' => ['stripe']],
             );
-
+            
             return response()->json([
                 'order_id' => $order->id,
             ]);
@@ -75,6 +82,9 @@ class CheckoutsController extends Controller
                 'err_code' => $e->getCode(),
                 'err_message' => $e->getMessage(),
             ]);
+            Mail::to(Auth::user()->email)->queue(
+                new OrderMail($order, $course, Auth::user(), false),
+            );
         }
 
         return response()->json([
