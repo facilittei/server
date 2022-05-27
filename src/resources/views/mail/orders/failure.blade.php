@@ -8,9 +8,9 @@ Facilittei
 
 # {{ trans('ui.hi') }}, {{ $user->name }}!
 
-{{ trans('messages.course_failure') }}: **{{ $course->title }}**
+{{ trans('messages.order_failure') }} **{{ $course->title }}**
 
-{{ trans('messages.order_number') }}:**{{ $order->id }}**
+{{ trans('messages.order_number') }}: **{{ $order->id }}**
 
 @slot('footer')
 @component('mail::footer')

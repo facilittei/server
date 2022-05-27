@@ -31,6 +31,6 @@ return [
     'password_reset_link_noaction' => 'Se você não solicitou uma redefinição de senha, nenhuma ação adicional é necessária.',
     'password_reset_link_trouble' => 'Se tiver problemas para clicar no botão "Redefinir Senha", copie e cole o URL abaixo em seu navegador:',
     'order_number' => 'ID do pedido',
-    'order_failure' => 'Sua solicitação não pôde ser processada para',
+    'order_failure' => 'Infelizmente sua compra nāo foi concluída com sucesso para',
     'order_enjoy' => 'Esperamos que você goste do curso!',
 ];
