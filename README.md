@@ -88,3 +88,10 @@ Application metrics can be visualized with [Grafana](https://grafana.com/).
 [http://localhost:3001](http://localhost:3001)
 
 Default login: admin/admin
+
+### Email server
+We need to send emails to our customers in order to notify about a successful account creation or a payment.
+
+To avoid going to external services to read those emails we can use [MailHog](https://github.com/mailhog/MailHog) to capture these emails for development purposes.
+
+[http://localhost:8025](http://localhost:8025)
