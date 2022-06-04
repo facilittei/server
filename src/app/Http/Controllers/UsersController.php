@@ -34,7 +34,9 @@ class UsersController extends Controller
         $user = User::create($req);
         if ($user) {
             $group = Group::where('code', $request->input('group_code'))->first();
-            $user->groups()->toggle($group->id);
+            if ($group) {
+                $user->groups()->toggle($group->id);
+            }
             
             Mail::to($user->email)->queue(new UserConfirmationMail($user));
             return response()->json([

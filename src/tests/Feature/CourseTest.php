@@ -25,13 +25,15 @@ class CourseTest extends TestCase
         $this->enroll($course, $student);
 
         $token = $this->accessToken($student);
-        $response = $this->withHeaders(['Authorization' => 'Bearer '.$token])
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
             ->json('GET', '/api/courses/enrolled');
-        
+
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) =>
+        $response->assertJson(
+            fn (AssertableJson $json) =>
             $json->has(1)
-                ->first(fn ($json) =>
+                ->first(
+                    fn ($json) =>
                     $json->where('id', $course->id)
                         ->where('title', $course->title)
                         ->where('description', $course->description)
