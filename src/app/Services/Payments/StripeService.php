@@ -13,7 +13,7 @@ class StripeService implements PaymentServiceContract
         $created = Charge::create([
             'amount' => $this->priceInCents($request['total']),
             'currency' => 'BRL',
-            'source' => $request['credit_card']['hash'],
+            'source' => $request['credit_card'],
             'description' => $request['description'],
         ]);
         return $created;
