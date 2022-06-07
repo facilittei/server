@@ -42,8 +42,6 @@ class AddressesController extends Controller
         ], 422);
     }
 
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -58,7 +56,7 @@ class AddressesController extends Controller
         $req = $request->all();
         $req['user_id'] = Auth::user()->id;
         if ($user->can('update', $address)) {
-            if($address->update($req)) {
+            if ($address->update($req)) {
                 return response()->json([
                     'address' => $address,
                     'message' => trans('messages.general_update'),
@@ -84,7 +82,7 @@ class AddressesController extends Controller
         $address = Address::findOrFail($id);
 
         if ($user->can('delete', $address)) {
-            if($address->delete()) {
+            if ($address->delete()) {
                 return response('', 204);
             }
         }
