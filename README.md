@@ -73,6 +73,20 @@ Emails are sent in background
 docker-compose exec php-fpm php artisan queue:work
 ```
 
+### Tests
+
+Running API tests
+
+```
+docker-compose exec php-fpm php artisan test
+```
+
+Run tests using filter to specify tests to run
+
+```
+docker-compose exec php-fpm php artisan test --filter AddressTest
+```
+
 ### Monitoring
 
 Application monitoring is done with [Prometheus](https://prometheus.io/).

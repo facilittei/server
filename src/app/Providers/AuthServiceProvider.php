@@ -6,10 +6,12 @@ use App\Models\Chapter;
 use App\Models\Comment;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\Address;
 use App\Policies\ChapterPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\CoursePolicy;
 use App\Policies\LessonPolicy;
+use App\Policies\AddressPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -24,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         Chapter::class => ChapterPolicy::class,
         Lesson::class => LessonPolicy::class,
         Comment::class => CommentPolicy::class,
+        Address::class => AddressPolicy::class,
     ];
 
     /**

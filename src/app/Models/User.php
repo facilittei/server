@@ -126,6 +126,16 @@ class User extends Authenticatable
     }
 
     /**
+     * The addresses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    /**
      * The orders.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

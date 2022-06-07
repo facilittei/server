@@ -12,6 +12,7 @@ use \App\Http\Controllers\CourseInvitesController;
 use App\Http\Controllers\GroupInvitesController;
 use App\Http\Controllers\GroupsController;
 use \App\Http\Controllers\CommonsController;
+use \App\Http\Controllers\AddressesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -82,6 +83,7 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
         Route::post('/chapters/{chapter_id}/lessons/{id}/upload', [LessonsController::class, 'upload']);
         Route::get('/comments', [CommentsController::class, 'user']);
         Route::resource('/lessons/{lesson_id}/comments', CommentsController::class)->except(['show', 'create', 'edit']);
+        Route::resource('/addresses', AddressesController::class)->except(['show', 'create', 'edit']);
 
         Route::get('home', [DashboardsController::class, 'home']);
     });
