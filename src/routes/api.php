@@ -83,7 +83,7 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
         Route::post('/chapters/{chapter_id}/lessons/{id}/upload', [LessonsController::class, 'upload']);
         Route::get('/comments', [CommentsController::class, 'user']);
         Route::resource('/lessons/{lesson_id}/comments', CommentsController::class)->except(['show', 'create', 'edit']);
-        Route::resource('/addresses', AddressesController::class)->except(['create', 'edit']);
+        Route::resource('/addresses', AddressesController::class)->except(['show', 'create', 'edit']);
 
         Route::get('home', [DashboardsController::class, 'home']);
     });

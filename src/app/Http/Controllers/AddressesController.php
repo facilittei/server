@@ -29,8 +29,10 @@ class AddressesController extends Controller
     {
         $req = $request->all();
         $req['user_id'] = Auth::user()->id;
-        if (Address::create($req)) {
+        $address = Address::create($req);
+        if ($address) {
             return response()->json([
+                'address' => $address,
                 'message' => trans('messages.general_create'),
             ], 201);
         }
@@ -40,38 +42,55 @@ class AddressesController extends Controller
         ], 422);
     }
 
+
+
     /**
-     * Display the specified resource.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, int $id)
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $user = $request->user();
+        $address = Address::findOrFail($id);
+        $req = $request->all();
+        $req['user_id'] = Auth::user()->id;
+        if ($user->can('update', $address)) {
+            if($address->update($req)) {
+                return response()->json([
+                    'address' => $address,
+                    'message' => trans('messages.general_update'),
+                ]);
+            }
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\AddressRequest $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(AddressRequest $request, $id)
-    {
-        //
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $user = $request->user();
+        $address = Address::findOrFail($id);
+
+        if ($user->can('delete', $address)) {
+            if($address->delete()) {
+                return response('', 204);
+            }
+        }
+
+        return response()->json([
+            'error' => trans('messages.general_error'),
+        ], 422);
     }
 }
