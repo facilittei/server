@@ -20,6 +20,7 @@ services:
       - db
       - redis
       - prometheus
+      - mailhog
 
   php-fpm:
     build:
@@ -94,12 +95,15 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    container_name: mailhog
     restart: unless-stopped
     logging:
       driver: 'none'
     ports:
       - 1025:1025
       - 8025:8025
+    networks:
+      - api-network
 
 networks:
   api-network:

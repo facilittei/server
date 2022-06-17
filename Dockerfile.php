@@ -38,8 +38,7 @@ RUN composer install --no-dev
 COPY src .
 
 RUN cp .env.example .env \
-    && php artisan key:generate \
-    && php artisan test
+    && php artisan key:generate
 
 ARG APP_ENV
 ENV APP_ENV=$APP_ENV
