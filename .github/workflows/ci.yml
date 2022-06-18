@@ -96,4 +96,5 @@ jobs:
             --build-arg 'PAPERTRAIL_URL=${{ secrets.PAPERTRAIL_URL }}' \
             --build-arg 'PAPERTRAIL_PORT=${{ secrets.PAPERTRAIL_PORT }}' \
             --build-arg 'LOG_SLACK_WEBHOOK_URL=${{ secrets.LOG_SLACK_WEBHOOK_URL }}'
+            --build-arg 'SENTRY_LARAVEL_DSN=${{ secrets.SENTRY_LARAVEL_DSN }}'
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
