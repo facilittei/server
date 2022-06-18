@@ -33,4 +33,5 @@ return [
     'order_number' => 'ID do pedido',
     'order_failure' => 'Infelizmente sua compra nāo foi concluída com sucesso para',
     'order_enjoy' => 'Esperamos que você goste do curso!',
+    'order_course_already_bought' => 'Este curso já foi comprado por você',
 ];

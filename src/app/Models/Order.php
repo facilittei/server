@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use App\Enums\OrderStatus;
 
 class Order extends Model
 {
@@ -84,5 +86,23 @@ class Order extends Model
             'address_postcode' => $request['customer']['address']['post_code'],
             'total' => $request['total'],
         ]);
+    }
+
+    /**
+     * Check if user has already bought a course.
+     * 
+     * @param int $course_id
+     * @param int $user_id
+     * @return bool
+     */
+    public static function hasBought(int $course_id, int $user_id): bool {
+        $count = DB::table('orders')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('order_histories', 'orders.id', '=', 'order_histories.order_id')
+            ->where('orders.user_id', $user_id)
+            ->where('order_items.course_id', $course_id)
+            ->where('order_histories.status', OrderStatus::STATUS['SUCCEED'])
+            ->count();
+        return $count > 0; 
     }
 }

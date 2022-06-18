@@ -87,6 +87,12 @@ Run tests using filter to specify tests to run
 docker-compose exec php-fpm php artisan test --filter AddressTest
 ```
 
+To create a test
+
+```
+docker-compose exec php-fpm php artisan make:test AddressTest
+```
+
 ### Monitoring
 
 Application monitoring is done with [Prometheus](https://prometheus.io/).
