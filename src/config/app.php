@@ -183,6 +183,7 @@ return [
         Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class,
         Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider::class,
         Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider::class,
+        Sentry\Laravel\ServiceProvider::class,
 
         /*
          * Application Service Providers...
