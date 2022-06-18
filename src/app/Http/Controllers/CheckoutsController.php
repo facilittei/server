@@ -34,6 +34,12 @@ class CheckoutsController extends Controller
         $req = $request->all();
         $course = Course::findOrFail($req['course_id']);
 
+        if (Order::hasBought($course->id, Auth::user()->id)) {
+            return response()->json([
+                'error' => trans('messages.order_course_already_bought'),
+            ], 400);
+        }
+
         $req['total'] = $course->price;
         $req['description'] = $course->title;
         $order = Order::store($req, Auth::user()->id);
@@ -57,7 +63,7 @@ class CheckoutsController extends Controller
             ]);
 
             $order->update(['reference' => $resp['id']]);
-            Log::info('info', ['status'=>$status, 's'=>OrderStatus::STATUS['SUCCEED']]);
+
             if ($status == OrderStatus::STATUS['SUCCEED']) {
                 $course->students()->syncWithoutDetaching(Auth::user()->id);
             }
