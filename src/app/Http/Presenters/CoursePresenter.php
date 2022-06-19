@@ -18,6 +18,7 @@ class CoursePresenter
             $teach = $report['teaching'];
             $courses = $teach['courses'];
             $drafts = $teach['drafts'];
+            $sales = collect($teach['sales']);
 
             $teaching = [];
             $teaching['courses'] = [];
@@ -37,6 +38,7 @@ class CoursePresenter
 
             for ($i = 0; $i < count($courses); $i++) {
                 $course = $courses[$i];
+                $salesTotal = $sales->firstWhere('id', $course->id);
 
                 $teaching['courses'][] = [
                     'id' => $course->id,
@@ -47,6 +49,7 @@ class CoursePresenter
                     'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $course->id),
                     'favorites' => CoursePresenter::getCollectionByCourse($teach['favorites'], $course->id),
                     'comments' => CoursePresenter::getCollectionByCourse($teach['comments'], $course->id),
+                    'sales' => $salesTotal ? $salesTotal->total : 0,
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
                 ];
