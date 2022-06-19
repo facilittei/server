@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Http\Presenters\CoursePresenter;
 use App\Queries\CourseQuery;
+use App\Queries\OrderQuery;
 use App\Queries\StudentQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 class DashboardsController extends Controller
 {
@@ -29,6 +30,10 @@ class DashboardsController extends Controller
         $lessonsFavoritedByCourseForStudent = DB::select(StudentQuery::buildGetTotalFavorites(), [$queryParams[0]]);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();
+        $sales = DB::select(OrderQuery::buildGetTotalSales(), [
+            OrderStatus::STATUS['SUCCEED'],
+            $user->id,
+        ]);
         $limit = $request->query('limit') ?? $coursesCount;
 
         $report = [];
@@ -41,6 +46,7 @@ class DashboardsController extends Controller
             'courses_lessons' => $lessonsByCourse,
             'favorites' => $lessonsFavoritedByCourse,
             'comments' => $commentsByCourse,
+            'sales' => $sales,
         ];
 
         $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), [$queryParams[0]]);
