@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -93,6 +94,18 @@ class Course extends Model
     public function lessons()
     {
         return $this->hasManyThrough(Lesson::class, Chapter::class);
+    }
+
+    /**
+     * The sales.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sales()
+    {
+        return $this->hasMany(OrderItem::class)
+            ->join('order_histories', 'order_histories.order_id', '=', 'order_items.order_id')
+            ->where('status', '=', OrderStatus::STATUS['SUCCEED']);
     }
 
     /**
