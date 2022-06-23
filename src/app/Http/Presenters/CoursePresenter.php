@@ -78,7 +78,7 @@ class CoursePresenter
             $courses = $learn['courses'];
             
             $learning = [];
-            $learning['latestWatched'] = CoursePresenter::formatLatestWatchedLesson($learn['latestWatched']);
+            $learning['latest_watched'] = CoursePresenter::formatLatestWatchedLesson($learn['latest_watched']);
             $learning['stats'] = [
                 'courses' => $learn['courses_total']
             ];

@@ -63,7 +63,7 @@ class DashboardsController extends Controller
                     'courses.created_at',
                     'courses.updated_at',
                 )->limit($request->query('limit') ?? $enrolledCount)->get(),
-            'latestWatched' => $studentLastestLesson,
+            'latest_watched' => $studentLastestLesson,
             'courses_total' => $enrolledCount,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
@@ -73,6 +73,6 @@ class DashboardsController extends Controller
 
         $rs = CoursePresenter::home($report);
 
-        return json_encode($rs);
+        return response()->json($rs);
     }
 }
