@@ -15,6 +15,11 @@ class StripeService implements PaymentServiceContract
             'currency' => 'BRL',
             'source' => $request['credit_card'],
             'description' => $request['description'],
+            'metadata' => [
+                'order_id' => $request['order_id'],
+                'name' => $request['name'],
+                'email' => $request['email'],
+            ],
         ]);
         return $created;
     }
