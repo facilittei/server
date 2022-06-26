@@ -22,9 +22,9 @@ class PrometheusService implements MetricContract
         $counter = app('prometheus')->getOrRegisterCounter(
             $name,
             MetricLabel::METRICS[$name],
-            $labels,
+            $labels['keys'],
         );
-        $counter->inc();
+        $counter->inc($labels['values']);
     }
 
     /**

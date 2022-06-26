@@ -34,7 +34,8 @@ class CheckoutsController extends Controller
         $req = $request->all();
         $course = Course::findOrFail($req['course_id']);
 
-        if (Order::hasBought($course->id, Auth::user()->id)) {
+        $user = Auth::user();
+        if (Order::hasBought($course->id, $user->id)) {
             return response()->json([
                 'error' => trans('messages.order_course_already_bought'),
             ], 400);
@@ -42,7 +43,10 @@ class CheckoutsController extends Controller
 
         $req['total'] = $course->price;
         $req['description'] = $course->title;
-        $order = Order::store($req, Auth::user()->id);
+        $req['name'] = $user->name;
+        $req['email'] = $user->email;
+        $order = Order::store($req, $user->id);
+        $req['order_id'] = $order->id;
         $order->histories()->create(['status' => OrderStatus::STATUS['STARTED']]);
         $order->items()->createMany([
             [
@@ -52,6 +56,7 @@ class CheckoutsController extends Controller
             ]
         ]);
 
+        $successful = false;
         try {
             $resp = $this->paymentService->charge($req);
             $status = $resp['status'];
@@ -68,19 +73,12 @@ class CheckoutsController extends Controller
                 $course->students()->syncWithoutDetaching(Auth::user()->id);
             }
 
-            Mail::to(Auth::user()->email)->queue(
-                new OrderMail($order, $course, Auth::user(), true),
-            );
-
+            $successful = true;
             $this->metricService->histogram(
                 'payment_request_duration_seconds',
                 microtime(true) - $start,
                 ['keys' => ['provider'], 'values' => ['stripe']],
             );
-            
-            return response()->json([
-                'order_id' => $order->id,
-            ]);
         } catch (Exception $e) {
             $order->histories()->create(['status' => OrderStatus::STATUS['FAILED']]);
             Log::critical('checkout controller store failed', [
@@ -88,9 +86,38 @@ class CheckoutsController extends Controller
                 'err_code' => $e->getCode(),
                 'err_message' => $e->getMessage(),
             ]);
-            Mail::to(Auth::user()->email)->queue(
-                new OrderMail($order, $course, Auth::user(), false),
-            );
+        }
+
+        try {
+            if ($successful) {
+                Mail::to(Auth::user()->email)->queue(
+                    new OrderMail($order, $course, Auth::user(), true),
+                );
+                $this->metricService->counter(
+                    'payment_status_counter', 
+                    ['keys' => ['provider', 'status'], 'values' => ['stripe', 'successful']],
+                );
+            } else {
+                Mail::to(Auth::user()->email)->queue(
+                    new OrderMail($order, $course, Auth::user(), false),
+                );
+                $this->metricService->counter(
+                    'payment_status_counter', 
+                    ['keys' => ['provider', 'status'], 'values' => ['stripe', 'failed']],
+                );
+            }
+        } catch(Exception $e) {
+            Log::critical('checkout controller mailer failed', [
+                'order_id' => $order->id,
+                'err_code' => $e->getCode(),
+                'err_message' => $e->getMessage(),
+            ]);
+        }
+
+        if ($successful) {
+            return response()->json([
+                'order_id' => $order->id,
+            ]);
         }
 
         return response()->json([
