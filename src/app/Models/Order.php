@@ -22,13 +22,6 @@ class Order extends Model
         'name',
         'email',
         'phone',
-        'document',
-        'address_street',
-        'address_number',
-        'address_complement',
-        'address_city',
-        'address_state',
-        'address_postcode',
         'total',
         'reference',
     ];
@@ -74,16 +67,9 @@ class Order extends Model
     {
         return self::create([
             'user_id' => $user_id,
-            'name' => $request['customer']['name'],
-            'email' => $request['customer']['email'],
-            'phone' => $request['customer']['phone'] ?? '',
-            'document' => $request['customer']['document'],
-            'address_street' => $request['customer']['address']['street'],
-            'address_number' => $request['customer']['address']['number'],
-            'address_complement' => $request['customer']['address']['complement'] ?? '',
-            'address_city' => $request['customer']['address']['city'],
-            'address_state' => $request['customer']['address']['state'],
-            'address_postcode' => $request['customer']['address']['post_code'],
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'phone' => $request['phone'] ?? '',
             'total' => $request['total'],
         ]);
     }
