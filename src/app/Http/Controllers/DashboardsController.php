@@ -26,11 +26,15 @@ class DashboardsController extends Controller
         $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
         $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), $queryParams);
         $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), $queryParams);
-        $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
-        $lessonsFavoritedByCourseForStudent = DB::select(StudentQuery::buildGetTotalFavorites(), [$queryParams[0]]);
+        $lessonsFavoriteByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
+        $lessonsFavoriteByCourseForStudent = DB::select(StudentQuery::buildGetTotalFavorites(), [$queryParams[0]]);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();
         $sales = DB::select(OrderQuery::buildGetTotalSales(), [
+            OrderStatus::STATUS['SUCCEED'],
+            $user->id,
+        ]);
+        $fees = DB::select(OrderQuery::buildGetTotalFees(), [
             OrderStatus::STATUS['SUCCEED'],
             $user->id,
         ]);
@@ -44,12 +48,13 @@ class DashboardsController extends Controller
             'courses_total' => $coursesCount,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
-            'favorites' => $lessonsFavoritedByCourse,
+            'favorites' => $lessonsFavoriteByCourse,
             'comments' => $commentsByCourse,
             'sales' => $sales,
+            'fees' => $fees,
         ];
 
-        $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), [$queryParams[0]]);
+        $studentLatestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), [$queryParams[0]]);
         $enrolledCount = $user->enrolled()->count();
 
         $report['learning'] = [
@@ -63,11 +68,11 @@ class DashboardsController extends Controller
                     'courses.created_at',
                     'courses.updated_at',
                 )->limit($request->query('limit') ?? $enrolledCount)->get(),
-            'latest_watched' => $studentLastestLesson,
+            'latest_watched' => $studentLatestLesson,
             'courses_total' => $enrolledCount,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
-            'favorites' => $lessonsFavoritedByCourseForStudent,
+            'favorites' => $lessonsFavoriteByCourseForStudent,
             'comments' => $commentsByCourse,
         ];
 

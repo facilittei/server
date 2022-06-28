@@ -13,6 +13,7 @@ use App\Services\Metrics\MetricContract;
 use App\Enums\OrderStatus;
 use App\Models\Course;
 use App\Mail\OrderMail;
+use App\Enums\Fee;
 
 class CheckoutsController extends Controller
 {
@@ -48,6 +49,10 @@ class CheckoutsController extends Controller
         $order = Order::store($req, $user->id);
         $req['order_id'] = $order->id;
         $order->histories()->create(['status' => OrderStatus::STATUS['STARTED']]);
+        $order->fees()->create([
+            'percentage' => Fee::TOTAL['PERCENTAGE'],
+            'transaction' => Fee::TOTAL['TRANSACTION'],
+        ]);
         $order->items()->createMany([
             [
                 'course_id' => $course->id,

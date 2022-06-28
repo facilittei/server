@@ -57,6 +57,16 @@ class Order extends Model
     }
 
     /**
+     * The fees.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function fees()
+    {
+        return $this->hasMany(Fee::class);
+    }
+
+    /**
      * Store order request.
      * 
      * @param array $request
