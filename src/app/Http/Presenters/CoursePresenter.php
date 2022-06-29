@@ -50,7 +50,6 @@ class CoursePresenter
                     'favorites' => CoursePresenter::getCollectionByCourse($teach['favorites'], $course->id),
                     'comments' => CoursePresenter::getCollectionByCourse($teach['comments'], $course->id),
                     'sales' => CoursePresenter::calculateSaleWithFees($course, $sales, $fees),
-                    'fees'=>$fees,
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
                 ];
@@ -201,13 +200,14 @@ class CoursePresenter
     public static function calculateSaleWithFees($course, $sales, $fees)
     {
         $salesTotal = $sales->firstWhere('id', $course->id);
-        $feesTotal = $fees->firstWhere('id', $course->id);
+        $feesTotal = $fees->where('id', $course->id);
 
         if (!$salesTotal) {
             return 0;
         }
 
-        $decreaseTotal = ($feesTotal->percentage / 100) * $salesTotal->total;
-        return $salesTotal->total - $decreaseTotal - floatval($feesTotal->transaction);
+        $decreaseTotal = $salesTotal->total * ($feesTotal[0]->percentage / 100);
+        $transactionTotal = floatval($feesTotal[0]->transaction) * $feesTotal->count();
+        return $salesTotal->total - $decreaseTotal - $transactionTotal;
     }
 }
