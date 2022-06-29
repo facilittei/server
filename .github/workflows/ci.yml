@@ -95,6 +95,8 @@ jobs:
             --build-arg 'PROMETHEUS_REDIS_PREFIX=${{ secrets.PROMETHEUS_REDIS_PREFIX }}' \
             --build-arg 'PAPERTRAIL_URL=${{ secrets.PAPERTRAIL_URL }}' \
             --build-arg 'PAPERTRAIL_PORT=${{ secrets.PAPERTRAIL_PORT }}' \
-            --build-arg 'LOG_SLACK_WEBHOOK_URL=${{ secrets.LOG_SLACK_WEBHOOK_URL }}'
-            --build-arg 'SENTRY_LARAVEL_DSN=${{ secrets.SENTRY_LARAVEL_DSN }}'
+            --build-arg 'LOG_SLACK_WEBHOOK_URL=${{ secrets.LOG_SLACK_WEBHOOK_URL }}' \
+            --build-arg 'SENTRY_LARAVEL_DSN=${{ secrets.SENTRY_LARAVEL_DSN }}' \
+            --build-arg 'STRIPE_KEY=${{ secrets.STRIPE_KEY }}' \
+            --build-arg 'STRIPE_SECRET=${{ secrets.STRIPE_SECRET }}'
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
