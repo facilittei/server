@@ -18,6 +18,8 @@ class CoursePresenter
             $teach = $report['teaching'];
             $courses = $teach['courses'];
             $drafts = $teach['drafts'];
+            $sales = collect($teach['sales']);
+            $fees = collect($teach['fees']);
 
             $teaching = [];
             $teaching['courses'] = [];
@@ -37,7 +39,7 @@ class CoursePresenter
 
             for ($i = 0; $i < count($courses); $i++) {
                 $course = $courses[$i];
-
+                
                 $teaching['courses'][] = [
                     'id' => $course->id,
                     'title' => $course->title,
@@ -47,6 +49,8 @@ class CoursePresenter
                     'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $course->id),
                     'favorites' => CoursePresenter::getCollectionByCourse($teach['favorites'], $course->id),
                     'comments' => CoursePresenter::getCollectionByCourse($teach['comments'], $course->id),
+                    'sales' => CoursePresenter::calculateSaleWithFees($course, $sales, $fees),
+                    'fees'=>$fees,
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
                 ];
@@ -75,7 +79,7 @@ class CoursePresenter
             $courses = $learn['courses'];
             
             $learning = [];
-            $learning['latestWatched'] = CoursePresenter::formatLatestWatchedLesson($learn['latestWatched']);
+            $learning['latest_watched'] = CoursePresenter::formatLatestWatchedLesson($learn['latest_watched']);
             $learning['stats'] = [
                 'courses' => $learn['courses_total']
             ];
@@ -184,5 +188,26 @@ class CoursePresenter
         }
 
         return $stats;
+    }
+
+    /**
+     * Calculate course sales with fees.
+     *
+     * @param \App\Models\Course $course
+     * @param object $sales
+     * @param object $fees
+     * @return array
+     */
+    public static function calculateSaleWithFees($course, $sales, $fees)
+    {
+        $salesTotal = $sales->firstWhere('id', $course->id);
+        $feesTotal = $fees->firstWhere('id', $course->id);
+
+        if (!$salesTotal) {
+            return 0;
+        }
+
+        $decreaseTotal = ($feesTotal->percentage / 100) * $salesTotal->total;
+        return $salesTotal->total - $decreaseTotal - floatval($feesTotal->transaction);
     }
 }

@@ -46,11 +46,14 @@ class ChaptersController extends Controller
             }
         }
 
-        $profile = [
-            'name' => $course->user->name,
-            'bio' => $course->user->profile->bio,
-            'photo' => $course->user->profile->photo,
-        ];
+        $profile = [];
+        if ($course->user->profile) {
+            $profile = [
+                'name' => $course->user->name,
+                'bio' => $course->user->profile->bio,
+                'photo' => $course->user->profile->photo,
+            ];
+        }
         unset($course->user);
 
         return response()->json(

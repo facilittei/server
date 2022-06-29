@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Http\Presenters\CoursePresenter;
 use App\Queries\CourseQuery;
+use App\Queries\OrderQuery;
 use App\Queries\StudentQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 class DashboardsController extends Controller
 {
@@ -25,10 +26,18 @@ class DashboardsController extends Controller
         $students = DB::select(StudentQuery::buildGetTotal(), $queryParams);
         $studentsByCourse = DB::select(StudentQuery::buildGetTotalByCourse(), $queryParams);
         $lessonsByCourse = DB::select(CourseQuery::buildGetTotalLessons(), $queryParams);
-        $lessonsFavoritedByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
-        $lessonsFavoritedByCourseForStudent = DB::select(StudentQuery::buildGetTotalFavorites(), [$queryParams[0]]);
+        $lessonsFavoriteByCourse = DB::select(CourseQuery::buildGetTotalFavorites(), $queryParams);
+        $lessonsFavoriteByCourseForStudent = DB::select(StudentQuery::buildGetTotalFavorites(), [$queryParams[0]]);
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();
+        $sales = DB::select(OrderQuery::buildGetTotalSales(), [
+            OrderStatus::STATUS['SUCCEED'],
+            $user->id,
+        ]);
+        $fees = DB::select(OrderQuery::buildGetTotalFees(), [
+            OrderStatus::STATUS['SUCCEED'],
+            $user->id,
+        ]);
         $limit = $request->query('limit') ?? $coursesCount;
 
         $report = [];
@@ -39,11 +48,13 @@ class DashboardsController extends Controller
             'courses_total' => $coursesCount,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
-            'favorites' => $lessonsFavoritedByCourse,
+            'favorites' => $lessonsFavoriteByCourse,
             'comments' => $commentsByCourse,
+            'sales' => $sales,
+            'fees' => $fees,
         ];
 
-        $studentLastestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), [$queryParams[0]]);
+        $studentLatestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), [$queryParams[0]]);
         $enrolledCount = $user->enrolled()->count();
 
         $report['learning'] = [
@@ -57,16 +68,16 @@ class DashboardsController extends Controller
                     'courses.created_at',
                     'courses.updated_at',
                 )->limit($request->query('limit') ?? $enrolledCount)->get(),
-            'latestWatched' => $studentLastestLesson,
+            'latest_watched' => $studentLatestLesson,
             'courses_total' => $enrolledCount,
             'courses_students' => $studentsByCourse,
             'courses_lessons' => $lessonsByCourse,
-            'favorites' => $lessonsFavoritedByCourseForStudent,
+            'favorites' => $lessonsFavoriteByCourseForStudent,
             'comments' => $commentsByCourse,
         ];
 
         $rs = CoursePresenter::home($report);
 
-        return json_encode($rs);
+        return response()->json($rs);
     }
 }

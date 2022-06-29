@@ -30,6 +30,9 @@ return [
     'password_reset_link_expiration' => 'This password reset link will expire in 60 minutes.',
     'password_reset_link_noaction' => 'If you did not request a password reset, no further action is required.',
     'password_reset_link_trouble' => 'If you’re having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser:',
-
+    'order_number' => 'Order ID',
+    'order_failure' => 'Unfortunately, your purchase was not completed successfully for',
+    'order_enjoy' => 'We hope you enjoy the course!',
+    'order_course_already_bought' => 'This course has already been bought by you',
 
 ];

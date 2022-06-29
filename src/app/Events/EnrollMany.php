@@ -13,7 +13,7 @@ class EnrollMany
     /**
      * Course to enroll
      *
-     * @var App\Models\Course
+     * @var \App\Models\Course
      */
     public $course;
 

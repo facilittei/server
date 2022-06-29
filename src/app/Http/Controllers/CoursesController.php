@@ -85,7 +85,14 @@ class CoursesController extends Controller
             if (($user->id !== $course->user_id) && !$course->is_published) {
                 return response()->json(['message' => trans('messages.not_published')]);
             }
-            return $course->load('chapters');
+
+            if ($user->can('update', $course)) {
+                $course->load('sales');
+                $course['sales_total'] = $course->sales->sum('price');
+            }
+
+            $course->load('chapters');
+            return $course;
         }
 
         return response()->json([

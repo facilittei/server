@@ -73,6 +73,26 @@ Emails are sent in background
 docker-compose exec php-fpm php artisan queue:work
 ```
 
+### Tests
+
+Running API tests
+
+```
+docker-compose exec php-fpm php artisan test
+```
+
+Run tests using filter to specify tests to run
+
+```
+docker-compose exec php-fpm php artisan test --filter AddressTest
+```
+
+To create a test
+
+```
+docker-compose exec php-fpm php artisan make:test AddressTest
+```
+
 ### Monitoring
 
 Application monitoring is done with [Prometheus](https://prometheus.io/).
@@ -88,3 +108,10 @@ Application metrics can be visualized with [Grafana](https://grafana.com/).
 [http://localhost:3001](http://localhost:3001)
 
 Default login: admin/admin
+
+### Email server
+We need to send emails to our customers in order to notify about a successful account creation or a payment.
+
+To avoid going to external services to read those emails we can use [MailHog](https://github.com/mailhog/MailHog) to capture these emails for development purposes.
+
+[http://localhost:8025](http://localhost:8025)

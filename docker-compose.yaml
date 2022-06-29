@@ -20,6 +20,7 @@ services:
       - db
       - redis
       - prometheus
+      - mailhog
 
   php-fpm:
     build:
@@ -85,12 +86,25 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - "3001:3000"
+      - "3002:3000"
     container_name: grafana
     depends_on:
       - prometheus
     networks:
       - api-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    restart: unless-stopped
+    logging:
+      driver: 'none'
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - api-network
+
 networks:
   api-network:
     driver: bridge

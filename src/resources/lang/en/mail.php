@@ -17,4 +17,5 @@ return [
     'course_info' => 'Here is the course you\'ve been subscribed',
     'course_password_reset' => 'Please reset the password to have access to your account',
     'course_password_reset_link' => 'Password reset',
+    'order_subject' => 'Order details',
 ];
