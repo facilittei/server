@@ -16,5 +16,7 @@ return [
     'thanks' => 'Obrigado',
     'hi' => 'Olá',
     'access' => 'Acessar',
+    'title' => 'Título',
+    'total' => 'Total',
 
 ];
