@@ -31,11 +31,11 @@ class DashboardsController extends Controller
         $commentsByCourse = DB::select(CourseQuery::buildGetTotalComments(), $queryParams);
         $coursesCount = $user->courses()->count();
         $sales = DB::select(OrderQuery::buildGetTotalSales(), [
-            OrderStatus::STATUS['SUCCEED'],
+            OrderStatus::SUCCEED->value,
             $user->id,
         ]);
         $fees = DB::select(OrderQuery::buildGetTotalFees(), [
-            OrderStatus::STATUS['SUCCEED'],
+            OrderStatus::SUCCEED->value,
             $user->id,
         ]);
         $limit = $request->query('limit') ?? $coursesCount;

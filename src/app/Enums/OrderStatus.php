@@ -2,12 +2,10 @@
 
 namespace App\Enums;
 
-class OrderStatus
+enum OrderStatus: string
 {
-    const STATUS = [
-        'STARTED' => 'started',
-        'SUCCEED' => 'succeeded',
-        'PENDING' => 'pending',
-        'FAILED'   => 'failed',
-    ];
+    case STARTED = 'started';
+    case SUCCEED = 'succeeded';
+    case PENDING = 'pending';
+    case FAILED = 'failed';
 }

@@ -105,7 +105,7 @@ class Course extends Model
     {
         return $this->hasMany(OrderItem::class)
             ->join('order_histories', 'order_histories.order_id', '=', 'order_items.order_id')
-            ->where('status', '=', OrderStatus::STATUS['SUCCEED']);
+            ->where('status', '=', OrderStatus::SUCCEED->value);
     }
 
     /**
