@@ -185,10 +185,16 @@ class CheckoutsController extends Controller
 
         $successful = $this->charge($req, $user, $order, $course, $start);
         $this->notify($user, $order, $course, $successful);
+
+        $total['fees'] = $order->total * (FeeEnum::PERCENTAGE->total() / 100);
+        $total['fees'] += FeeEnum::TRANSACTION->total();
+        $total['gross'] = $order->total;
+        $total['net'] = $total['gross'] - $total['fees'];
         
         if ($successful) {
             return response()->json([
                 'order_id' => $order->id,
+                ...$total,
             ]);
         }
 
