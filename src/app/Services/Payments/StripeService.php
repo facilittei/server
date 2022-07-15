@@ -2,35 +2,78 @@
 
 namespace App\Services\Payments;
 
+use App\Enums\ErrorCode;
 use Stripe\Charge;
 use Stripe\Stripe;
+use App\Models\User;
+use App\Models\Order;
+use Exception;
 
 class StripeService implements PaymentServiceContract
 {
-    public function charge(array $request)
+    private ?Order $order = null;
+    private ?User $customer = null;
+
+    public function charge(array $request): mixed
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
-        $created = Charge::create([
-            'amount' => $this->priceInCents($request['total']),
-            'currency' => 'BRL',
-            'source' => $request['credit_card'],
-            'description' => $request['description'],
-            'metadata' => [
-                'order_id' => $request['order_id'],
-                'name' => $request['name'],
-                'email' => $request['email'],
-            ],
-        ]);
-        return $created;
+        if (!$this->isValid($request)) {
+            throw new Exception('invalid payload for charge');
+        }
+
+        if (!$this->customer) {
+            throw new Exception('customer is required');
+        }
+
+        if (!$this->order) {
+            throw new Exception('order is required');
+        }
+
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            $created = Charge::create([
+                'amount' => $this->priceInCents($this->order->total),
+                'currency' => 'BRL',
+                'source' => $request['credit_card'],
+                'description' => $request['description'],
+                'metadata' => [
+                    'order_id' => $this->order->id,
+                    'name' => $this->customer->name,
+                    'email' => $this->customer->email,
+                ],
+            ]);
+
+            return $created;
+        } catch(Exception $e) {
+            throw new Exception(
+                'stripe checkout charge', 
+                ErrorCode::PAYMENT_CHARGE_TRANSACTION->value, 
+                $e,
+            );
+        }
     }
 
-    /**
-     * Apply price transformation to be based on cents
-     * 
-     * @param int $price
-     * @return int
-     */
-    private function priceInCents($price)
+    public function isValid(array $request): bool {
+        if (!isset($request['credit_card']) || $request['credit_card'] == '') {
+            return false;
+        }
+    
+        if (!isset($request['description']) || $request['description'] == '') {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function order(Order $order): void {
+        $this->order = $order;
+    }
+
+    public function customer(User $user): void {
+        $this->customer = $user;
+    }
+    
+    public function priceInCents($price): int
     {
         return $price * 100;
     }

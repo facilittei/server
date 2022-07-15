@@ -13,7 +13,8 @@ use App\Services\Metrics\MetricContract;
 use App\Enums\OrderStatus;
 use App\Models\Course;
 use App\Mail\OrderMail;
-use App\Enums\Fee;
+use App\Models\User;
+use App\Enums\Fee as FeeEnum;
 
 class CheckoutsController extends Controller
 {
@@ -24,45 +25,27 @@ class CheckoutsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Charge order.
+     * 
+     * @param array $req
+     * @param \App\Models\User $user
+     * @param \App\Models\Order $order
+     * @param \App\Models\Course $course
+     * @param string|float $start
+     * @return bool
      */
-    public function store(CheckoutRequest $request)
+    private function charge(
+        array $req, 
+        User $user,
+        Order $order, 
+        Course $course, 
+        string|float $start,
+    ): bool
     {
-        $start = microtime(true);
-        $req = $request->all();
-        $course = Course::findOrFail($req['course_id']);
-
-        $user = Auth::user();
-        if (Order::hasBought($course->id, $user->id)) {
-            return response()->json([
-                'error' => trans('messages.order_course_already_bought'),
-            ], 400);
-        }
-
-        $req['total'] = $course->price;
-        $req['description'] = $course->title;
-        $req['name'] = $user->name;
-        $req['email'] = $user->email;
-        $order = Order::store($req, $user->id);
-        $req['order_id'] = $order->id;
-        $order->histories()->create(['status' => OrderStatus::STATUS['STARTED']]);
-        $order->fees()->create([
-            'percentage' => Fee::TOTAL['PERCENTAGE'],
-            'transaction' => Fee::TOTAL['TRANSACTION'],
-        ]);
-        $order->items()->createMany([
-            [
-                'course_id' => $course->id,
-                'title' => $course->title,
-                'price' => $course->price,
-            ]
-        ]);
-
         $successful = false;
         try {
+            $this->paymentService->customer($user);
+            $this->paymentService->order($order);
             $resp = $this->paymentService->charge($req);
             $status = $resp['status'];
 
@@ -74,8 +57,8 @@ class CheckoutsController extends Controller
 
             $order->update(['reference' => $resp['id']]);
 
-            if ($status == OrderStatus::STATUS['SUCCEED']) {
-                $course->students()->syncWithoutDetaching(Auth::user()->id);
+            if ($status == OrderStatus::SUCCEED->value) {
+                $course->students()->syncWithoutDetaching($user->id);
             }
 
             $successful = true;
@@ -85,7 +68,7 @@ class CheckoutsController extends Controller
                 ['keys' => ['provider'], 'values' => ['stripe']],
             );
         } catch (Exception $e) {
-            $order->histories()->create(['status' => OrderStatus::STATUS['FAILED']]);
+            $order->histories()->create(['status' => OrderStatus::FAILED->value]);
             Log::critical('checkout controller store failed', [
                 'order_id' => $order->id,
                 'err_code' => $e->getCode(),
@@ -93,18 +76,38 @@ class CheckoutsController extends Controller
             ]);
         }
 
+        return $successful;
+    }
+
+    /**
+     * Notify charge.
+     * 
+     * @param array $req
+     * @param \App\Models\User $user
+     * @param \App\Models\Order $order
+     * @param \App\Models\Course $course
+     * @param string|float $start
+     * @return void
+     */
+    private function notify(
+        User $user,
+        Order $order, 
+        Course $course, 
+        bool $successful,
+    ): void
+    {
         try {
             if ($successful) {
-                Mail::to(Auth::user()->email)->queue(
-                    new OrderMail($order, $course, Auth::user(), true),
+                Mail::to($user->email)->queue(
+                    new OrderMail($order, $course, $user, true),
                 );
                 $this->metricService->counter(
                     'payment_status_counter', 
                     ['keys' => ['provider', 'status'], 'values' => ['stripe', 'successful']],
                 );
             } else {
-                Mail::to(Auth::user()->email)->queue(
-                    new OrderMail($order, $course, Auth::user(), false),
+                Mail::to($user->email)->queue(
+                    new OrderMail($order, $course, $user, false),
                 );
                 $this->metricService->counter(
                     'payment_status_counter', 
@@ -118,7 +121,71 @@ class CheckoutsController extends Controller
                 'err_message' => $e->getMessage(),
             ]);
         }
+    }
 
+    /**
+     * Prepare charge payload.
+     * 
+     * @param array $req
+     * @param \App\Models\User $user
+     * @param \App\Models\Course $course
+     * @return array
+     * @throws \Exception
+     */
+    private function prepare(array $req, User $user, Course $course): array
+    {
+        if (Order::hasBought($course->id, $user->id)) {
+            throw new Exception('customer has already bought course');
+        }
+
+        $req['total'] = $course->price;
+        $req['description'] = $course->title;
+        $req['name'] = $user->name;
+        $req['email'] = $user->email;
+
+        return $req;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\CheckoutRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(CheckoutRequest $request)
+    {
+        $start = microtime(true);
+        $req = $request->all();
+        $course = Course::findOrFail($req['course_id']);
+
+        $user = Auth::user();
+        
+        try {
+            $req = $this->prepare($req, $user, $course);
+        } catch(Exception $e) {
+            return response()->json([
+                'error' => trans('messages.order_course_already_bought'),
+            ], 400);
+        }
+       
+        $order = Order::store($req, $user->id);
+        $req['order_id'] = $order->id;
+        $order->histories()->create(['status' => OrderStatus::STARTED->value]);
+        $order->fees()->create([
+            'percentage' => FeeEnum::PERCENTAGE->total(),
+            'transaction' => FeeEnum::TRANSACTION->total(),
+        ]);
+        $order->items()->createMany([
+            [
+                'course_id' => $course->id,
+                'title' => $course->title,
+                'price' => $course->price,
+            ]
+        ]);
+
+        $successful = $this->charge($req, $user, $order, $course, $start);
+        $this->notify($user, $order, $course, $successful);
+        
         if ($successful) {
             return response()->json([
                 'order_id' => $order->id,

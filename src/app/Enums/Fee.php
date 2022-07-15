@@ -2,10 +2,17 @@
 
 namespace App\Enums;
 
-class Fee
+enum Fee
 {
-    const TOTAL = [
-        'PERCENTAGE' => 5,
-        'TRANSACTION' => 0.5,
-    ];
+    case PERCENTAGE;
+    case TRANSACTION;
+
+    public function total(): int|float
+    {
+        return match($this)
+        {
+            self::PERCENTAGE => 5,
+            self::TRANSACTION => 0.5,
+        };
+    }
 }
