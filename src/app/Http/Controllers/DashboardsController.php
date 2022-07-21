@@ -34,10 +34,6 @@ class DashboardsController extends Controller
             OrderStatus::SUCCEED->value,
             $user->id,
         ]);
-        $fees = DB::select(OrderQuery::buildGetTotalFees(), [
-            OrderStatus::SUCCEED->value,
-            $user->id,
-        ]);
         $limit = $request->query('limit') ?? $coursesCount;
 
         $report = [];
@@ -51,7 +47,6 @@ class DashboardsController extends Controller
             'favorites' => $lessonsFavoriteByCourse,
             'comments' => $commentsByCourse,
             'sales' => $sales,
-            'fees' => $fees,
         ];
 
         $studentLatestLesson = DB::select(StudentQuery::buildGetLatestCompletedLesson(), [$queryParams[0]]);

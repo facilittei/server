@@ -19,7 +19,6 @@ class CoursePresenter
             $courses = $teach['courses'];
             $drafts = $teach['drafts'];
             $sales = collect($teach['sales']);
-            $fees = collect($teach['fees']);
 
             $teaching = [];
             $teaching['courses'] = [];
@@ -39,7 +38,8 @@ class CoursePresenter
 
             for ($i = 0; $i < count($courses); $i++) {
                 $course = $courses[$i];
-                
+                $salesTotal = fn($s) => count($s) > 0 ? floatval($s[0]->total) : 0;
+
                 $teaching['courses'][] = [
                     'id' => $course->id,
                     'title' => $course->title,
@@ -49,7 +49,7 @@ class CoursePresenter
                     'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $course->id),
                     'favorites' => CoursePresenter::getCollectionByCourse($teach['favorites'], $course->id),
                     'comments' => CoursePresenter::getCollectionByCourse($teach['comments'], $course->id),
-                    'sales' => CoursePresenter::calculateSaleWithFees($course, $sales, $fees),
+                    'sales' => $salesTotal($sales->where('id', $course->id)),
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
                 ];
@@ -187,27 +187,5 @@ class CoursePresenter
         }
 
         return $stats;
-    }
-
-    /**
-     * Calculate course sales with fees.
-     *
-     * @param \App\Models\Course $course
-     * @param object $sales
-     * @param object $fees
-     * @return array
-     */
-    public static function calculateSaleWithFees($course, $sales, $fees)
-    {
-        $salesTotal = $sales->firstWhere('id', $course->id);
-        $feesTotal = $fees->where('id', $course->id);
-
-        if (!$salesTotal) {
-            return 0;
-        }
-
-        $decreaseTotal = $salesTotal->total * ($feesTotal[0]->percentage / 100);
-        $transactionTotal = floatval($feesTotal[0]->transaction) * $feesTotal->count();
-        return $salesTotal->total - $decreaseTotal - $transactionTotal;
     }
 }
