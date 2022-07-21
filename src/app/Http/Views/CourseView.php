@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Presenters;
+namespace App\Http\Views;
 
-class CoursePresenter
+class CourseView
 {
     /**
      * Show user home dashboard report.
@@ -45,10 +45,10 @@ class CoursePresenter
                     'title' => $course->title,
                     'is_published' => $course->is_published,
                     'cover' => $course->cover,
-                    'students' => CoursePresenter::getCollectionByCourse($teach['courses_students'], $course->id),
-                    'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $course->id),
-                    'favorites' => CoursePresenter::getCollectionByCourse($teach['favorites'], $course->id),
-                    'comments' => CoursePresenter::getCollectionByCourse($teach['comments'], $course->id),
+                    'students' => CourseView::getCollectionByCourse($teach['courses_students'], $course->id),
+                    'lessons' => CourseView::getCollectionByCourse($teach['courses_lessons'], $course->id),
+                    'favorites' => CourseView::getCollectionByCourse($teach['favorites'], $course->id),
+                    'comments' => CourseView::getCollectionByCourse($teach['comments'], $course->id),
                     'sales' => $salesTotal($sales->where('id', $course->id)),
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
@@ -63,8 +63,8 @@ class CoursePresenter
                     'title' => $draft->title,
                     'is_published' => $draft->is_published,
                     'cover' => $draft->cover,
-                    'students' => CoursePresenter::getCollectionByCourse($teach['courses_students'], $draft->id),
-                    'lessons' => CoursePresenter::getCollectionByCourse($teach['courses_lessons'], $draft->id),
+                    'students' => CourseView::getCollectionByCourse($teach['courses_students'], $draft->id),
+                    'lessons' => CourseView::getCollectionByCourse($teach['courses_lessons'], $draft->id),
                     'created_at' => $draft->created_at,
                     'updated_at' => $draft->updated_at,
                 ];
@@ -78,7 +78,7 @@ class CoursePresenter
             $courses = $learn['courses'];
             
             $learning = [];
-            $learning['latest_watched'] = CoursePresenter::formatLatestWatchedLesson($learn['latest_watched']);
+            $learning['latest_watched'] = CourseView::formatLatestWatchedLesson($learn['latest_watched']);
             $learning['stats'] = [
                 'courses' => $learn['courses_total']
             ];
@@ -93,10 +93,10 @@ class CoursePresenter
                     'cover' => $course->cover,
                     'created_at' => $course->created_at,
                     'updated_at' => $course->updated_at,
-                    'students' => CoursePresenter::getCollectionByCourse($learn['courses_students'], $course->id),
-                    'lessons' => CoursePresenter::getCollectionByCourse($learn['courses_lessons'], $course->id),
-                    'favorites' => CoursePresenter::getCollectionByCourse($learn['favorites'], $course->id),
-                    'comments' => CoursePresenter::getCollectionByCourse($learn['comments'], $course->id),
+                    'students' => CourseView::getCollectionByCourse($learn['courses_students'], $course->id),
+                    'lessons' => CourseView::getCollectionByCourse($learn['courses_lessons'], $course->id),
+                    'favorites' => CourseView::getCollectionByCourse($learn['favorites'], $course->id),
+                    'comments' => CourseView::getCollectionByCourse($learn['comments'], $course->id),
                 ];
             }
 

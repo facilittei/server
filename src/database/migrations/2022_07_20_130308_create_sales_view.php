@@ -31,7 +31,7 @@ return new class extends Migration
     private function createView(): string
     {
         return <<<QUERY
-        CREATE VIEW sales_view AS 
+        CREATE OR REPLACE VIEW sales_view AS 
         SELECT 
             i.course_id,
             o.id order_id, 

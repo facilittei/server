@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Presenters;
+namespace App\Http\Views;
 
-class CommentPresenter
+class CommentView
 {
     public static function user(array $comments)
     {
