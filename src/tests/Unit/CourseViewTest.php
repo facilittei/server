@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Http\Presenters\CoursePresenter;
+use App\Http\Views\CourseView;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class CoursePresenterTest extends TestCase
+class CourseViewTest extends TestCase
 {
     /**
      * Get total amount from collection.
@@ -20,7 +20,7 @@ class CoursePresenterTest extends TestCase
         $courseLesson->total = 10;
         $collection = [$courseLesson];
 
-        $this->assertEquals(10, CoursePresenter::getCollectionByCourse($collection, 1));
+        $this->assertEquals(10, CourseView::getCollectionByCourse($collection, 1));
     }
 
     /**
@@ -32,7 +32,7 @@ class CoursePresenterTest extends TestCase
     {
         $collection = [];
 
-        $this->assertEquals(0, CoursePresenter::getCollectionByCourse($collection, 1));
+        $this->assertEquals(0, CourseView::getCollectionByCourse($collection, 1));
     }
 
     /**
@@ -46,7 +46,7 @@ class CoursePresenterTest extends TestCase
         $courseLesson->total = 10;
         $collection = [$courseLesson];
 
-        $this->assertEquals(0, CoursePresenter::getCollectionByCourse($collection, 1));
+        $this->assertEquals(0, CourseView::getCollectionByCourse($collection, 1));
     }
 
     /**
@@ -60,7 +60,7 @@ class CoursePresenterTest extends TestCase
         $courseLesson->id = 1;
         $collection = [$courseLesson];
 
-        $this->assertEquals(0, CoursePresenter::getCollectionByCourse($collection, 1));
+        $this->assertEquals(0, CourseView::getCollectionByCourse($collection, 1));
     }
 
     /**
@@ -79,7 +79,7 @@ class CoursePresenterTest extends TestCase
         $rs->lesson_title = 'Getting started';
         $collection = [$rs];
 
-        $lesson = CoursePresenter::formatLatestWatchedLesson($collection);
+        $lesson = CourseView::formatLatestWatchedLesson($collection);
         $this->assertArrayHasKey('id', $lesson['course']);
         $this->assertArrayHasKey('title', $lesson['course']);
         $this->assertArrayHasKey('id', $lesson['chapters']);
@@ -96,6 +96,6 @@ class CoursePresenterTest extends TestCase
     public function testEmptyLatestWatchedLessonCollection()
     {
         $collection = [];
-        $this->assertNull(CoursePresenter::formatLatestWatchedLesson($collection));
+        $this->assertNull(CourseView::formatLatestWatchedLesson($collection));
     }
 }

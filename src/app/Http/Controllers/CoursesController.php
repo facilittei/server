@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Queries\StudentQuery;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Presenters\CoursePresenter;
+use App\Http\Views\CourseView;
 use App\Models\CourseInvite;
 use App\Mail\CourseInviteMail;
 use App\Http\Requests\CourseAnnulRequest;
@@ -401,7 +401,7 @@ class CoursesController extends Controller
         $params = [Auth::user()->id];
         $watcheds = DB::select(StudentQuery::buildCourseStats(), $params);
         $lessons = DB::select(StudentQuery::buildCourseLessonStats(), $params);
-        $stats = CoursePresenter::formatCourseStats($watcheds, $lessons);
+        $stats = CourseView::formatCourseStats($watcheds, $lessons);
 
         return response()->json($stats);
     }
