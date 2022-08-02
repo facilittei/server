@@ -14,7 +14,9 @@ return [
     'confirm' => 'Confirm',
     'welcome' => 'Welcome',
     'thanks' => 'Thanks',
-    'hi' => 'Howdy',
+    'hi' => 'Hi',
     'access' => 'Access',
+    'title' => 'Title',
+    'total' => 'Total',
 
 ];

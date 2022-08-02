@@ -6,17 +6,29 @@ Facilittei
 @endcomponent
 @endslot
 
-# {{ trans('mail.course_welcome') }}, {{ $user->name }}!
+# {{ trans('ui.hi') }}, {{ $user->name }},
 
-{{ trans('mail.course_info') }}: **{{ $course->title }}**
+## {{ trans('mail.course_welcome') }}!
 
-{{ trans('messages.order_number') }}: **{{ $order->id }}**
+@component('mail::table')
+| {{ trans('ui.title') }}  | {{ trans('ui.total') }}                                           |
+| :----------------------- | -----------------------------------------------------------------:|
+| {{ $course->title }}     | R$ {{ number_format(floatval($course->price), 2, '.', ',') }}     |
+@endcomponent
 
-### {{ trans('messages.order_enjoy') }}
+@component('mail::table')
+| {{ trans('messages.order_number') }}  |
+| :------------------------------------ |
+| {{ $order->id }}                      |
+@endcomponent
 
 @component('mail::button', ['url' => config('app.client_url') . '/view-course/' . $course->id])
 {{ trans('ui.access') }}
 @endcomponent
+
+### {{ trans('messages.order_enjoy') }}
+
+<a href="{{ config('app.client_url') . '/view-course/' . $course->id }}">{{ config('app.client_url') . '/view-course/' . $course->id }}</a>
 
 @slot('footer')
 @component('mail::footer')

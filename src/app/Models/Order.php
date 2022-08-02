@@ -97,7 +97,7 @@ class Order extends Model
             ->join('order_histories', 'orders.id', '=', 'order_histories.order_id')
             ->where('orders.user_id', $user_id)
             ->where('order_items.course_id', $course_id)
-            ->where('order_histories.status', OrderStatus::STATUS['SUCCEED'])
+            ->where('order_histories.status', OrderStatus::SUCCEED->value)
             ->count();
         return $count > 0; 
     }

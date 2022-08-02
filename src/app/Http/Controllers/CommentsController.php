@@ -6,7 +6,7 @@ use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
-use App\Http\Presenters\CommentPresenter;
+use App\Http\Views\CommentView;
 
 class CommentsController extends Controller
 {
@@ -144,6 +144,6 @@ class CommentsController extends Controller
             ->latest()
             ->get()
             ->toArray();
-        return response()->json(['comments' => CommentPresenter::user($comments)]);
+        return response()->json(['comments' => CommentView::user($comments)]);
     }
 }

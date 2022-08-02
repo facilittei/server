@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:8.1-fpm
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    libzip-dev
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    libzip-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo_mysql zip exif pcntl bcmath
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install gd
@@ -38,8 +38,7 @@ RUN composer install
 COPY src .
 
 RUN cp .env.example .env \
-    && php artisan key:generate \
-    && php artisan test
+    && php artisan key:generate
 
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www

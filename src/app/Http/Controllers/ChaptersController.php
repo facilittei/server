@@ -49,6 +49,7 @@ class ChaptersController extends Controller
         $profile = [];
         if ($course->user->profile) {
             $profile = [
+                'id' => $course->user->id,
                 'name' => $course->user->name,
                 'bio' => $course->user->profile->bio,
                 'photo' => $course->user->profile->photo,
