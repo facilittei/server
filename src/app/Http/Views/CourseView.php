@@ -43,6 +43,7 @@ class CourseView
                 $teaching['courses'][] = [
                     'id' => $course->id,
                     'title' => $course->title,
+                    'slug' => $course->slug,
                     'is_published' => $course->is_published,
                     'cover' => $course->cover,
                     'students' => CourseView::getCollectionByCourse($teach['courses_students'], $course->id),
