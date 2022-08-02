@@ -167,6 +167,7 @@ class User extends Authenticatable
         $courses = $this->courses()->select(
             'id', 
             'title', 
+            'slug',
             'is_published', 
             'cover', 
             'created_at', 
