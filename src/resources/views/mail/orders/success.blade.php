@@ -22,13 +22,13 @@ Facilittei
 | {{ $order->id }}                      |
 @endcomponent
 
-@component('mail::button', ['url' => config('app.client_url') . '/view-course/' . $course->id])
+@component('mail::button', ['url' => config('app.client_url') . '/course/' . $course->id])
 {{ trans('ui.access') }}
 @endcomponent
 
 ### {{ trans('messages.order_enjoy') }}
 
-<a href="{{ config('app.client_url') . '/view-course/' . $course->id }}">{{ config('app.client_url') . '/view-course/' . $course->id }}</a>
+<a href="{{ config('app.client_url') . '/course/' . $course->id }}">{{ config('app.client_url') . '/course/' . $course->id }}</a>
 
 @slot('footer')
 @component('mail::footer')

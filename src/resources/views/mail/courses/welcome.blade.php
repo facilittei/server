@@ -10,7 +10,7 @@ Facilittei
 
 {{ trans('mail.course_info') }}: **{{ $course->title }}**
 
-@component('mail::button', ['url' => config('app.client_url') . '/view-course/' . $course->id])
+@component('mail::button', ['url' => config('app.client_url') . '/course/' . $course->id])
 {{ trans('ui.access') }}
 @endcomponent
 
