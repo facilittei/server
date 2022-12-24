@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Order;
 use App\Services\Payments\PaymentServiceContract;
@@ -15,6 +16,8 @@ use App\Models\Course;
 use App\Mail\OrderMail;
 use App\Models\User;
 use App\Enums\Fee as FeeEnum;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
 
 class CheckoutsController extends Controller
 {
@@ -201,5 +204,69 @@ class CheckoutsController extends Controller
         return response()->json([
             'error' => trans('messages.general_error'),
         ], 500);
+    }
+
+    /**
+     * Checkout Session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * 
+     * @see 
+     * https://stripe.com/docs/checkout/quickstart
+     * https://stripe.com/docs/api/checkout/sessions/object
+     */
+    public function stripe(Request $request)
+    {
+        $req = $request->only(['course_id']);
+        $course = Course::findOrFail($req['course_id']);
+        $user = Auth::user();
+
+        if (Order::hasBought($course->id, $user->id)) {
+            throw new Exception('customer has already bought course');
+        }
+
+        $req['total'] = $course->price;
+        $req['description'] = $course->title;
+        $req['name'] = $user->name;
+        $req['email'] = $user->email;
+
+        $order = Order::store($req, $user->id);
+        $order->histories()->create(['status' => OrderStatus::STARTED->value]);
+        $order->fees()->create([
+            'percentage' => FeeEnum::PERCENTAGE->total(),
+            'transaction' => FeeEnum::TRANSACTION->total(),
+        ]);
+        $order->items()->createMany([
+            [
+                'course_id' => $course->id,
+                'title' => $course->title,
+                'price' => $course->price,
+            ]
+        ]);
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+        $checkoutSession = StripeSession::create([
+            'client_reference_id' => $order->id,
+            'mode' => 'payment',
+            'customer_email' => $user->email,
+            'currency' => 'BRL',
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'BRL',
+                        'unit_amount' => $course->price * 100,
+                        'product_data' => [
+                            'name' => $course->title,
+                        ],
+                    ],
+                    'quantity' => 1,
+                ]
+            ],
+            'success_url' => config('app.client_url') . '/checkout/success',
+            'cancel_url' => config('app.client_url') . '/checkout/cancel',
+        ]);
+
+        return $checkoutSession->url;
     }
 }

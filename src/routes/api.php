@@ -50,6 +50,7 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
             Route::post('/group-invite/{group_id}', [GroupInvitesController::class, 'invite']);
         });
 
+        Route::post('/checkouts/stripe', [CheckoutsController::class, 'stripe']);
         Route::post('/checkouts', [CheckoutsController::class, 'store']);
         Route::get('/users', [UsersController::class, 'show']);
         Route::put('/users', [UsersController::class, 'update']);
