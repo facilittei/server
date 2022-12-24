@@ -8,7 +8,6 @@ use stdClass;
 
 class LessonTest extends TestCase
 {
-    
     use \Tests\CreatesApplication;
 
     protected function setUp(): void
@@ -35,13 +34,13 @@ class LessonTest extends TestCase
             [
                 'id' => 5,
                 'title' => 'Hic similique nam quibusdam.',
-                "chapter" => [
+                'chapter' => [
                     'id' => 31,
-                    'title' => 'Lorem ipsum'
+                    'title' => 'Lorem ipsum',
                 ],
-                "course" => [
+                'course' => [
                     'id' => 31,
-                    'title' => 'Lorem ipsum'
+                    'title' => 'Lorem ipsum',
                 ],
             ],
         ];

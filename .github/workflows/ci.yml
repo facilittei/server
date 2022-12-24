@@ -4,7 +4,8 @@ on:
   push:
     branches:
       # - "dev"
-      - "main"
+      # - "main"
+      - "no_branch" # TODO: update with new infrastructure requirements
 
 jobs:
   build:

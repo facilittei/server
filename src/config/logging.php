@@ -1,8 +1,8 @@
 <?php
 
 use Monolog\Handler\NullHandler;
-use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SocketHandler;
+use Monolog\Handler\StreamHandler;
 
 return [
 

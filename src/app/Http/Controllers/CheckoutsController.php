@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Fee as FeeEnum;
+use App\Enums\OrderStatus;
+use App\Http\Requests\CheckoutRequest;
+use App\Mail\OrderMail;
+use App\Models\Course;
+use App\Models\Order;
+use App\Models\User;
+use App\Services\Metrics\MetricContract;
+use App\Services\Payments\PaymentServiceContract;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\CheckoutRequest;
-use App\Models\Order;
-use App\Services\Payments\PaymentServiceContract;
-use App\Services\Metrics\MetricContract;
-use App\Enums\OrderStatus;
-use App\Models\Course;
-use App\Mail\OrderMail;
-use App\Models\User;
-use App\Enums\Fee as FeeEnum;
 
 class CheckoutsController extends Controller
 {
@@ -26,22 +26,21 @@ class CheckoutsController extends Controller
 
     /**
      * Charge order.
-     * 
-     * @param array $req
-     * @param \App\Models\User $user
-     * @param \App\Models\Order $order
-     * @param \App\Models\Course $course
-     * @param string|float $start
+     *
+     * @param  array  $req
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Order  $order
+     * @param  \App\Models\Course  $course
+     * @param  string|float  $start
      * @return bool
      */
     private function charge(
-        array $req, 
+        array $req,
         User $user,
-        Order $order, 
-        Course $course, 
+        Order $order,
+        Course $course,
         string|float $start,
-    ): bool
-    {
+    ): bool {
         $successful = false;
         try {
             $this->paymentService->customer($user);
@@ -81,28 +80,27 @@ class CheckoutsController extends Controller
 
     /**
      * Notify charge.
-     * 
-     * @param array $req
-     * @param \App\Models\User $user
-     * @param \App\Models\Order $order
-     * @param \App\Models\Course $course
-     * @param string|float $start
+     *
+     * @param  array  $req
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Order  $order
+     * @param  \App\Models\Course  $course
+     * @param  string|float  $start
      * @return void
      */
     private function notify(
         User $user,
-        Order $order, 
-        Course $course, 
+        Order $order,
+        Course $course,
         bool $successful,
-    ): void
-    {
+    ): void {
         try {
             if ($successful) {
                 Mail::to($user->email)->queue(
                     new OrderMail($order, $course, $user, true),
                 );
                 $this->metricService->counter(
-                    'payment_status_counter', 
+                    'payment_status_counter',
                     ['keys' => ['provider', 'status'], 'values' => ['stripe', 'successful']],
                 );
             } else {
@@ -110,7 +108,7 @@ class CheckoutsController extends Controller
                     new OrderMail($order, $course, $user, false),
                 );
                 $this->metricService->counter(
-                    'payment_status_counter', 
+                    'payment_status_counter',
                     ['keys' => ['provider', 'status'], 'values' => ['stripe', 'failed']],
                 );
             }
@@ -125,11 +123,12 @@ class CheckoutsController extends Controller
 
     /**
      * Prepare charge payload.
-     * 
-     * @param array $req
-     * @param \App\Models\User $user
-     * @param \App\Models\Course $course
+     *
+     * @param  array  $req
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Course  $course
      * @return array
+     *
      * @throws \Exception
      */
     private function prepare(array $req, User $user, Course $course): array
@@ -159,7 +158,7 @@ class CheckoutsController extends Controller
         $course = Course::findOrFail($req['course_id']);
 
         $user = Auth::user();
-        
+
         try {
             $req = $this->prepare($req, $user, $course);
         } catch(Exception $e) {
@@ -167,7 +166,7 @@ class CheckoutsController extends Controller
                 'error' => trans('messages.order_course_already_bought'),
             ], 400);
         }
-       
+
         $order = Order::store($req, $user->id);
         $req['order_id'] = $order->id;
         $order->histories()->create(['status' => OrderStatus::STARTED->value]);
@@ -180,7 +179,7 @@ class CheckoutsController extends Controller
                 'course_id' => $course->id,
                 'title' => $course->title,
                 'price' => $course->price,
-            ]
+            ],
         ]);
 
         $successful = $this->charge($req, $user, $order, $course, $start);
@@ -190,7 +189,7 @@ class CheckoutsController extends Controller
         $total['fees'] += FeeEnum::TRANSACTION->total();
         $total['gross'] = $order->total;
         $total['net'] = $total['gross'] - $total['fees'];
-        
+
         if ($successful) {
             return response()->json([
                 'order_id' => $order->id,

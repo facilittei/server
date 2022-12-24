@@ -11,7 +11,7 @@ class CourseQuery
      */
     public static function buildGetTotalLessons()
     {
-        $query = <<<QUERY
+        $query = <<<'QUERY'
         SELECT courses.id, COUNT(lessons.id) total
         FROM lessons
         INNER JOIN chapters ON chapters.id = lessons.chapter_id
@@ -39,7 +39,7 @@ class CourseQuery
      */
     public static function buildGetTotalFavorites()
     {
-        $query = <<<QUERY
+        $query = <<<'QUERY'
         SELECT courses.id, COUNT(courses.id) AS total FROM courses 
         INNER JOIN chapters ON courses.id = chapters.course_id 
         INNER JOIN lessons ON chapters.id = lessons.chapter_id 
@@ -69,7 +69,7 @@ class CourseQuery
      */
     public static function buildGetTotalComments()
     {
-        $query = <<<QUERY
+        $query = <<<'QUERY'
         SELECT courses.id, COUNT(courses.id) AS total FROM courses 
         INNER JOIN comments ON courses.id = comments.course_id 
         WHERE (

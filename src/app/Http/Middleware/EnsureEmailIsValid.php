@@ -35,21 +35,21 @@ class EnsureEmailIsValid
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (!$request->user($guard)) {
+        if (! $request->user($guard)) {
             return response()->json([
                 'message' => trans('auth.unauthorized'),
                 'errors' => [
                     'main' => [trans('auth.access_token_invalid')],
-                ]
+                ],
             ], 401);
         }
 
-        if (!$request->user($guard)->hasVerifiedEmail()) {
+        if (! $request->user($guard)->hasVerifiedEmail()) {
             return response()->json([
                 'message' => trans('auth.unauthorized'),
                 'errors' => [
                     'main' => [trans('auth.email_not_confirmed')],
-                ]
+                ],
             ], 403);
         }
 

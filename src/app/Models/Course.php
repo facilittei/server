@@ -43,7 +43,7 @@ class Course extends Model
      */
     protected $casts = [
         'is_published' => 'boolean',
-        'price' => 'float'
+        'price' => 'float',
     ];
 
     /**
@@ -128,7 +128,7 @@ class Course extends Model
     public function getCoverAttribute()
     {
         if ($this->attributes['cover']) {
-            return config('app.assets_url') .'/'. $this->attributes['cover'];
+            return config('app.assets_url').'/'.$this->attributes['cover'];
         }
     }
 }

@@ -99,7 +99,7 @@ return [
     'collectors' => [
         // \Your\ExporterClass::class,
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Buckets config
@@ -110,7 +110,7 @@ return [
     | Default value is null.
     |
     */
-    
+
     'routes_buckets' => null,
     'sql_buckets' => null,
     'guzzle_buckets' => null,

@@ -99,7 +99,7 @@ class LessonsController extends Controller
     {
         $lesson = Lesson::where('chapter_id', $chapter_id)->findOrFail($id);
 
-        if (!$lesson->is_published || !$lesson->is_preview) {
+        if (! $lesson->is_published || ! $lesson->is_preview) {
             return response()->json([
                 'error' => trans('auth.unauthorized'),
             ], 401);
@@ -125,7 +125,7 @@ class LessonsController extends Controller
             $previous = Lesson::where('id', '<', $lesson->id)->where('chapter_id', $lesson->chapter->id)->max('id');
             $next = Lesson::where('id', '>', $lesson->id)->where('chapter_id', $lesson->chapter->id)->min('id');
 
-            if (($user->id !== $lesson->chapter->course->user_id) && !$lesson->is_published) {
+            if (($user->id !== $lesson->chapter->course->user_id) && ! $lesson->is_published) {
                 return response()->json(['message' => trans('messages.not_published')]);
             }
 
@@ -327,7 +327,7 @@ class LessonsController extends Controller
             ->join('chapters', 'chapters.id', '=', 'lessons.chapter_id')
             ->join('courses', 'courses.id', '=', 'chapters.course_id')
             ->leftJoin('course_user', 'courses.id', '=', 'course_user.course_id')
-            ->where('lessons.title', 'like', '%' . $request->input('q') . '%')
+            ->where('lessons.title', 'like', '%'.$request->input('q').'%')
             ->where(function ($query) use ($user) {
                 $query->where('course_user.user_id', '=', $user->id)
                     ->orWhere('courses.user_id', '=', $user->id);
@@ -343,7 +343,6 @@ class LessonsController extends Controller
 
         return Lesson::formatResultWithChapter($result);
     }
-
 
     /**
      * Upload lesson's video.

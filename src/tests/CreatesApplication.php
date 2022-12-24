@@ -2,10 +2,9 @@
 
 namespace Tests;
 
-use Illuminate\Contracts\Console\Kernel;
-
-use App\Models\User;
 use App\Models\Course;
+use App\Models\User;
+use Illuminate\Contracts\Console\Kernel;
 
 trait CreatesApplication
 {
@@ -25,8 +24,8 @@ trait CreatesApplication
 
     /**
      * Get access token for a user.
-     * 
-     * @param \App\Models\User $user
+     *
+     * @param  \App\Models\User  $user
      * @return string
      */
     public function accessToken(User $user): string
@@ -36,7 +35,7 @@ trait CreatesApplication
 
     /**
      * Create a user.
-     * 
+     *
      * @return \App\Models\User
      */
     public function createUser(): User
@@ -45,13 +44,14 @@ trait CreatesApplication
         $user->profile()->create([
             'bio' => implode(' ', $this->faker->sentences(5)),
         ]);
+
         return $user;
     }
 
     /**
      * Create a course.
-     * 
-     * @param \App\Models\User $teacher
+     *
+     * @param  \App\Models\User  $teacher
      * @return \App\Models\Course
      */
     public function createCourse(User $teacher): Course
@@ -64,14 +64,15 @@ trait CreatesApplication
             'is_published' => true,
             'price' => 10,
         ]);
+
         return $course;
     }
 
     /**
      * Enroll a student in a course.
-     * 
-     * @param \App\Models\Course $course
-     * @param \App\Models\User $student
+     *
+     * @param  \App\Models\Course  $course
+     * @param  \App\Models\User  $student
      * @return void
      */
     public function enroll(Course $course, User $student): void

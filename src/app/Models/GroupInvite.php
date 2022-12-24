@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
-use Illuminate\Contracts\Encryption\DecryptException;
 
 class GroupInvite extends Model
 {
@@ -36,20 +36,20 @@ class GroupInvite extends Model
     /**
      * Generate the token that identifies the invite.
      *
-     * @param int $group_id
+     * @param  int  $group_id
      * @return string
      */
     public function generateToken($group_id)
     {
         if ($group_id) {
-            return Crypt::encryptString($group_id . '-' . Str::uuid());
+            return Crypt::encryptString($group_id.'-'.Str::uuid());
         }
     }
 
     /**
      * Validate and decrypt the identification token invite.
      *
-     * @param string $token
+     * @param  string  $token
      * @return array
      */
     public function identifyToken($token)
@@ -58,6 +58,7 @@ class GroupInvite extends Model
             try {
                 $invite = Crypt::decryptString($token);
                 $components = explode('-', $invite);
+
                 return [
                     'group_id' => array_shift($components),
                 ];

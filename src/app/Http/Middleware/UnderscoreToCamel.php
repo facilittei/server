@@ -29,7 +29,7 @@ class UnderscoreToCamel
     /**
      * Convert string content (json) to array
      *
-     * @param string $content
+     * @param  string  $content
      * @return array
      */
     public function toArray(string $content): array
@@ -40,7 +40,7 @@ class UnderscoreToCamel
     /**
      * Serialize array into JSON
      *
-     * @param array $response
+     * @param  array  $response
      * @return string
      */
     public function toJSON(array $content): string
@@ -51,19 +51,19 @@ class UnderscoreToCamel
     /**
      * Transform array keys from camelCase to underscore
      *
-     * @param array $content
+     * @param  array  $content
      * @return array
      */
     public function transform($content): array
     {
-        if (!$content) {
+        if (! $content) {
             return [];
         }
 
         $result = [];
 
         foreach ($content as $key => $value) {
-            if (!is_array($content[$key])) {
+            if (! is_array($content[$key])) {
                 $result[$this->toCamel($key)] = $content[$key];
             } else {
                 $inner = $this->transform($content[$key]);
@@ -79,7 +79,7 @@ class UnderscoreToCamel
     /**
      * Convert underscore based to camelCase
      *
-     * @param string $key
+     * @param  string  $key
      * @return string
      */
     public function toCamel(?string $key): string

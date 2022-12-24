@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Notifications\ResetPassword;
 
 class User extends Authenticatable
 {
@@ -33,7 +33,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'role'
+        'role',
     ];
 
     /**
@@ -157,20 +157,20 @@ class User extends Authenticatable
 
     /**
      * Courses by status (published)
-     * 
-     * @param bool $is_published
-     * @param int $limit
-     * @return Array<Course> 
+     *
+     * @param  bool  $is_published
+     * @param  int  $limit
+     * @return array<Course>
      */
     public function getCourseByStatus($is_published, $limit)
     {
         $courses = $this->courses()->select(
-            'id', 
-            'title', 
+            'id',
+            'title',
             'slug',
-            'is_published', 
-            'cover', 
-            'created_at', 
+            'is_published',
+            'cover',
+            'created_at',
             'updated_at'
         )->where('is_published', $is_published)->limit($limit)->get();
 

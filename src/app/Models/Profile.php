@@ -39,7 +39,7 @@ class Profile extends Model
     public function getPhotoAttribute()
     {
         if ($this->attributes['photo']) {
-            return config('app.assets_url') .'/'. $this->attributes['photo'];
+            return config('app.assets_url').'/'.$this->attributes['photo'];
         }
     }
 }

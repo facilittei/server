@@ -12,7 +12,7 @@ class CommentView
             $comment = $comments[$i];
             $comment['user'] = [
                 'id' => $comment['user_id'],
-                'name' => $comment['user_name']
+                'name' => $comment['user_name'],
             ];
             unset($comment['user_id']);
             unset($comment['user_name']);

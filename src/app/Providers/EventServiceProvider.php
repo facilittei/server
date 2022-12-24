@@ -22,7 +22,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         EnrollMany::class => [
             BulkStudent::class,
-        ]
+        ],
     ];
 
     /**

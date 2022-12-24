@@ -2,15 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Http;
-
-use App\Services\Storages\StorageServiceContract;
-use App\Services\Storages\StorageServiceS3;
-use App\Services\Payments\PaymentServiceContract;
-use App\Services\Payments\StripeService;
 use App\Services\Metrics\MetricContract;
 use App\Services\Metrics\PrometheusService;
+use App\Services\Payments\PaymentServiceContract;
+use App\Services\Payments\StripeService;
+use App\Services\Storages\StorageServiceContract;
+use App\Services\Storages\StorageServiceS3;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

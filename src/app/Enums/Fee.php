@@ -9,8 +9,7 @@ enum Fee
 
     public function total(): int|float
     {
-        return match($this)
-        {
+        return match ($this) {
             self::PERCENTAGE => 5,
             self::TRANSACTION => 0.5,
         };

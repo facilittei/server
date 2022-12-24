@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Mail\GroupInviteMail;
-use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Models\GroupInvite;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class GroupInvitesController extends Controller
 {
@@ -27,7 +27,7 @@ class GroupInvitesController extends Controller
 
         $group = Group::findOrFail($group_id);
         $user = User::where('email', $request->input('email'))->first();
-        if (!$user) {
+        if (! $user) {
             $invite = GroupInvite::firstOrCreate([
                 'group_id' => $group->id,
                 'name' => $request->input('name'),
@@ -35,6 +35,7 @@ class GroupInvitesController extends Controller
                 'token' => (new GroupInvite)->generateToken($group->id),
             ]);
             Mail::to($invite->email)->queue(new GroupInviteMail($group, $invite));
+
             return response()->json(['message' => trans('messages.general_success')]);
         }
 
@@ -67,7 +68,7 @@ class GroupInvitesController extends Controller
             ->where('token', $token)
             ->first();
 
-        if (!$groupInvite) {
+        if (! $groupInvite) {
             return response()->json([
                 'error' => trans('auth.invalid_verification_token'),
             ], 401);
@@ -92,6 +93,7 @@ class GroupInvitesController extends Controller
 
             $user['groups'] = $groups;
             $user['token'] = $user->createToken($request->header('User-Agent'))->plainTextToken;
+
             return response()->json($user);
         }
 

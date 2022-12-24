@@ -34,7 +34,7 @@ class UserConfirmationMail extends Mailable implements ShouldQueue
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->verification = strval($this->user->id) . '-' . base64_encode($this->user->created_at);
+        $this->verification = strval($this->user->id).'-'.base64_encode($this->user->created_at);
     }
 
     /**

@@ -71,7 +71,7 @@ class Lesson extends Model
     /**
      * Format lesson with a chapter on top of a query result.
      *
-     * @param array $result
+     * @param  array  $result
      * @return array
      */
     public static function formatResultWithChapter($result)
@@ -91,6 +91,7 @@ class Lesson extends Model
                 ],
             ];
         }
+
         return $lessons;
     }
 }

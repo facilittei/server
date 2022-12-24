@@ -26,7 +26,7 @@ class StudentQuery
      */
     public static function buildGetTotalByCourse()
     {
-        $query = <<<QUERY
+        $query = <<<'QUERY'
         SELECT courses.id, COUNT(courses.id) AS total FROM courses 
         INNER JOIN course_user ON courses.id = course_user.course_id 
         WHERE courses.id IN (SELECT course_id FROM course_user WHERE user_id = ?) OR courses.user_id = ? 
@@ -102,7 +102,7 @@ class StudentQuery
         $query = 'SELECT course_id as id, COUNT(comments.id) AS total FROM comments ';
         $query .= 'WHERE comments.user_id = ? AND deleted_at IS NULL';
         $query .= 'GROUP BY course_id ';
-        
+
         return $query;
     }
 
@@ -113,13 +113,13 @@ class StudentQuery
      */
     public static function buildGetTotalFavorites()
     {
-        $query = 'SELECT courses.id, COUNT(favorite_lesson.id) AS total FROM favorite_lesson '; 
+        $query = 'SELECT courses.id, COUNT(favorite_lesson.id) AS total FROM favorite_lesson ';
         $query .= 'INNER JOIN lessons ON favorite_lesson.lesson_id = lessons.id ';
         $query .= 'INNER JOIN chapters ON lessons.chapter_id = chapters.id ';
         $query .= 'INNER JOIN courses ON chapters.course_id = courses.id ';
         $query .= 'WHERE favorite_lesson.user_id = ? ';
         $query .= 'GROUP BY courses.id ';
-        
+
         return $query;
     }
 }

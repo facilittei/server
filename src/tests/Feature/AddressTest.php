@@ -20,7 +20,7 @@ class AddressTest extends TestCase
         $student = $this->createUser();
         $token = $this->accessToken($student);
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $response = $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->json('POST', '/api/addresses', [
                 'postcode' => $this->faker->postcode(),
                 'street' => $this->faker->streetAddress(),
@@ -43,7 +43,7 @@ class AddressTest extends TestCase
         $student = $this->createUser();
         $token = $this->accessToken($student);
 
-        $createResponse = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $createResponse = $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->json('POST', '/api/addresses', [
                 'postcode' => $this->faker->postcode(),
                 'street' => $this->faker->streetAddress(),
@@ -56,8 +56,8 @@ class AddressTest extends TestCase
         $createResponse->assertStatus(201);
 
         $city = $this->faker->city();
-        $createResponse = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->json('PUT', '/api/addresses/' . $createResponse['address']['id'], [
+        $createResponse = $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->json('PUT', '/api/addresses/'.$createResponse['address']['id'], [
                 'city' => $city,
             ]);
         $createResponse->assertStatus(200);
@@ -74,7 +74,7 @@ class AddressTest extends TestCase
         $student = $this->createUser();
         $token = $this->accessToken($student);
 
-        $createResponse = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $createResponse = $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->json('POST', '/api/addresses', [
                 'postcode' => $this->faker->postcode(),
                 'street' => $this->faker->streetAddress(),
@@ -86,8 +86,8 @@ class AddressTest extends TestCase
             ]);
         $createResponse->assertStatus(201);
 
-        $destroyResponse = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->json('DELETE', '/api/addresses/' . $createResponse['address']['id']);
+        $destroyResponse = $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->json('DELETE', '/api/addresses/'.$createResponse['address']['id']);
         $destroyResponse->assertStatus(204);
     }
 }

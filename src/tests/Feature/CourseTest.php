@@ -4,9 +4,8 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
-
+use Tests\TestCase;
 
 class CourseTest extends TestCase
 {
@@ -25,16 +24,14 @@ class CourseTest extends TestCase
         $this->enroll($course, $student);
 
         $token = $this->accessToken($student);
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $response = $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->json('GET', '/api/courses/enrolled');
 
         $response->assertStatus(200);
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has(1)
+            fn (AssertableJson $json) => $json->has(1)
                 ->first(
-                    fn ($json) =>
-                    $json->where('id', $course->id)
+                    fn ($json) => $json->where('id', $course->id)
                         ->where('title', $course->title)
                         ->where('description', $course->description)
                         ->etc()

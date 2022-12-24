@@ -17,25 +17,26 @@ class CamelToUnderscore
     public function handle(Request $request, Closure $next)
     {
         $request->replace($this->transform($request->all()));
+
         return $next($request);
     }
 
     /**
      * Transform array keys from camelCase to underscore
      *
-     * @param array $content
+     * @param  array  $content
      * @return array
      */
     public function transform($content): array
     {
-        if (!$content) {
+        if (! $content) {
             return [];
         }
 
         $result = [];
 
         foreach ($content as $key => $value) {
-            if (!is_array($content[$key])) {
+            if (! is_array($content[$key])) {
                 $result[$this->toUnderscore($key)] = $content[$key];
             } else {
                 $inner = $this->transform($content[$key]);
@@ -51,7 +52,7 @@ class CamelToUnderscore
     /**
      * Convert camelCase based to underscore
      *
-     * @param string $key
+     * @param  string  $key
      * @return string
      */
     public function toUnderscore(?string $key): string

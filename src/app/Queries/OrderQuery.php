@@ -11,7 +11,7 @@ class OrderQuery
      */
     public static function buildGetTotalSales(): string
     {
-        $query = <<<QUERY
+        $query = <<<'QUERY'
         SELECT c.id, SUM(s.net) as total
         FROM sales_view s
         INNER JOIN courses c ON c.id = s.course_id

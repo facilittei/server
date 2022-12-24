@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use App\Models\CourseInvite;
+use PHPUnit\Framework\TestCase;
 
 class CourseInviteTest extends TestCase
 {

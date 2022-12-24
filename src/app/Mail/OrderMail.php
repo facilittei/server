@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
-use \App\Models\Order;
-use \App\Models\User;
-use \App\Models\Course;
+use App\Models\Course;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -20,11 +20,12 @@ class OrderMail extends Mailable implements ShouldQueue
      * @return void
      */
     public function __construct(
-        public Order $order, 
+        public Order $order,
         public Course $course,
         public User $user,
         public bool $isOk,
-    ){}
+    ) {
+    }
 
     /**
      * Build the message.
@@ -37,6 +38,7 @@ class OrderMail extends Mailable implements ShouldQueue
         if ($this->isOk) {
             return $mail->markdown('mail.orders.success');
         }
+
         return $mail->markdown('mail.orders.failure');
     }
 }

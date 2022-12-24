@@ -27,6 +27,7 @@ class LessonRequest extends BaseRequest
     {
         $input = parent::all();
         $input['chapter_id'] = $this->route('chapter_id');
+
         return $input;
     }
 }

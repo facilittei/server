@@ -21,7 +21,7 @@ abstract class BaseRequest extends FormRequest
     /**
      * If validator fails return the exception in json form.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      * @return array
      */
     protected function failedValidation(Validator $validator)

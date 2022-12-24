@@ -27,6 +27,7 @@ class CommentRequest extends BaseRequest
     {
         $input = parent::all();
         $input['lesson_id'] = $this->route('lesson_id');
+
         return $input;
     }
 }

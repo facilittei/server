@@ -7,7 +7,7 @@ class CourseView
     /**
      * Show user home dashboard report.
      *
-     * @param array $report
+     * @param  array  $report
      * @return array
      */
     public static function home(array $report)
@@ -27,18 +27,18 @@ class CourseView
             if (count($courses)) {
                 $teaching['stats'] = [
                     'courses' => $teach['courses_total'],
-                    'students' => $teach['students']
+                    'students' => $teach['students'],
                 ];
             } else {
                 $teaching['stats'] = [
                     'courses' => 0,
-                    'students' => 0
+                    'students' => 0,
                 ];
             }
 
             for ($i = 0; $i < count($courses); $i++) {
                 $course = $courses[$i];
-                $salesTotal = fn($s) => count($s) > 0 ? floatval($s[0]->total) : 0;
+                $salesTotal = fn ($s) => count($s) > 0 ? floatval($s[0]->total) : 0;
 
                 $teaching['courses'][] = [
                     'id' => $course->id,
@@ -77,11 +77,11 @@ class CourseView
         if (isset($report['learning'])) {
             $learn = $report['learning'];
             $courses = $learn['courses'];
-            
+
             $learning = [];
             $learning['latest_watched'] = CourseView::formatLatestWatchedLesson($learn['latest_watched']);
             $learning['stats'] = [
-                'courses' => $learn['courses_total']
+                'courses' => $learn['courses_total'],
             ];
 
             for ($i = 0; $i < count($courses); $i++) {
@@ -110,8 +110,8 @@ class CourseView
     /**
      * Get the course related total count.
      *
-     * @param array $collection
-     * @param int $courseId
+     * @param  array  $collection
+     * @param  int  $courseId
      * @return int
      */
     public static function getCollectionByCourse($collection, $courseId)
@@ -119,7 +119,7 @@ class CourseView
         $result = 0;
 
         for ($i = 0; $i < count($collection); $i++) {
-            if (!isset($collection[$i]->id)) {
+            if (! isset($collection[$i]->id)) {
                 continue;
             }
 
@@ -134,8 +134,8 @@ class CourseView
     /**
      * Format latest watched lesson.
      *
-     * @param array $collection
-     * @param int $courseId
+     * @param  array  $collection
+     * @param  int  $courseId
      * @return array
      */
     public static function formatLatestWatchedLesson($collection)
@@ -163,25 +163,25 @@ class CourseView
     /**
      * Format course stats.
      *
-     * @param array $watcheds
-     * @param array $lessons
+     * @param  array  $watcheds
+     * @param  array  $lessons
      * @return array
      */
     public static function formatCourseStats($watcheds, $lessons)
     {
         $watchedStats = [];
-        for($i = 0; $i < count($watcheds); $i++) {
-            $total = $watchedStats[$watcheds[$i]->course_id] ?? 0; 
+        for ($i = 0; $i < count($watcheds); $i++) {
+            $total = $watchedStats[$watcheds[$i]->course_id] ?? 0;
             $watchedStats[$watcheds[$i]->course_id] = ++$total;
         }
 
         $lessonStats = [];
-        for($i = 0; $i < count($lessons); $i++) {
+        for ($i = 0; $i < count($lessons); $i++) {
             $lessonStats[$lessons[$i]->course_id] = $lessons[$i]->total;
         }
 
         $stats = [];
-        foreach($lessonStats as $key => $value) {
+        foreach ($lessonStats as $key => $value) {
             if (isset($watchedStats[$key])) {
                 $stats[$key] = floor($watchedStats[$key] / $value * 100);
             }

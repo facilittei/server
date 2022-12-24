@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentRequest;
+use App\Http\Views\CommentView;
 use App\Models\Comment;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
-use App\Http\Views\CommentView;
 
 class CommentsController extends Controller
 {
@@ -74,7 +74,6 @@ class CommentsController extends Controller
         $comment = Comment::findOrFail($id);
 
         if ($request->user()->can('update', $comment)) {
-
             if ($comment->update(['description' => $request->input('description')])) {
                 return response()->json([
                     'comment' => $comment,
@@ -137,13 +136,14 @@ class CommentsController extends Controller
             ->join('courses', 'chapters.course_id', '=', 'courses.id')
             ->leftJoin('users', 'comments.user_id', '=', 'users.id')
             ->select('comments.*', 'chapters.id as chapter_id', 'users.name as user_name')
-            ->where(function($query) use ($user_id){
+            ->where(function ($query) use ($user_id) {
                 $query->where('comments.user_id', $user_id)
                       ->orWhere('courses.user_id', $user_id);
             })
             ->latest()
             ->get()
             ->toArray();
+
         return response()->json(['comments' => CommentView::user($comments)]);
     }
 }

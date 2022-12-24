@@ -2,23 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Carbon;
-use Faker\Factory as Faker;
-use App\Models\User;
-use App\Models\Course;
 use App\Models\Chapter;
-use App\Models\Lesson;
 use App\Models\Comment;
+use App\Models\Course;
 use App\Models\Group;
+use App\Models\Lesson;
+use App\Models\User;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class BaseSeeder extends Seeder
 {
     private $faker;
 
-    function __construct() {
+    public function __construct()
+    {
         $this->faker = Faker::create();
     }
 
@@ -45,7 +44,8 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createTeacher() {
+    private function createTeacher()
+    {
         return $this->createUser('Bill Gates', 'gates@microsoft.com');
     }
 
@@ -54,11 +54,12 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createStudents() {
+    private function createStudents()
+    {
         $this->createUser('Elon Musk', 'elon@tesla.com');
 
         return [
-            $this->createUser('Jeff Bezos', 'jeff@amazon.com'), 
+            $this->createUser('Jeff Bezos', 'jeff@amazon.com'),
             $this->createUser('Larry Page', 'larry@google.com'),
             $this->createUser('Mark Zuckerberg', 'mark@facebook.com'),
         ];
@@ -69,7 +70,8 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createUser($name, $email) {
+    private function createUser($name, $email)
+    {
         $user = User::create([
             'name' => $name,
             'email' => $email,
@@ -78,7 +80,7 @@ class BaseSeeder extends Seeder
         ]);
 
         $user->profile()->create([
-            'bio' => $name . ' ' . implode(' ', $this->faker->sentences(3)),
+            'bio' => $name.' '.implode(' ', $this->faker->sentences(3)),
         ]);
 
         return $user;
@@ -89,7 +91,8 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createCourse($teacher, $students) {
+    private function createCourse($teacher, $students)
+    {
         $course = Course::create([
             'user_id' => $teacher->id,
             'price' => $this->faker->randomFloat(2),
@@ -108,6 +111,7 @@ class BaseSeeder extends Seeder
         ]);
 
         $course->students()->attach([$students[0]->id, $students[1]->id, $students[2]->id]);
+
         return $course;
     }
 
@@ -116,7 +120,8 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createChapters($course) {
+    private function createChapters($course)
+    {
         $chapter1 = Chapter::create([
             'course_id' => $course->id,
             'title' => 'Introduction',
@@ -135,6 +140,7 @@ class BaseSeeder extends Seeder
             'position' => 3,
             'is_published' => true,
         ]);
+
         return [$chapter1, $chapter2, $chapter3];
     }
 
@@ -143,20 +149,22 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createLessons($chapters) {
+    private function createLessons($chapters)
+    {
         $lessons = [];
-        $chaptersAssoc = [0,0,1,2];
+        $chaptersAssoc = [0, 0, 1, 2];
         for ($i = 0; $i < 4; $i++) {
-            $description = '{"blocks":[{"key":"e92u9","text":"Content of lesson 0'. $i .'","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}';
+            $description = '{"blocks":[{"key":"e92u9","text":"Content of lesson 0'.$i.'","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":7,"length":4,"key":0}],"data":{}}],"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"https://facilittei.com","className":"jss342"}}}}';
             $lessons[] = Lesson::create([
                 'chapter_id' => $chapters[$chaptersAssoc[$i]]->id,
-                'title' => 'Lesson 0'. $i + 1,
+                'title' => 'Lesson 0'.$i + 1,
                 'description' => $description,
                 'position' => $i == 1 ? 2 : 1,
                 'is_published' => true,
                 'is_preview' => $i % 2 ? true : false,
             ]);
         }
+
         return $lessons;
     }
 
@@ -165,7 +173,8 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createComments($lessons) {
+    private function createComments($lessons)
+    {
         foreach ($lessons as $lesson) {
             for ($i = 1; $i <= 3; $i++) {
                 Comment::create([
@@ -183,7 +192,8 @@ class BaseSeeder extends Seeder
      *
      * @return void
      */
-    private function createGroup($teacher) {
+    private function createGroup($teacher)
+    {
         $group = Group::create([
             'name' => 'Beta',
             'code' => 'usuarios_beta',
@@ -193,13 +203,14 @@ class BaseSeeder extends Seeder
 
     /**
      * Watch lessons.
-     * 
+     *
      * We have four lessons and will apply the watched flag
      * to users but differently
-     * 
+     *
      * @return void
      */
-    private function watchLessons($students, $lessons) {
+    private function watchLessons($students, $lessons)
+    {
         for ($i = 0; $i < 4; $i++) {
             $students[0]->watched()->attach($lessons[$i]->id);
         }
@@ -211,13 +222,14 @@ class BaseSeeder extends Seeder
 
     /**
      * Favorites lessons.
-     * 
+     *
      * We have four lessons and will apply the favorite flag
      * to users but differently
-     * 
+     *
      * @return void
      */
-    private function favoriteLessons($students, $lessons) {
+    private function favoriteLessons($students, $lessons)
+    {
         for ($i = 0; $i < 2; $i++) {
             $students[0]->favorited()->attach($lessons[$i]->id);
         }

@@ -93,6 +93,12 @@ To create a test
 docker-compose exec php-fpm php artisan make:test AddressTest
 ```
 
+### Code style
+
+```
+docker-compose exec php-fpm ./vendor/bin/pint
+```
+
 ### Monitoring
 
 Application monitoring is done with [Prometheus](https://prometheus.io/).

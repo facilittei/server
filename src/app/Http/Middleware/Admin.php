@@ -18,15 +18,15 @@ class Admin
     {
         $isAdmin = $request->user()->role == 'ADMIN_CONSOLE';
 
-        if (!$isAdmin) {
+        if (! $isAdmin) {
             return response()->json([
                 'message' => trans('auth.unauthorized'),
                 'errors' => [
                     'main' => [trans('auth.access_token_invalid')],
-                ]
+                ],
             ], 401);
         }
-        
+
         return $next($request);
     }
 }

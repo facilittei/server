@@ -23,14 +23,14 @@ class ChaptersController extends Controller
         $chapters = null;
         $profile = null;
         $watched = null;
-        
+
         if ($request->user()->id === $course->user_id) {
             $chapters = $course->chapters()->with('lessons')->get();
         } else {
             $chapters = Chapter::published($course)->get();
             $lesson_ids = [];
-            foreach($chapters as $chapter) {
-                foreach($chapter->lessons as $lesson) {
+            foreach ($chapters as $chapter) {
+                foreach ($chapter->lessons as $lesson) {
                     $lesson_ids[] = $lesson->id;
                 }
             }
@@ -40,7 +40,7 @@ class ChaptersController extends Controller
                 ->where('user_id', $request->user()->id)
                 ->whereIn('lesson_id', $lesson_ids)->select('lesson_id as id')->get();
 
-                foreach($lesson_user as $lesson) {
+                foreach ($lesson_user as $lesson) {
                     $watched[] = $lesson->id;
                 }
             }
@@ -80,18 +80,18 @@ class ChaptersController extends Controller
     {
         $common_fields = ['id', 'title', 'description'];
         $course = Course::select(...array_merge(['id', 'user_id', 'slug', 'cover', 'price'], $common_fields))
-        ->with(['chapters' => function($query) {
+        ->with(['chapters' => function ($query) {
             $query->where('is_published', true)
             ->select('course_id', 'id', 'title')
-            ->with(['lessons' => function($query) {
+            ->with(['lessons' => function ($query) {
                 $fields = ['id', 'title', 'chapter_id', 'is_preview'];
                 $query->where('is_published', true)
                 ->select($fields);
             }]);
         }])
-        ->with(['user' => function($query) {
+        ->with(['user' => function ($query) {
             $query->select('id', 'name');
-            $query->with(['profile' => function($query) {
+            $query->with(['profile' => function ($query) {
                 $query->select('user_id', 'bio', 'photo');
             }]);
         }])
@@ -156,7 +156,7 @@ class ChaptersController extends Controller
         $chapter = Chapter::findOrFail($id);
         $user = $request->user();
         if ($user->can('view', $chapter)) {
-            if (($user->id !== $chapter->course->user_id) && !$chapter->is_published) {
+            if (($user->id !== $chapter->course->user_id) && ! $chapter->is_published) {
                 return response()->json(['message' => trans('messages.not_published')]);
             }
 

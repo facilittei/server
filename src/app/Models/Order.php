@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
-use App\Enums\OrderStatus;
 
 class Order extends Model
 {
@@ -68,9 +68,9 @@ class Order extends Model
 
     /**
      * Store order request.
-     * 
-     * @param array $request
-     * @param int $user_id
+     *
+     * @param  array  $request
+     * @param  int  $user_id
      * @return \App\Models\Order
      */
     public static function store(array $request, int $user_id): Order
@@ -86,12 +86,13 @@ class Order extends Model
 
     /**
      * Check if user has already bought a course.
-     * 
-     * @param int $course_id
-     * @param int $user_id
+     *
+     * @param  int  $course_id
+     * @param  int  $user_id
      * @return bool
      */
-    public static function hasBought(int $course_id, int $user_id): bool {
+    public static function hasBought(int $course_id, int $user_id): bool
+    {
         $count = DB::table('orders')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('order_histories', 'orders.id', '=', 'order_histories.order_id')
@@ -99,6 +100,7 @@ class Order extends Model
             ->where('order_items.course_id', $course_id)
             ->where('order_histories.status', OrderStatus::SUCCEED->value)
             ->count();
-        return $count > 0; 
+
+        return $count > 0;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -18,6 +18,7 @@ class GroupsController extends Controller
     public function list()
     {
         $groups = Group::all();
+
         return response()->json($groups);
     }
 
@@ -53,7 +54,7 @@ class GroupsController extends Controller
         return response()->json(['error' => trans('messages.register_failed')], 422);
     }
 
-     /**
+    /**
      * Delete group.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -67,6 +68,7 @@ class GroupsController extends Controller
                 'message' => trans('messages.general_destroy'),
             ]);
         }
+
         return response()->json(['error' => trans('messages.register_failed')], 422);
     }
 
@@ -81,6 +83,7 @@ class GroupsController extends Controller
         $group = Group::findOrFail($group_id);
         $user = User::findOrFail($user_id);
         $user->groups()->toggle($group->id);
+
         return response()->json([
             'message' => trans('messages.register_success'),
         ]);

@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ErrorCode: int 
+enum ErrorCode: int
 {
     case PAYMENT_CHARGE_TRANSACTION = 10000;
     case PAYMENT_CHARGE_PAYLOAD = 10001;

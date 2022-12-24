@@ -3,28 +3,29 @@
 namespace App\Services\Payments;
 
 use App\Enums\ErrorCode;
+use App\Models\Order;
+use App\Models\User;
+use Exception;
 use Stripe\Charge;
 use Stripe\Stripe;
-use App\Models\User;
-use App\Models\Order;
-use Exception;
 
 class StripeService implements PaymentServiceContract
 {
     private ?Order $order = null;
+
     private ?User $customer = null;
 
     public function charge(array $request): mixed
     {
-        if (!$this->isValid($request)) {
+        if (! $this->isValid($request)) {
             throw new Exception('invalid payload for charge');
         }
 
-        if (!$this->customer) {
+        if (! $this->customer) {
             throw new Exception('customer is required');
         }
 
-        if (!$this->order) {
+        if (! $this->order) {
             throw new Exception('order is required');
         }
 
@@ -46,33 +47,36 @@ class StripeService implements PaymentServiceContract
             return $created;
         } catch(Exception $e) {
             throw new Exception(
-                'stripe checkout charge', 
-                ErrorCode::PAYMENT_CHARGE_TRANSACTION->value, 
+                'stripe checkout charge',
+                ErrorCode::PAYMENT_CHARGE_TRANSACTION->value,
                 $e,
             );
         }
     }
 
-    public function isValid(array $request): bool {
-        if (!isset($request['credit_card']) || $request['credit_card'] == '') {
+    public function isValid(array $request): bool
+    {
+        if (! isset($request['credit_card']) || $request['credit_card'] == '') {
             return false;
         }
-    
-        if (!isset($request['description']) || $request['description'] == '') {
+
+        if (! isset($request['description']) || $request['description'] == '') {
             return false;
         }
 
         return true;
     }
 
-    public function order(Order $order): void {
+    public function order(Order $order): void
+    {
         $this->order = $order;
     }
 
-    public function customer(User $user): void {
+    public function customer(User $user): void
+    {
         $this->customer = $user;
     }
-    
+
     public function priceInCents($price): int
     {
         return $price * 100;

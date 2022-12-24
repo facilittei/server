@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Course;
 use App\Models\CourseInvite;
 use App\Models\User;
-use App\Models\Course;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class CourseInvitesController extends Controller
 {
@@ -35,7 +35,7 @@ class CourseInvitesController extends Controller
             ->where('token', $token)
             ->first();
 
-        if (!$courseInvite) {
+        if (! $courseInvite) {
             return response()->json([
                 'error' => trans('auth.invalid_verification_token'),
             ], 401);
@@ -54,6 +54,7 @@ class CourseInvitesController extends Controller
             $course = Course::findOrFail($identify['course_id']);
             $course->students()->syncWithoutDetaching($user->id);
             $user['token'] = $user->createToken($request->header('User-Agent'))->plainTextToken;
+
             return response()->json($user);
         }
 

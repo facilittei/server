@@ -2,12 +2,12 @@
 
 namespace App\Mail;
 
+use App\Models\Group;
+use App\Models\GroupInvite;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Group;
-use App\Models\GroupInvite;
 
 class GroupInviteMail extends Mailable implements ShouldQueue
 {
@@ -46,5 +46,5 @@ class GroupInviteMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->subject(trans('mail.groups_subject'))->markdown('mail.groups.invite');
-    }    
+    }
 }

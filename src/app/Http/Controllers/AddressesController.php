@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\AddressRequest;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Address;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AddressesController extends Controller
 {
@@ -22,7 +22,7 @@ class AddressesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\AddressRequest $request
+     * @param  \App\Http\Requests\AddressRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(AddressRequest $request)

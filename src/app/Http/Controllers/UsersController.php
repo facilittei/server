@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
 use App\Mail\UserConfirmationMail;
+use App\Models\Group;
 use App\Models\GroupInvite;
 use App\Models\User;
-use App\Models\Group;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller
 {
@@ -37,8 +37,9 @@ class UsersController extends Controller
             if ($group) {
                 $user->groups()->toggle($group->id);
             }
-            
+
             Mail::to($user->email)->queue(new UserConfirmationMail($user));
+
             return response()->json([
                 'message' => trans('messages.register_success'),
             ]);
@@ -58,13 +59,13 @@ class UsersController extends Controller
         $req = $request->all();
         $user = User::where('email', $req['email'])->first();
 
-        if (!$user || !Hash::check($req['password'], $user->password)) {
+        if (! $user || ! Hash::check($req['password'], $user->password)) {
             throw ValidationException::withMessages([
                 'email' => [trans('auth.failed')],
             ]);
         }
 
-        if (!$user->email_verified_at) {
+        if (! $user->email_verified_at) {
             throw ValidationException::withMessages([
                 'email' => [trans('auth.email_not_confirmed')],
             ]);
@@ -101,16 +102,17 @@ class UsersController extends Controller
      */
     public function verify($hash)
     {
-        list($id, $created_at) = explode('-', $hash);
+        [$id, $created_at] = explode('-', $hash);
         $user = User::where('id', $id)->where('created_at', base64_decode($created_at))->first();
 
         if ($user) {
             $user->update(['email_verified_at' => Carbon::now()]);
+
             return response()->json(['user' => $user]);
         }
 
         return response()->json([
-            'error' => trans('auth.invalid_verification_token')
+            'error' => trans('auth.invalid_verification_token'),
         ], 401);
     }
 
@@ -129,7 +131,7 @@ class UsersController extends Controller
         }
 
         return response()->json([
-            'error' => trans('messages.general_error')
+            'error' => trans('messages.general_error'),
         ], 401);
     }
 
@@ -151,9 +153,9 @@ class UsersController extends Controller
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) use ($request) {
+            function ($user, $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->save();
 
                 $user->setRememberToken(Str::random(60));
@@ -167,7 +169,7 @@ class UsersController extends Controller
         }
 
         return response()->json([
-            'error' => trans('messages.general_error')
+            'error' => trans('messages.general_error'),
         ], 401);
     }
 
@@ -184,7 +186,7 @@ class UsersController extends Controller
         $password = $user->password;
 
         if ($hasPassword) {
-            if (!Hash::check($request->input('old_password'), $password)) {
+            if (! Hash::check($request->input('old_password'), $password)) {
                 return response()->json([
                     'error' => trans('messages.general_error'),
                 ], 401);
@@ -217,6 +219,7 @@ class UsersController extends Controller
     {
         $user = $request->user();
         $user->loadMissing('groups:code');
+
         return response()->json(['user' => $user]);
     }
 
@@ -230,6 +233,7 @@ class UsersController extends Controller
     {
         $users = User::has('groups')->get();
         $invites = GroupInvite::all()->merge($users);
+
         return response()->json($invites);
     }
 }

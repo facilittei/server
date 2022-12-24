@@ -2,12 +2,12 @@
 
 namespace App\Mail;
 
+use App\Models\Course;
+use App\Models\CourseInvite;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Course;
-use App\Models\CourseInvite;
 
 class CourseInviteMail extends Mailable implements ShouldQueue
 {
@@ -46,5 +46,5 @@ class CourseInviteMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->subject(trans('mail.course_subject'))->markdown('mail.courses.invite');
-    }    
+    }
 }

@@ -3,27 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Events\EnrollMany;
+use App\Http\Requests\CourseAnnulRequest;
 use App\Http\Requests\CourseRequest;
+use App\Http\Views\CourseView;
 use App\Mail\CourseEnrollManyMail;
+use App\Mail\CourseInviteMail;
 use App\Models\Course;
+use App\Models\CourseInvite;
 use App\Models\Lesson;
 use App\Models\User;
+use App\Queries\StudentQuery;
+use App\Services\Storages\StorageServiceContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Queries\StudentQuery;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Views\CourseView;
-use App\Models\CourseInvite;
-use App\Mail\CourseInviteMail;
-use App\Http\Requests\CourseAnnulRequest;
-use App\Services\Storages\StorageServiceContract;
 
 class CoursesController extends Controller
 {
     public function __construct(
         private StorageServiceContract $storageService,
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource (teacher).
@@ -82,7 +83,7 @@ class CoursesController extends Controller
         $course = Course::findOrFail($id);
         $user = $request->user();
         if ($user->can('view', $course)) {
-            if (($user->id !== $course->user_id) && !$course->is_published) {
+            if (($user->id !== $course->user_id) && ! $course->is_published) {
                 return response()->json(['message' => trans('messages.not_published')]);
             }
 
@@ -92,6 +93,7 @@ class CoursesController extends Controller
             }
 
             $course->load('chapters');
+
             return $course;
         }
 
@@ -123,7 +125,7 @@ class CoursesController extends Controller
                 $course->toArray(),
                 [
                     'profile' => $profile,
-                    'lessons' => $lessonsCount
+                    'lessons' => $lessonsCount,
                 ]
             );
         }
@@ -199,7 +201,7 @@ class CoursesController extends Controller
         if ($course->cover) {
             $this->storageService->destroy($course->cover);
         }
-        
+
         $cover = $this->storageService->upload($request, 'cover', 'courses');
 
         if ($course->update(['cover' => $cover])) {
@@ -251,7 +253,7 @@ class CoursesController extends Controller
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
         $student = User::where('email', $request->input('email'))->first();
 
-        if (!$student) {
+        if (! $student) {
             $req = $request->all();
             $invite = CourseInvite::firstOrCreate([
                 'course_id' => $course->id,
@@ -260,11 +262,13 @@ class CoursesController extends Controller
                 'token' => (new CourseInvite)->generateToken($course->id),
             ]);
             Mail::to($invite->email)->queue(new CourseInviteMail($course, $invite));
+
             return response()->json(['message' => trans('messages.general_success')]);
         }
 
         if ($course->students()->syncWithoutDetaching($student->id)) {
             Mail::to($student->email)->queue(new CourseEnrollManyMail($course, $student));
+
             return response()->json(['message' => trans('messages.general_success')]);
         }
 
@@ -285,6 +289,7 @@ class CoursesController extends Controller
         if ($course->students()->detach($request->input('user_id'))) {
             $ids = is_array($request->input('user_id')) ? $request->input('user_id') : [$request->input('user_id')];
             DB::table('lesson_user')->whereIn('user_id', $ids)->delete();
+
             return response()->json(['message' => trans('messages.general_destroy')]);
         }
 
@@ -301,6 +306,7 @@ class CoursesController extends Controller
     public function students(Request $request, $id)
     {
         $course = Course::where('user_id', $request->user()->id)->findOrFail($id);
+
         return $course->students;
     }
 
@@ -360,6 +366,7 @@ class CoursesController extends Controller
 
         if ($course->students()->detach($request->input('users_id'))) {
             DB::table('lesson_user')->whereIn('user_id', $request->input('users_id'))->delete();
+
             return response()->json(['message' => trans('messages.general_destroy')]);
         }
 

@@ -30,7 +30,7 @@ return new class extends Migration
      */
     private function createView(): string
     {
-        return <<<QUERY
+        return <<<'QUERY'
         CREATE OR REPLACE VIEW sales_view AS 
         SELECT 
             i.course_id,
