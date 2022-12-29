@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AddressesController;
 use App\Http\Controllers\ChaptersController;
-use App\Http\Controllers\CheckoutsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\CommonsController;
 use App\Http\Controllers\CourseInvitesController;
@@ -11,6 +10,7 @@ use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\GroupInvitesController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\LessonsController;
+use App\Http\Controllers\Payments\StripeAccounts;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -50,7 +50,6 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
             Route::post('/group-invite/{group_id}', [GroupInvitesController::class, 'invite']);
         });
 
-        Route::post('/checkouts', [CheckoutsController::class, 'store']);
         Route::get('/users', [UsersController::class, 'show']);
         Route::put('/users', [UsersController::class, 'update']);
         Route::get('/profiles', [ProfilesController::class, 'show']);
@@ -85,6 +84,8 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
         Route::resource('/lessons/{lesson_id}/comments', CommentsController::class)->except(['show', 'create', 'edit']);
         Route::resource('/addresses', AddressesController::class)->except(['show', 'create', 'edit']);
 
-        Route::get('home', [DashboardsController::class, 'home']);
+        Route::get('/home', [DashboardsController::class, 'home']);
+
+        Route::post('/payments/stripe/accounts', [StripeAccounts::class, 'store']);
     });
 });

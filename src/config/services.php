@@ -40,6 +40,8 @@ return [
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
+        'refresh_url' => env('STRIPE_REFRESH_URL'),
+        'return_url' => env('STRIPE_RETURN_URL'),
     ],
 
 ];

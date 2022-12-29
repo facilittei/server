@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use App\Services\Metrics\MetricContract;
 use App\Services\Metrics\PrometheusService;
-use App\Services\Payments\PaymentServiceContract;
-use App\Services\Payments\StripeService;
 use App\Services\Storages\StorageServiceContract;
 use App\Services\Storages\StorageServiceS3;
 use Illuminate\Support\Facades\Http;
@@ -22,9 +20,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(StorageServiceContract::class, function ($app) {
             return $app->make(StorageServiceS3::class);
-        });
-        $this->app->singleton(PaymentServiceContract::class, function ($app) {
-            return $app->make(StripeService::class);
         });
         $this->app->singleton(MetricContract::class, function ($app) {
             return $app->make(PrometheusService::class);

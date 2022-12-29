@@ -94,6 +94,7 @@ services:
       - api-network
 
   mailhog:
+    platform: linux/x86_64
     image: mailhog/mailhog
     container_name: mailhog
     restart: unless-stopped

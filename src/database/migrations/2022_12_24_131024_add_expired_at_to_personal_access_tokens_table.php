@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('personal_access_tokens', function (Blueprint $table) {
-            $table->dropColumn('expired_at');
+            $table->dropColumn('expires_at');
         });
     }
 };
