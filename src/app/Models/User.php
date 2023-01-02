@@ -146,6 +146,16 @@ class User extends Authenticatable
     }
 
     /**
+     * The Payment Service Providers (PSP).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function paymentPlatforms()
+    {
+        return $this->hasMany(PaymentPlatform::class);
+    }
+
+    /**
      * Send user password reset notification link.
      *
      * @return void

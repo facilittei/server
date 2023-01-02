@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payments;
 
 use App\Http\Controllers\Controller;
+use App\Models\PaymentPlatform;
 use App\Services\Payments\StripeService;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,9 +16,17 @@ class StripeAccounts extends Controller
      */
     public function store()
     {
+        $user = Auth::user();
+
         $account = StripeService::createAccount([
             'type' => 'standard',
-            'email' => Auth::user()->email,
+            'email' => $user->email,
+        ]);
+
+        PaymentPlatform::firstOrCreate([
+            'user_id' => $user->id,
+            'reference_id' => $account->id,
+            'name' => 'Stripe',
         ]);
 
         $accountLink = StripeService::createAccountLinks([

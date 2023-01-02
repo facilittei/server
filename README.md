@@ -65,6 +65,18 @@ It will create and populate the tables
 docker-compose exec php-fpm php artisan migrate:fresh --seed
 ```
 
+#### Create migration
+
+```
+docker-compose exec php-fpm php artisan make:migration <name>
+```
+
+#### Alter migration specifying table
+
+```
+docker-compose exec php-fpm php artisan make:migration <name> --table=<table>
+```
+
 ### Queue
 
 Emails are sent in background

@@ -2,9 +2,9 @@
 
 namespace App\Services\Payments;
 
-use \Stripe\Account;
-use \Stripe\AccountLink;
-use \Stripe\StripeClient;
+use Stripe\Account;
+use Stripe\AccountLink;
+use Stripe\StripeClient;
 
 class StripeService
 {
@@ -16,6 +16,7 @@ class StripeService
     public static function createAccount(array $params): Account
     {
         $params['type'] = 'standard';
+
         return self::client()->accounts->create($params);
     }
 
