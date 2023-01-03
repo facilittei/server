@@ -263,8 +263,8 @@ class CheckoutsController extends Controller
                     'quantity' => 1,
                 ]
             ],
-            'success_url' => config('app.client_url') . '/checkout/success',
-            'cancel_url' => config('app.client_url') . '/checkout/cancel',
+            'success_url' => config('app.client_url') . '/checkout/success/' . $course->id,
+            'cancel_url' => config('app.client_url') . '/course/' . $course->id,
         ]);
 
         return $checkoutSession->url;
