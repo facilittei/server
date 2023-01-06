@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'collect_full_sql_query' => env('PROMETHEUS_COLLECT_FULL_SQL_QUERY', true),
+    'collect_full_sql_query' => env('PROMETHEUS_COLLECT_FULL_SQL_QUERY', false),
 
     /*
     |--------------------------------------------------------------------------

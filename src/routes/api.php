@@ -10,7 +10,8 @@ use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\GroupInvitesController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\LessonsController;
-use App\Http\Controllers\Payments\StripeAccounts;
+use App\Http\Controllers\Payments\StripeAccountsController;
+use App\Http\Controllers\Payments\StripeCheckoutsController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -83,9 +84,9 @@ Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function (
         Route::get('/comments', [CommentsController::class, 'user']);
         Route::resource('/lessons/{lesson_id}/comments', CommentsController::class)->except(['show', 'create', 'edit']);
         Route::resource('/addresses', AddressesController::class)->except(['show', 'create', 'edit']);
-
         Route::get('/home', [DashboardsController::class, 'home']);
 
-        Route::post('/payments/stripe/accounts', [StripeAccounts::class, 'store']);
+        Route::post('/payments/stripe/checkouts', [StripeCheckoutsController::class, 'create']);
+        Route::post('/payments/stripe/accounts', [StripeAccountsController::class, 'store']);
     });
 });

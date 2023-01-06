@@ -7,7 +7,7 @@ use App\Models\PaymentPlatform;
 use App\Services\Payments\StripeService;
 use Illuminate\Support\Facades\Auth;
 
-class StripeAccounts extends Controller
+class StripeAccountsController extends Controller
 {
     /**
      * Store a newly created resource in storage.

@@ -35,18 +35,21 @@ class PrometheusService implements MetricContract
      * @see https://prometheus.io/docs/concepts/metric_types/
      *
      * @param  string  $name
-     * @param  int  $value
      * @param  array  $labels
+     * @param  callable  $callback
      * @return void
      */
-    public function histogram(string $name, int $value, array $labels): void
+    public function histogram(string $name, array $labels, callable $callback): void
     {
+        $start = microtime(true);
+        $callback();
         $histogram = app('prometheus')->getOrRegisterHistogram(
             $name,
             MetricLabel::METRICS[$name],
             $labels['keys'],
             [0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0],
         );
-        $histogram->observe($value, $labels['values']);
+
+        $histogram->observe(microtime(true) - $start, $labels['values']);
     }
 }

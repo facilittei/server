@@ -6,5 +6,5 @@ interface MetricContract
 {
     public function counter(string $name, array $labels): void;
 
-    public function histogram(string $name, int $value, array $labels): void;
+    public function histogram(string $name, array $labels, callable $callback): void;
 }

@@ -34,5 +34,7 @@ return [
     'order_failure' => 'Unfortunately, your purchase was not completed successfully for',
     'order_enjoy' => 'We hope you enjoy the course!',
     'order_course_already_bought' => 'This course has already been bought by you',
+    'order_no_payment' => 'Teacher without payment platform',
+    'order_no_payment_enabled' => 'Teacher has no payment platform enabled',
 
 ];
