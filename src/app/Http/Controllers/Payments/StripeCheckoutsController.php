@@ -29,6 +29,7 @@ class StripeCheckoutsController extends Controller
      * @see
      * https://stripe.com/docs/checkout/quickstart
      * https://stripe.com/docs/api/checkout/sessions/object
+     * https://stripe.com/docs/connect/creating-a-payments-page
      */
     public function create(Request $request)
     {
@@ -70,6 +71,10 @@ class StripeCheckoutsController extends Controller
                     ['keys' => ['provider', 'status'], 'values' => ['stripe', $status]],
                 );
 
+                $price = $course->price * 100;
+                $transaction = Fee::TRANSACTION->total();
+                $fee = Fee::PERCENTAGE->total() * $price + ($transaction * 100);
+                
                 $order = Order::store($req, $user->id);
                 $order->histories()->create(['status' => $status]);
                 $order->fees()->create([
@@ -97,7 +102,7 @@ class StripeCheckoutsController extends Controller
                         [
                             'price_data' => [
                                 'currency' => 'BRL',
-                                'unit_amount' => $course->price * 100,
+                                'unit_amount' => $price,
                                 'product_data' => [
                                     'name' => $course->title,
                                     'images' => $images,
@@ -107,7 +112,7 @@ class StripeCheckoutsController extends Controller
                         ],
                     ],
                     'payment_intent_data' => [
-                        'application_fee_amount' => 123,
+                        'application_fee_amount' => $fee,
                         'transfer_data' => [
                             'destination' => $pp->reference_id,
                         ],
