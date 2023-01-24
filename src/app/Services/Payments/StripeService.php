@@ -15,7 +15,7 @@ class StripeService
 
     public static function createAccount(array $params): Account
     {
-        $params['type'] = 'standard';
+        $params['type'] = 'express';
 
         return self::client()->accounts->create($params);
     }

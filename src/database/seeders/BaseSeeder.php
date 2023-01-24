@@ -46,7 +46,7 @@ class BaseSeeder extends Seeder
      */
     private function createTeacher()
     {
-        return $this->createUser('Bill Gates', 'gates@microsoft.com');
+        return $this->createUser('Elon Musk', 'elon@tesla.com');
     }
 
     /**
@@ -56,8 +56,6 @@ class BaseSeeder extends Seeder
      */
     private function createStudents()
     {
-        $this->createUser('Elon Musk', 'elon@tesla.com');
-
         return [
             $this->createUser('Jeff Bezos', 'jeff@amazon.com'),
             $this->createUser('Larry Page', 'larry@google.com'),

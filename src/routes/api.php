@@ -12,6 +12,7 @@ use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\LessonsController;
 use App\Http\Controllers\Payments\StripeAccountsController;
 use App\Http\Controllers\Payments\StripeCheckoutsController;
+use App\Http\Controllers\Payments\StripeWebhookController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('healthcheck', [CommonsController::class, 'healthcheck']);
+Route::post('/payments/stripe/webhook', [StripeWebhookController::class, 'handle']);
 
 Route::group(['middleware' => ['locale', 'underscore', 'camelcase']], function () {
     Route::post('/register', [UsersController::class, 'register']);

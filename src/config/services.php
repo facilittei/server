@@ -42,6 +42,7 @@ return [
         'secret' => env('STRIPE_SECRET'),
         'refresh_url' => env('STRIPE_REFRESH_URL'),
         'return_url' => env('STRIPE_RETURN_URL'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
 ];

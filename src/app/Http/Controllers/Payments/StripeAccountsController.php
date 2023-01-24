@@ -19,8 +19,11 @@ class StripeAccountsController extends Controller
         $user = Auth::user();
 
         $account = StripeService::createAccount([
-            'type' => 'standard',
             'email' => $user->email,
+            'capabilities' => [
+                'card_payments' => ['requested' => true],
+                'transfers' => ['requested' => true],
+            ],
         ]);
 
         PaymentPlatform::firstOrCreate([

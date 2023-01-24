@@ -11,7 +11,7 @@ enum Fee
     {
         return match ($this) {
             self::PERCENTAGE => 5,
-            self::TRANSACTION => 0.5,
+            self::TRANSACTION => 1,
         };
     }
 }
