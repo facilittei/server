@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Services\Metrics\MetricContract;
 use Exception;
+use App\Models\PaymentPlatform;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -94,6 +95,11 @@ class StripeWebhookController extends Controller
             return response()->json([
                 'error' => trans('auth.unauthorized'),
             ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if ($event->type == 'account.updated' && $event->data->object->charges_enabled) {
+            PaymentPlatform::firstWhere('reference_id', $event->data->object->id)
+                ->update(['is_enabled' => 1]);
         }
 
         if ($event->type == 'checkout.session.completed') {

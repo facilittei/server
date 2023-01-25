@@ -17,20 +17,25 @@ class StripeAccountsController extends Controller
     public function store()
     {
         $user = Auth::user();
+        $paymentPlatform = $user->paymentPlatforms->where('name', 'Stripe')->first();
 
-        $account = StripeService::createAccount([
-            'email' => $user->email,
-            'capabilities' => [
-                'card_payments' => ['requested' => true],
-                'transfers' => ['requested' => true],
-            ],
-        ]);
+        if (!$paymentPlatform) {
+            $account = StripeService::createAccount([
+                'email' => $user->email,
+                'capabilities' => [
+                    'card_payments' => ['requested' => true],
+                    'transfers' => ['requested' => true],
+                ],
+            ]);
 
-        PaymentPlatform::firstOrCreate([
-            'user_id' => $user->id,
-            'reference_id' => $account->id,
-            'name' => 'Stripe',
-        ]);
+            PaymentPlatform::firstOrCreate([
+                'user_id' => $user->id,
+                'reference_id' => $account->id,
+                'name' => 'Stripe',
+            ]);
+        } else {
+            $account = StripeService::client()->accounts->retrieve($paymentPlatform->reference_id);
+        }
 
         $accountLink = StripeService::createAccountLinks([
             'account' => $account->id,

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->string('reference_id');
             $table->string('name');
-            $table->boolean('is_enabled')->default(true);
+            $table->boolean('is_enabled')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
