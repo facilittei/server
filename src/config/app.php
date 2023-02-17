@@ -180,9 +180,9 @@ return [
         /*
          * Package Service Providers...
          */
-        Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class,
-        Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider::class,
-        Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider::class,
+        App\Services\Metrics\Prom\PrometheusServiceProvider::class,
+        App\Services\Metrics\Prom\DatabaseServiceProvider::class,
+        App\Services\Metrics\Prom\GuzzleServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
 
         /*
